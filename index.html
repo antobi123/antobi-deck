@@ -199,6 +199,13 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .pbtn{border:1px solid var(--line); background:#1b1c22; color:var(--fg); border-radius:10px; padding:10px 14px; font:13px var(--font-ui)}
 .pbtn.pri{background:var(--illum); color:#06070a; border-color:transparent; font-weight:700}
 .pbtn.warn{color:#ff8a7a}
+#lockLayer{position:fixed; inset:0; z-index:60; touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; display:flex; align-items:center; justify-content:center}
+#lockLayer .lockHint{opacity:0; transition:opacity .25s; background:rgba(5,6,10,.85); border:1px solid var(--illum); color:var(--fg); padding:12px 20px; border-radius:12px; font:14px/1.6 var(--font-ui); text-align:center; box-shadow:0 0 18px var(--illumglow)}
+#lockLayer .lockHint small{color:var(--muted); font-size:12px}
+#lockLayer.hint .lockHint{opacity:1}
+#lockBtn{overflow:hidden}
+#lockBtn::after{content:""; position:absolute; left:0; bottom:0; height:3px; width:calc(var(--hold, 0)*100%); background:var(--illum); box-shadow:0 0 8px var(--illum)}
+:root.locked .k:not(#lockBtn), :root.locked .rk{opacity:.4; transition:opacity .3s}
 #presetList, #rResults{list-style:none; margin:6px 0 0; padding:0; display:flex; flex-direction:column; gap:4px}
 #rResults{max-height:280px; overflow:auto}
 #presetList li, #rResults li{display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; background:rgba(255,255,255,.03)}
@@ -247,7 +254,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="inds">
           <span class="ind" id="iSt">ST</span><span class="ind" id="iLoud">LOUD</span><span class="ind" id="iAtt">ATT</span>
-          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iAuto">AUTO</span>
+          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iAuto">AUTO</span><span class="ind" id="iLock">LOCK</span>
         </div>
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
@@ -296,7 +303,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <button class="k" id="p5" style="left:438px;top:434px;width:62px;height:26px">5</button>
       <button class="k" id="p6" style="left:510px;top:434px;width:62px;height:26px">6</button>
       <div class="strip" style="left:132px;top:472px;width:458px"></div>
-      <span class="lbl" style="left:40px;top:446px">DISC DIRECT</span>
+      <button class="k" id="lockBtn" style="left:28px;top:432px;width:62px;height:28px" aria-label="キーロック">LOCK</button>
 
       <!-- bottom right: transport -->
       <button class="k" id="prev" style="left:652px;top:426px;width:64px;height:38px" aria-label="前の曲"><svg viewBox="0 0 24 24"><path d="M5 5h2v14H5zM19 5v14L8.5 12z"/></svg></button>
@@ -309,6 +316,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="portrait-hint">スマホを横向きにすると大きく表示されます</div>
 </div>
 
+<div id="lockLayer" hidden><div class="lockHint">🔒 KEY LOCK<br><small>左下の LOCK を長押しで解除</small></div></div>
 <input type="file" id="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac,.opus" multiple>
 
 <div class="sheet" id="sheet" hidden>
@@ -402,6 +410,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
           <dt>SEEK ∧∨</dt><dd>10秒送り／戻し</dd>
           <dt>ATT</dt><dd>アッテネーター。一時的に音量をぐっと下げる</dd>
+          <dt>LOCK</dt><dd>キーロック（誤操作防止）。押すと、ボタンも画面タップも効かなくなる。解除は LOCK を約1.5秒長押し</dd>
           <dt>ILLUMI</dt><dd>キー照明の色を切り替え（8色＋RANDOM。RANDOM は数秒ごとに色がゆっくり変わる）</dd>
           <dt>LIST</dt><dd>プレイリストを開く</dd>
           <dt>1 SCROLL</dt><dd>曲名のスクロール表示 ON/OFF</dd>
@@ -840,6 +849,31 @@ $('#file').addEventListener('change', e => { ensureAudio(); addFiles(e.target.fi
 on('#dispBtn', () => setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true));
 on('#disp', e => { if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true); });
 on('#illBtn', () => setIllum(ILLUMS[(ILLUMS.indexOf(illum)+1) % ILLUMS.length], true));
+/* KEY LOCK: a clear layer over everything so nothing reacts in a pocket; hold LOCK ~1.5 s to release */
+let locked = false, holdStart = 0, holdRAF = 0, hintT = 0;
+const lockLayer = $('#lockLayer'), lockBtn = $('#lockBtn');
+function setLock(v){
+  locked = v; lockLayer.hidden = !v; root.classList.toggle('locked', v);
+  $('#iLock').classList.toggle('on', v); lockBtn.classList.toggle('on', v);
+  flash(v ? 'KEY LOCK  ON' : 'KEY LOCK  OFF', 1200);
+}
+on('#lockBtn', () => { if(!locked) setLock(true); });
+const onLockBtn = e => { const r = lockBtn.getBoundingClientRect(), pad = 16; return e.clientX >= r.left - pad && e.clientX <= r.right + pad && e.clientY >= r.top - pad && e.clientY <= r.bottom + pad; };
+function endHold(){ cancelAnimationFrame(holdRAF); holdStart = 0; lockBtn.style.setProperty('--hold', 0); }
+function lockHint(){ lockLayer.classList.add('hint'); clearTimeout(hintT); hintT = setTimeout(() => lockLayer.classList.remove('hint'), 1800); }
+lockLayer.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  if(!onLockBtn(e)){ lockHint(); return; }
+  holdStart = performance.now();
+  const tick = () => {
+    const p = Math.min(1, (performance.now() - holdStart)/1500);
+    lockBtn.style.setProperty('--hold', p);
+    if(p >= 1){ endHold(); setLock(false); } else holdRAF = requestAnimationFrame(tick);
+  };
+  holdRAF = requestAnimationFrame(tick);
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => lockLayer.addEventListener(ev, endHold));
+lockLayer.addEventListener('contextmenu', e => e.preventDefault());
 on('#attBtn', () => { att = !att; applyVol(); flash(att ? 'ATT  ON' : 'ATT  OFF', 900); updateUI(); });
 /* ---------------- RADIO: internet radio on presets 1-6 (all streams allow the spectrum to read them) ---------------- */
 const DEFAULT_STATIONS = [   // 1-3 hip-hop, 4-6 soul; each checked to play with CORS so the spectrum follows it
