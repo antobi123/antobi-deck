@@ -1291,6 +1291,10 @@ const vbg = vbLow.getContext('2d', {willReadFrequently: true});
 const vbLit = document.createElement('canvas'), vbl = vbLit.getContext('2d');
 const vbDim = document.createElement('canvas'), vbd = vbDim.getContext('2d');
 const vbStars = Array.from({length:16}, (_, i) => [(i*37 + 11) % VB_C, (i*13 + 3) % 14, i*1.7]);
+const vbStarsX = Array.from({length:22}, (_, i) => [(i*53 + 7) % VB_C, (i*29 + 5) % 22, i*2.3]);   // extra stars at night
+const vbFakeHour = (() => { const v = parseFloat(new URLSearchParams(location.search).get('hour')); return isNaN(v) ? null : v; })();   // ?hour=21 previews another time of day
+function vbHour(){ if(vbFakeHour !== null) return vbFakeHour; const d = new Date(); return d.getHours() + d.getMinutes()/60; }
+function vbDayOfYear(){ const d = new Date(); return Math.floor((d - new Date(d.getFullYear(), 0, 0))/864e5); }
 let vbT = 0, vbKey = '', vbPulse = 0;
 function vbPalm(x, y, h, lean, ph, sc){
   const sway = Math.sin(vbT*.55 + ph)*.05 + Math.sin(vbT*1.7 + ph*2)*.018 + .02;
@@ -1326,23 +1330,50 @@ function drawVFDBeach(dt){
     for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++) vbd.fillRect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
   }
   // ---- scene at dot resolution: green = cyan tube, red = amber tube ----
-  const hz = 25, sx = 84;
+  // The sky follows the real clock (sunrise/sunset shift with the season, roughly Tokyo):
+  // sunrise glow in the east (left), a high sun by day, the striped sunset in the west, a crescent moon at night.
+  const hz = 25, h = vbHour(), doy = vbDayOfYear();
+  const dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365), rise = 11.6 - dayLen/2, set = 11.6 + dayLen/2;
+  const day = h >= rise && h < set;
+  const p = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*p);
+  const sx = Math.round(46 + p*52), sy = hz - 1 - el*(hz - 9), low = day && el < .32;   // path stays in the open sky between the palms
+  const starsOn = day ? Math.max(0, 1 - el*3.5) : 1;
   vbg.fillStyle = '#000'; vbg.fillRect(0, 0, VB_C, VB_R);
   vbg.fillStyle = '#0f0';
-  vbStars.forEach(([x, y, p]) => { if(Math.sin(vbT*1.3 + p) > .2) vbg.fillRect(x, y, 1, 1); });
-  // sun with retro stripes sliding down
-  const r = 12.5 + vbPulse*1.5;
+  vbStars.slice(0, Math.round(vbStars.length*starsOn)).forEach(([x, y, q]) => { if(Math.sin(vbT*1.3 + q) > .2) vbg.fillRect(x, y, 1, 1); });
+  if(!day) vbStarsX.forEach(([x, y, q]) => { if(Math.sin(vbT*.9 + q) > .45) vbg.fillRect(x, y, 1, 1); });
   vbg.save(); vbg.beginPath(); vbg.rect(0, 0, VB_C, hz); vbg.clip();
-  vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, hz - 1, r, 0, Math.PI*2); vbg.fill();
-  vbg.fillStyle = '#000';
-  for(let k=0;k<5;k++){ const y = hz - 2 - k*2.6 + ((vbT*1.4) % 2.6); if(y > hz - r*.75) vbg.fillRect(sx - r - 1, Math.round(y), r*2 + 2, 1); }
+  if(low){                                         // big striped sun near the horizon (sunrise / sunset)
+    const r = 12.5 + vbPulse*1.5;
+    vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, sy, r, 0, Math.PI*2); vbg.fill();
+    vbg.fillStyle = '#000';
+    for(let k=0;k<5;k++){ const y = sy - 1 - k*2.6 + ((vbT*1.4) % 2.6); if(y > sy - r*.75) vbg.fillRect(sx - r - 1, Math.round(y), r*2 + 2, 1); }
+  } else if(day){                                  // high sun with twinkling rays and drifting clouds
+    const r = 5.5 + vbPulse;
+    vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, sy, r, 0, Math.PI*2); vbg.fill();
+    for(let k=0;k<8;k++){ if((k + Math.floor(vbT*2)) % 2) continue; const a = k*Math.PI/4 + vbT*.3; vbg.fillRect(Math.round(sx + Math.cos(a)*(r + 3)), Math.round(sy + Math.sin(a)*(r + 3)), 1, 1); }
+    vbg.fillStyle = '#0f0';
+    [[0, 6, 14], [60, 12, 10]].forEach(([o, y, w]) => {
+      const x = Math.round(((vbT*1.2 + o) % (VB_C + 30)) - 15);
+      for(let i=0;i<w;i+=2) vbg.fillRect(x + i, y, 1, 1);
+      for(let i=3;i<w-2;i+=2) vbg.fillRect(x + i, y - 1, 1, 1);
+    });
+  } else {                                         // crescent moon and an occasional shooting star
+    const r = 5;
+    vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, sy, r, 0, Math.PI*2); vbg.fill();
+    vbg.fillStyle = '#000'; vbg.beginPath(); vbg.arc(sx + 2.6, sy - 1.6, r, 0, Math.PI*2); vbg.fill();
+    const q = (vbT % 11)/11;
+    if(q < .1){ const t = q/.1, x = Math.round(18 + t*46), y = Math.round(2 + t*9); vbg.fillStyle = '#0f0'; vbg.fillRect(x, y, 1, 1); vbg.fillRect(x - 1, y - 1, 1, 1); vbg.fillRect(x - 2, y - 1, 1, 1); }
+  }
   vbg.restore();
-  // gulls
-  vbg.fillStyle = '#f00';
-  [[0, 6, 0], [9, 9, 1.4]].forEach(([o, y0, p]) => {
-    const x = Math.round(((vbT*2.2 + o + 40) % (VB_C + 10)) - 5), y = y0 + Math.round(Math.sin(vbT*.8 + p)), up = Math.sin(vbT*5 + p) > 0;
-    vbg.fillRect(x - 2, y - (up ? 1 : 0), 1, 1); vbg.fillRect(x - 1, y, 1, 1); vbg.fillRect(x, y + 1, 1, 1); vbg.fillRect(x + 1, y, 1, 1); vbg.fillRect(x + 2, y - (up ? 1 : 0), 1, 1);
-  });
+  // gulls fly by day
+  if(day){
+    vbg.fillStyle = '#f00';
+    [[0, 6, 0], [9, 9, 1.4]].forEach(([o, y0, q]) => {
+      const x = Math.round(((vbT*2.2 + o + 40) % (VB_C + 10)) - 5), y = y0 + Math.round(Math.sin(vbT*.8 + q)), up = Math.sin(vbT*5 + q) > 0;
+      vbg.fillRect(x - 2, y - (up ? 1 : 0), 1, 1); vbg.fillRect(x - 1, y, 1, 1); vbg.fillRect(x, y + 1, 1, 1); vbg.fillRect(x + 1, y, 1, 1); vbg.fillRect(x + 2, y - (up ? 1 : 0), 1, 1);
+    });
+  }
   // horizon + island
   vbg.fillStyle = '#0f0'; vbg.fillRect(0, hz, VB_C, 1);
   vbg.fillRect(104, hz - 1, 16, 1); vbg.fillRect(108, hz - 2, 8, 1);
@@ -1351,10 +1382,11 @@ function drawVFDBeach(dt){
     const y = hz + dy; if(y >= VB_R) return;
     for(let x=0;x<VB_C;x++) if(Math.sin(x*(.55 - k*.07) + vbT*(1.2 + k*.35) + k*2) > .45) vbg.fillRect(x, y, 1, 1);
   });
-  // sun reflection = spectrum
+  // sun / moon reflection = spectrum (slimmer under a high sun, slimmest under the moon)
+  const rw = low ? 1 : day ? .6 : .45;
   vbg.fillStyle = '#f00';
   for(let j=0;j<VB_R - hz - 1;j++){
-    const v = st.v[Math.max(0, 15 - j)], w = Math.round((2 + j*.5)*(.35 + v*1.4)), jx = Math.round(Math.sin(vbT*2.5 + j*1.9)*(1 + j*.08));
+    const v = st.v[Math.max(0, 15 - j)], w = Math.max(1, Math.round((2 + j*.5)*(.35 + v*1.4)*rw)), jx = Math.round(Math.sin(vbT*2.5 + j*1.9)*(1 + j*.08));
     if(j % 2 === 0) vbg.fillRect(sx - (w >> 1) + jx, hz + 1 + j, w, 1);
   }
   // sand (dithered amber) + foam washing in and out
@@ -1520,7 +1552,7 @@ function frame(now){
 }
 
 /* ---------------- boot ---------------- */
-setSkin(skin, false); setIllum(illum, false); setVol(vol, false); installState(); renderList();
+setSkin(ORDER[0], false); setIllum(illum, false); setVol(vol, false); installState(); renderList();
 renderMarq(titleText); fit();
 loadLibrary();
 if(document.fonts) document.fonts.ready.then(() => { if(!flashT) renderMarq(titleText); });
