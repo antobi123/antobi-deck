@@ -36,7 +36,6 @@
 :root[data-skin="vfd"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="neon"]{ --lit:#ff5fd2; --lit2:#3fe9ff; --dimt:rgba(255,95,210,.18); --glow:rgba(255,95,210,.55); --screen:#13041d; }
 :root[data-skin="tape"]{ --lit:#ffb13a; --lit2:#ff5c2b; --dimt:rgba(255,177,58,.16); --glow:rgba(255,160,40,.5); --screen:#150a02; }
-:root[data-skin="beach"]{ --lit:#ffd27a; --lit2:#4fe8d0; --dimt:rgba(255,210,122,.16); --glow:rgba(255,170,90,.6); --screen:#0c2a30; }
 :root[data-skin="led"]{ --lit:#45ff76; --lit2:#ff3b3b; --dimt:rgba(69,255,118,.15); --glow:rgba(69,255,118,.45); --screen:#040706; }
 :root[data-illum="green"]{ --illum:#5dff8a; --illumglow:rgba(70,255,120,.55); }
 :root[data-illum="red"]{ --illum:#ff4d3d; --illumglow:rgba(255,70,50,.6); }
@@ -157,7 +156,6 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.neon{background:linear-gradient(180deg,#2a0838,#ff5fd2 60%,#ffcf5a 61%,#13041d 62%)}
 .sw.tape{background:radial-gradient(circle at 28% 50%,#ffb13a 0 5px,#150a02 6px),radial-gradient(circle at 72% 50%,#ffb13a 0 5px,#150a02 6px)}
-.sw.beach{background:radial-gradient(circle at 50% 50%,#ffe08a 0 6px,transparent 7px),linear-gradient(180deg,#1e1046,#5e2670 22%,#ff8f48 46%,#2e8496 50%,#10385a 78%,#a8645a 80%,#4a2236)}
 .sw.led{background:linear-gradient(90deg,#45ff76 0 55%,#ffe03a 55% 78%,#ff3b3b 78%)}
 .dot{width:22px; height:22px; border-radius:50%}
 .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
@@ -265,8 +263,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="chips" id="skinChips">
           <button class="chip" data-skin="dsp"><span class="sw dsp"></span>DSP<small>3Dスペアナ</small></button>
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
-          <button class="chip" data-skin="neon"><span class="sw neon"></span>NEON<small>シンセウェイブ</small></button>
-          <button class="chip" data-skin="beach"><span class="sw beach"></span>BEACH<small>サンセット</small></button>
+          <button class="chip" data-skin="neon"><span class="sw neon"></span>NEON<small>夕焼け</small></button>
           <button class="chip" data-skin="tape"><span class="sw tape"></span>TAPE<small>カセット</small></button>
           <button class="chip" data-skin="led"><span class="sw led"></span>LED<small>イルミ</small></button>
         </div>
@@ -340,7 +337,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['dsp','vfd','neon','beach','tape','led'], ILLUMS = ['blue','green','red','amber'];
+const SKINS = ['dsp','vfd','neon','tape','led'], ILLUMS = ['blue','green','red','amber'];
 let skin = store.get('skin2','dsp'); if(!SKINS.includes(skin)) skin = 'dsp';
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
 let vol = store.get('vol', 28), att = false;
@@ -816,191 +813,6 @@ function drawNeon(dt){
   g.fillStyle = C.lit; g.fillRect(0, hz-1, W, 2);
 }
 
-/* BEACH: tropical sunset beach — swaying palms, turquoise lagoon, rolling waves, tiki torches; the sun's reflection on the sea is the spectrum */
-const clouds = [[.08,.16,170,7,.9],[.55,.10,220,6,.6],[.32,.28,140,5,1.2],[.82,.24,180,6,.8],[.68,.34,120,4,1.4]];
-const gulls = [[.30,.20,0],[.36,.25,1.3],[.62,.15,2.1]];
-const glints = Array.from({length:34}, () => [Math.random(), Math.random(), Math.random()*6]);
-let beachT = 0, sunPulse = 0;
-function palm(x, y, h, lean, ph, scale){
-  const sway = Math.sin(beachT*.55 + ph)*.05 + Math.sin(beachT*1.7 + ph*2)*.018 + .02;
-  const tx = x + (lean + sway)*h, ty = y - h;
-  const cx = x + lean*h*.15, cy = y - h*.55;
-  g.lineCap = 'round';
-  const N = 18; let px0 = x, py0 = y;
-  for(let i=1;i<=N;i++){
-    const t = i/N, u = 1 - t;
-    const qx = u*u*x + 2*u*t*cx + t*t*tx, qy = u*u*y + 2*u*t*cy + t*t*ty;
-    g.strokeStyle = i % 2 ? '#23160e' : '#2e1d12';
-    g.lineWidth = (10 - 5.5*t)*scale;
-    g.beginPath(); g.moveTo(px0, py0); g.lineTo(qx, qy); g.stroke();
-    px0 = qx; py0 = qy;
-  }
-  g.fillStyle = '#3a2412';
-  g.beginPath(); [[-4,4],[3,5],[0,8]].forEach(([dx,dy]) => { const ux = tx + dx*scale, uy = ty + dy*scale; g.moveTo(ux + 3.4*scale, uy); g.arc(ux, uy, 3.4*scale, 0, Math.PI*2); }); g.fill();
-  const fr = [-3.1,-2.75,-2.4,-2.05,-1.7,-1.4,-1.05,-.7,-.35,-.05];
-  fr.forEach((a0, k) => {
-    const L = h*(.44 + (k%3)*.05)*scale;
-    const flut = Math.sin(beachT*2.3 + k*1.1 + ph)*.07 + sway*1.6;
-    const dir = Math.cos(a0) >= 0 ? 1 : -1;
-    g.strokeStyle = k % 2 ? '#0d2a17' : '#12341d';
-    let fx = tx, fy = ty; const S = 13;
-    for(let i=1;i<=S;i++){
-      const t = i/S, a = a0 + flut*t + dir*t*t*1.25;
-      const nx = fx + Math.cos(a)*L/S, ny = fy + Math.sin(a)*L/S;
-      g.lineWidth = 2.6*scale*(1 - t*.6);
-      g.beginPath(); g.moveTo(fx, fy); g.lineTo(nx, ny); g.stroke();
-      const ll = L*.25*(1 - t*.7), w = Math.sin(beachT*3 + i + k)*.12;
-      g.lineWidth = 2*scale*(1 - t*.5);
-      [-1, 1].forEach(sd => { const b = a + sd*1.0 + dir*.4 + w; g.beginPath(); g.moveTo(nx, ny); g.lineTo(nx + Math.cos(b)*ll, ny + Math.sin(b)*ll + ll*.4); g.stroke(); });
-      fx = nx; fy = ny;
-    }
-  });
-}
-function torch(x, y, h, ph){
-  const fl = .85 + .15*Math.sin(beachT*13 + ph) + .08*Math.sin(beachT*29 + ph*2);
-  const fy = y - h;
-  const glow = g.createRadialGradient(x, fy - 8, 2, x, fy - 8, 38*fl);
-  glow.addColorStop(0, 'rgba(255,180,80,.75)'); glow.addColorStop(1, 'rgba(255,120,40,0)');
-  g.fillStyle = glow; g.fillRect(x - 40, fy - 48, 80, 80);
-  g.strokeStyle = '#2a1608'; g.lineWidth = 3; g.lineCap = 'butt';
-  g.beginPath(); g.moveTo(x, y); g.lineTo(x, fy); g.stroke();
-  g.fillStyle = '#3d2210'; g.fillRect(x - 4.5, fy - 3, 9, 7);
-  g.strokeStyle = '#1a0d05'; g.lineWidth = 1; g.beginPath(); g.moveTo(x - 4.5, fy); g.lineTo(x + 4.5, fy + 3); g.stroke();
-  const tip = Math.sin(beachT*7 + ph)*2.5;
-  const fg = g.createLinearGradient(0, fy - 18*fl, 0, fy - 2);
-  fg.addColorStop(0, '#fff3a0'); fg.addColorStop(.5, '#ffb02e'); fg.addColorStop(1, '#ff5a1e');
-  g.fillStyle = fg; g.shadowBlur = 14; g.shadowColor = '#ff9a2e';
-  g.beginPath(); g.moveTo(x - 4.5, fy - 3);
-  g.quadraticCurveTo(x - 6, fy - 11*fl, x + tip, fy - 19*fl);
-  g.quadraticCurveTo(x + 6, fy - 11*fl, x + 4.5, fy - 3); g.fill();
-  g.shadowBlur = 0;
-}
-function leaf(x, y, len, ang, wid){
-  g.save(); g.translate(x, y); g.rotate(ang);
-  g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(len*.45, -wid, len, 0); g.quadraticCurveTo(len*.45, wid, 0, 0); g.fill();
-  g.strokeStyle = 'rgba(60,120,70,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, 0); g.lineTo(len*.95, 0); g.stroke();
-  g.restore();
-}
-function hibiscus(x, y, r, rot, col){
-  g.save(); g.translate(x, y); g.rotate(rot);
-  g.fillStyle = col; g.shadowBlur = 6; g.shadowColor = col;
-  for(let i=0;i<5;i++){ g.rotate(Math.PI*2/5); g.beginPath(); g.ellipse(r*.62, 0, r*.62, r*.46, 0, 0, Math.PI*2); g.fill(); }
-  g.shadowBlur = 0;
-  g.fillStyle = 'rgba(120,0,30,.7)'; g.beginPath(); g.arc(0, 0, r*.28, 0, Math.PI*2); g.fill();
-  g.strokeStyle = '#ffe36a'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(0, 0); g.lineTo(r*1.15, -r*.35); g.stroke();
-  g.fillStyle = '#ffe36a'; g.beginPath(); g.arc(r*1.15, -r*.35, 1.6, 0, Math.PI*2); g.fill();
-  g.restore();
-}
-function drawBeach(dt){
-  beachT += dt;
-  const hz = H*.48, shore = H*.8, cx = W*.5;
-  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3;
-  sunPulse += (bass - sunPulse)*.15;
-  // sky: tropical tangerine sunset
-  const sky = g.createLinearGradient(0, 0, 0, hz);
-  sky.addColorStop(0, '#1e1046'); sky.addColorStop(.3, '#5e2670'); sky.addColorStop(.58, '#e0586a'); sky.addColorStop(.82, '#ff8f48'); sky.addColorStop(1, '#ffc46a');
-  g.fillStyle = sky; g.fillRect(0, 0, W, hz);
-  g.fillStyle = '#fff';
-  for(let i=0;i<24;i++){ const sx = (i*97.3) % W, sy = (i*37.1) % (hz*.42); g.globalAlpha = .15 + .45*Math.abs(Math.sin(beachT*.9 + i)); g.fillRect(sx, sy, 1.2, 1.2); }
-  g.globalAlpha = 1;
-  // sun
-  const r = H*.2*(1 + sunPulse*.06), sy = hz - r*.08;
-  const halo = g.createRadialGradient(cx, sy, r*.6, cx, sy, r*3.6);
-  halo.addColorStop(0, 'rgba(255,230,140,.6)'); halo.addColorStop(1, 'rgba(255,140,90,0)');
-  g.fillStyle = halo; g.fillRect(0, 0, W, hz);
-  g.save(); g.beginPath(); g.rect(0, 0, W, hz); g.clip();
-  const sg = g.createLinearGradient(0, sy - r, 0, sy + r);
-  sg.addColorStop(0, '#fffbe0'); sg.addColorStop(.5, '#ffd35a'); sg.addColorStop(1, '#ff8a3a');
-  g.fillStyle = sg; g.shadowBlur = 26 + sunPulse*22; g.shadowColor = '#ffc060';
-  g.beginPath(); g.arc(cx, sy, r, 0, Math.PI*2); g.fill(); g.shadowBlur = 0;
-  g.restore();
-  // clouds drifting
-  clouds.forEach(([x0, y0, w, h, sp]) => {
-    const x = ((x0*W + beachT*sp*4) % (W + w*2)) - w;
-    const cg = g.createLinearGradient(0, y0*H - h, 0, y0*H + h);
-    cg.addColorStop(0, 'rgba(255,170,140,.7)'); cg.addColorStop(1, 'rgba(120,45,100,.7)');
-    g.fillStyle = cg; g.beginPath(); g.ellipse(x, y0*H, w/2, h/2, 0, 0, Math.PI*2); g.fill();
-    g.beginPath(); g.ellipse(x + w*.18, y0*H - h*.35, w*.28, h*.42, 0, 0, Math.PI*2); g.fill();
-  });
-  // gulls
-  g.strokeStyle = '#3a1a2a'; g.lineWidth = 1.3; g.lineCap = 'round';
-  gulls.forEach(([x0, y0, ph]) => {
-    const x = ((x0*W + beachT*9) % (W + 40)) - 20, y = y0*H + Math.sin(beachT*.7 + ph)*4, f = Math.sin(beachT*5 + ph)*3;
-    g.beginPath(); g.moveTo(x - 7, y - f*.6); g.quadraticCurveTo(x - 3, y - 4 - f, x, y); g.quadraticCurveTo(x + 3, y - 4 - f, x + 7, y - f*.6); g.stroke();
-  });
-  // island with tiny palms
-  g.fillStyle = '#2e1838';
-  g.beginPath(); g.moveTo(W*.66, hz); g.quadraticCurveTo(W*.74, hz - 13, W*.8, hz - 6); g.quadraticCurveTo(W*.87, hz - 10, W*.94, hz); g.fill();
-  g.strokeStyle = '#2e1838'; g.lineWidth = 1.2;
-  [[W*.73, 10], [W*.76, 13], [W*.85, 9]].forEach(([ix, ih], k) => {
-    const s = Math.sin(beachT*.8 + k)*.6, top = hz - 8 - ih;
-    g.beginPath(); g.moveTo(ix, hz - 8); g.quadraticCurveTo(ix + 1, top + 5, ix + 2 + s, top);
-    for(let a=0;a<5;a++){ const an = -2.9 + a*.6; g.moveTo(ix + 2 + s, top); g.quadraticCurveTo(ix + 2 + s + Math.cos(an)*4, top + Math.sin(an)*4, ix + 2 + s + Math.cos(an)*7, top + 2.5); }
-    g.stroke();
-  });
-  // sailboat
-  { const bx = ((W*.18 + beachT*3) % (W + 40)) - 20, by = hz + 1 + Math.sin(beachT*1.3)*.6;
-    g.fillStyle = '#2a1230';
-    g.beginPath(); g.moveTo(bx - 9, by - 3); g.lineTo(bx + 9, by - 3); g.lineTo(bx + 6, by); g.lineTo(bx - 6, by); g.fill();
-    g.beginPath(); g.moveTo(bx, by - 4); g.lineTo(bx, by - 22); g.lineTo(bx + 9, by - 5); g.fill();
-    g.beginPath(); g.moveTo(bx - 1, by - 18); g.lineTo(bx - 1, by - 5); g.lineTo(bx - 7, by - 5); g.fill(); }
-  // sea: turquoise lagoon glowing with sunset
-  const sea = g.createLinearGradient(0, hz, 0, shore);
-  sea.addColorStop(0, '#ff9468'); sea.addColorStop(.1, '#2e8496'); sea.addColorStop(.5, '#175a78'); sea.addColorStop(1, '#10385a');
-  g.fillStyle = sea; g.fillRect(0, hz, W, shore - hz + 12);
-  const lag = g.createLinearGradient(0, shore - 26, 0, shore + 6);
-  lag.addColorStop(0, 'rgba(70,230,205,0)'); lag.addColorStop(1, 'rgba(90,220,200,.38)');
-  g.fillStyle = lag; g.fillRect(0, shore - 26, W, 32);
-  const rows = 16;
-  for(let k=0;k<rows;k++){
-    const d = (k + 1)/rows, y = hz + (shore - hz)*Math.pow(d, 1.5);
-    g.strokeStyle = `rgba(255,220,225,${.1 + d*.22})`; g.lineWidth = .6 + d*1.2;
-    g.beginPath();
-    for(let x=0;x<=W;x+=8){ const yy = y + Math.sin(x*(.05 - d*.03) + beachT*(1.2 + d) + k*1.7)*(1 + d*3); x ? g.lineTo(x, yy) : g.moveTo(x, yy); }
-    g.stroke();
-    // sun reflection = spectrum
-    const v = st.v[Math.min(15, rows - 1 - k)];
-    const rw = r*(.25 + d*1.1)*(.45 + v*1.1), jx = Math.sin(beachT*2.5 + k*1.9)*(3 + d*5);
-    g.fillStyle = k % 2 ? '#fff0a0' : '#ffc860'; g.globalAlpha = .4 + v*.6;
-    g.shadowBlur = 8; g.shadowColor = '#ffc860';
-    g.fillRect(cx - rw/2 + jx, y - (.8 + d*1.6), rw, 1.2 + d*2.2);
-    g.shadowBlur = 0; g.globalAlpha = 1;
-  }
-  // glints
-  g.fillStyle = '#fff';
-  glints.forEach(([gx, gy, ph]) => { const a = Math.sin(beachT*2.2 + ph*3); if(a > .55){ g.globalAlpha = (a - .55)*2; const y = hz + 4 + gy*(shore - hz - 10); g.fillRect(gx*W - 2, y, 4, 1); g.fillRect(gx*W - .5, y - 1.5, 1, 4); } });
-  g.globalAlpha = 1;
-  g.fillStyle = 'rgba(255,240,200,.9)'; g.fillRect(0, hz - .5, W, 1);
-  // shoreline: wave washes up and pulls back
-  const wash = Math.sin(beachT*.6), sl = x => shore + wash*7 + Math.sin(x*.018 + beachT*.9)*3 + Math.sin(x*.05 - beachT*1.4)*1.2;
-  g.fillStyle = '#6a3644'; g.beginPath(); g.moveTo(0, H);
-  for(let x=0;x<=W;x+=8) g.lineTo(x, sl(x) + 4 - wash*3);
-  g.lineTo(W, H); g.fill();
-  const sand = g.createLinearGradient(0, shore, 0, H);
-  sand.addColorStop(0, '#a8645a'); sand.addColorStop(1, '#4a2236');
-  g.fillStyle = sand; g.beginPath(); g.moveTo(0, H);
-  for(let x=0;x<=W;x+=8) g.lineTo(x, sl(x) + 8 + Math.max(0, wash)*2);
-  g.lineTo(W, H); g.fill();
-  g.strokeStyle = `rgba(255,255,250,${.6 + .3*Math.max(0, wash)})`; g.lineWidth = 1.8; g.shadowBlur = 6; g.shadowColor = '#ffffff';
-  g.beginPath(); for(let x=0;x<=W;x+=6){ const y = sl(x); x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
-  g.lineWidth = .9; g.globalAlpha = .6;
-  g.beginPath(); for(let x=0;x<=W;x+=6){ const y = sl(x) - 5 - Math.sin(x*.07 + beachT*2)*1.5; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
-  g.globalAlpha = 1; g.shadowBlur = 0;
-  // tiki torches, palms, foliage and flowers
-  torch(206, H - 2, 34, 0); torch(W - 156, H - 2, 30, 2.4);
-  palm(W*.8, shore + 16, H*.36, -.12, 4.2, .55);
-  palm(56, H + 6, H*.9, .32, 0, 1);
-  palm(122, H + 8, H*.64, .12, 1.7, .8);
-  palm(W - 44, H + 6, H*.8, -.28, 3.1, .94);
-  const fs = Math.sin(beachT*1.1)*.06;
-  g.fillStyle = '#0f3a1f';
-  [[-1.25, 86, 15], [-.85, 96, 17], [-.45, 78, 14], [-.1, 60, 11]].forEach(([a, l, w], i) => leaf(-6, H + 6, l, a + fs*(1 + i*.3), w));
-  [[-1.9, 86, 15], [-2.3, 92, 16], [-2.7, 72, 13], [-3.05, 58, 11]].forEach(([a, l, w], i) => leaf(W + 6, H + 6, l, a - fs*(1 + i*.3), w));
-  hibiscus(40, H - 30, 8, beachT*.2, '#ff2f55');
-  hibiscus(70, H - 12, 6.5, 1 - beachT*.15, '#ff6fae');
-  hibiscus(W - 36, H - 26, 8, 2 + beachT*.18, '#ff4a3a');
-}
-
 let angL = 0, angR = 0, vuL = -20, vuR = -20;
 function drawTape(dt){
   g.fillStyle = C.screen; g.fillRect(0,0,W,H);
@@ -1101,7 +913,7 @@ function frame(now){
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
-  if(skin === 'dsp') drawDSP(); else if(skin === 'vfd') drawVFD(); else if(skin === 'neon') drawNeon(dt); else if(skin === 'beach') drawBeach(dt); else if(skin === 'tape') drawTape(dt); else drawLED();
+  if(skin === 'dsp') drawDSP(); else if(skin === 'vfd') drawVFD(); else if(skin === 'neon') drawNeon(dt); else if(skin === 'tape') drawTape(dt); else drawLED();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
