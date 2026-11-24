@@ -434,9 +434,13 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfd','vfdb','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
-let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s)); SKINS.forEach(s => { if(!ORDER.includes(s)) ORDER.push(s); });
+let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
+// an order nobody rearranged (the old default, VFD first) moves to the new default with VFD BEACH first
+const OLD_DEFAULT = ['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb')];
+if(ORDER.length && ORDER.join() === OLD_DEFAULT.slice(0, ORDER.length).join()) ORDER = [];
+SKINS.forEach(s => { if(!ORDER.includes(s)) ORDER.push(s); });
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
 let vol = store.get('vol', 28), att = false;
 let loud = store.get('loud', false), shuffle = store.get('shuffle', false), repeat = store.get('repeat', 'all');
