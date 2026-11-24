@@ -34,6 +34,7 @@
   --lit:#46e6ff; --lit2:#ff4f9a; --dimt:rgba(70,230,255,.16); --glow:rgba(70,230,255,.6); --screen:#020309;
 }
 :root[data-skin="vfd"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdb"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="neon"]{ --lit:#ff5fd2; --lit2:#3fe9ff; --dimt:rgba(255,95,210,.18); --glow:rgba(255,95,210,.55); --screen:#13041d; }
 :root[data-skin="tape"]{ --lit:#ffb13a; --lit2:#ff5c2b; --dimt:rgba(255,177,58,.16); --glow:rgba(255,160,40,.5); --screen:#150a02; }
 :root[data-skin="led"]{ --lit:#45ff76; --lit2:#ff3b3b; --dimt:rgba(69,255,118,.15); --glow:rgba(69,255,118,.45); --screen:#040706; }
@@ -74,7 +75,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfd"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -154,6 +155,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw{width:100%; height:22px; border-radius:4px; box-shadow:inset 0 1px 4px #000}
 .sw.dsp{background:linear-gradient(0deg,#25f0d8 0 30%,#2fb8ff 30% 55%,#7a5cff 55% 75%,#020309 75%)}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
+.sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
 .sw.neon{background:linear-gradient(180deg,#2a0838,#ff5fd2 60%,#ffcf5a 61%,#13041d 62%)}
 .sw.tape{background:radial-gradient(circle at 28% 50%,#ffb13a 0 5px,#150a02 6px),radial-gradient(circle at 72% 50%,#ffb13a 0 5px,#150a02 6px)}
 .sw.led{background:linear-gradient(90deg,#45ff76 0 55%,#ffe03a 55% 78%,#ff3b3b 78%)}
@@ -263,6 +265,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="chips" id="skinChips">
           <button class="chip" data-skin="dsp"><span class="sw dsp"></span>DSP<small>3Dスペアナ</small></button>
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
+          <button class="chip" data-skin="vfdb"><span class="sw vfdb"></span>VFD BEACH<small>蛍光管サンセット</small></button>
           <button class="chip" data-skin="neon"><span class="sw neon"></span>NEON<small>夕焼け</small></button>
           <button class="chip" data-skin="tape"><span class="sw tape"></span>TAPE<small>カセット</small></button>
           <button class="chip" data-skin="led"><span class="sw led"></span>LED<small>イルミ</small></button>
@@ -337,7 +340,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['dsp','vfd','neon','tape','led'], ILLUMS = ['blue','green','red','amber'];
+const SKINS = ['dsp','vfd','vfdb','neon','tape','led'], ILLUMS = ['blue','green','red','amber'];
 let skin = store.get('skin2','dsp'); if(!SKINS.includes(skin)) skin = 'dsp';
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
 let vol = store.get('vol', 28), att = false;
@@ -777,6 +780,108 @@ function drawVFD(){
   g.globalAlpha = 1;
 }
 
+/* VFD BEACH: a sunset beach with palms drawn on the fluorescent dot matrix (cyan + amber only);
+   the sun's reflection on the sea is the spectrum */
+const VB_C = 132, VB_R = 44;
+const vbLow = document.createElement('canvas'); vbLow.width = VB_C; vbLow.height = VB_R;
+const vbg = vbLow.getContext('2d', {willReadFrequently: true});
+const vbLit = document.createElement('canvas'), vbl = vbLit.getContext('2d');
+const vbDim = document.createElement('canvas'), vbd = vbDim.getContext('2d');
+const vbStars = Array.from({length:16}, (_, i) => [(i*37 + 11) % VB_C, (i*13 + 3) % 14, i*1.7]);
+let vbT = 0, vbKey = '', vbPulse = 0;
+function vbPalm(x, y, h, lean, ph, sc){
+  const sway = Math.sin(vbT*.55 + ph)*.05 + Math.sin(vbT*1.7 + ph*2)*.018 + .02;
+  const tx = x + (lean + sway)*h, ty = y - h, cx = x + lean*h*.15, cy = y - h*.55;
+  vbg.strokeStyle = '#0f0'; vbg.lineCap = 'round';
+  vbg.lineWidth = 2.2*sc; vbg.beginPath(); vbg.moveTo(x, y); vbg.quadraticCurveTo(cx, cy, tx, ty); vbg.stroke();
+  [-3.0,-2.55,-2.1,-1.6,-1.1,-.6,-.15].forEach((a0, k) => {
+    const L = h*(.5 + (k%2)*.08)*sc, flut = Math.sin(vbT*2.3 + k*1.1 + ph)*.08 + sway*1.6;
+    const dir = Math.cos(a0) >= 0 ? 1 : -1;
+    let fx = tx, fy = ty; const N = 7;
+    vbg.lineWidth = 1.3;
+    vbg.beginPath(); vbg.moveTo(fx, fy);
+    for(let i=1;i<=N;i++){
+      const t = i/N, a = a0 + flut*t + dir*t*t*1.3;
+      const nx = fx + Math.cos(a)*L/N, ny = fy + Math.sin(a)*L/N;
+      vbg.lineTo(nx, ny);
+      if(i % 2 === 0 && i < N){ const ll = 2.4*sc*(1 - t*.5); vbg.moveTo(nx, ny); vbg.lineTo(nx + Math.cos(a + dir*1.3)*ll, ny + Math.sin(a + dir*1.3)*ll + ll*.5); vbg.moveTo(nx, ny); }
+      fx = nx; fy = ny;
+    }
+    vbg.stroke();
+  });
+}
+function drawVFDBeach(dt){
+  vbT += dt;
+  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3;
+  vbPulse += (bass - vbPulse)*.15;
+  const cw = W/VB_C, ch = H/VB_R;
+  const key = W + 'x' + H + 'x' + DPR + C.dimt;
+  if(key !== vbKey){
+    vbKey = key;
+    [vbLit, vbDim].forEach(c => { c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); });
+    vbd.setTransform(DPR,0,0,DPR,0,0); vbd.clearRect(0,0,W,H); vbd.fillStyle = C.dimt;
+    for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++) vbd.fillRect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  // ---- scene at dot resolution: green = cyan tube, red = amber tube ----
+  const hz = 25, sx = 84;
+  vbg.fillStyle = '#000'; vbg.fillRect(0, 0, VB_C, VB_R);
+  vbg.fillStyle = '#0f0';
+  vbStars.forEach(([x, y, p]) => { if(Math.sin(vbT*1.3 + p) > .2) vbg.fillRect(x, y, 1, 1); });
+  // sun with retro stripes sliding down
+  const r = 12.5 + vbPulse*1.5;
+  vbg.save(); vbg.beginPath(); vbg.rect(0, 0, VB_C, hz); vbg.clip();
+  vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, hz - 1, r, 0, Math.PI*2); vbg.fill();
+  vbg.fillStyle = '#000';
+  for(let k=0;k<5;k++){ const y = hz - 2 - k*2.6 + ((vbT*1.4) % 2.6); if(y > hz - r*.75) vbg.fillRect(sx - r - 1, Math.round(y), r*2 + 2, 1); }
+  vbg.restore();
+  // gulls
+  vbg.fillStyle = '#f00';
+  [[0, 6, 0], [9, 9, 1.4]].forEach(([o, y0, p]) => {
+    const x = Math.round(((vbT*2.2 + o + 40) % (VB_C + 10)) - 5), y = y0 + Math.round(Math.sin(vbT*.8 + p)), up = Math.sin(vbT*5 + p) > 0;
+    vbg.fillRect(x - 2, y - (up ? 1 : 0), 1, 1); vbg.fillRect(x - 1, y, 1, 1); vbg.fillRect(x, y + 1, 1, 1); vbg.fillRect(x + 1, y, 1, 1); vbg.fillRect(x + 2, y - (up ? 1 : 0), 1, 1);
+  });
+  // horizon + island
+  vbg.fillStyle = '#0f0'; vbg.fillRect(0, hz, VB_C, 1);
+  vbg.fillRect(104, hz - 1, 16, 1); vbg.fillRect(108, hz - 2, 8, 1);
+  // sea: dashed waves rolling toward the shore
+  [2, 4, 7, 10, 14].forEach((dy, k) => {
+    const y = hz + dy; if(y >= VB_R) return;
+    for(let x=0;x<VB_C;x++) if(Math.sin(x*(.55 - k*.07) + vbT*(1.2 + k*.35) + k*2) > .45) vbg.fillRect(x, y, 1, 1);
+  });
+  // sun reflection = spectrum
+  vbg.fillStyle = '#f00';
+  for(let j=0;j<VB_R - hz - 1;j++){
+    const v = st.v[Math.max(0, 15 - j)], w = Math.round((2 + j*.5)*(.35 + v*1.4)), jx = Math.round(Math.sin(vbT*2.5 + j*1.9)*(1 + j*.08));
+    if(j % 2 === 0) vbg.fillRect(sx - (w >> 1) + jx, hz + 1 + j, w, 1);
+  }
+  // sand (dithered amber) + foam washing in and out
+  const wash = Math.sin(vbT*.6)*2;
+  const top = x => x < 54 ? VB_R - 8 + x*.13 - wash*.5 : x > 104 ? VB_R - 1 - (x - 104)*.22 - wash*.5 : VB_R + 2;
+  for(let x=0;x<VB_C;x++){
+    const t0 = Math.round(top(x));
+    for(let y=Math.max(t0, 0); y<VB_R; y++){ if((x + y) % 2 === 0){ vbg.fillStyle = '#f00'; vbg.fillRect(x, y, 1, 1); } }
+    if(t0 < VB_R && Math.sin(x*.7 - vbT*3) > -.2){ vbg.fillStyle = '#0f0'; vbg.fillRect(x, t0 - 1, 1, 1); }
+  }
+  // palms
+  vbPalm(12, VB_R + 2, 34, .3, 0, 1);
+  vbPalm(36, VB_R + 2, 22, .05, 1.7, .75);
+  vbPalm(122, VB_R + 2, 30, -.28, 3.1, .9);
+  // ---- light the tubes ----
+  const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
+  vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
+  const pc = new Path2D(), pa = new Path2D();
+  for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++){
+    const i = (y*VB_C + x)*4, rr = px[i], gg = px[i+1];
+    if(gg > 110) pc.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+    else if(rr > 110) pa.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  vbl.fillStyle = C.lit; vbl.fill(pc);
+  vbl.fillStyle = C.lit2; vbl.fill(pa);
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  g.drawImage(vbDim, 0, 0, W, H);
+  g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
+}
+
 const stars = Array.from({length:50}, () => [Math.random(), Math.random()*.5, Math.random()*6]);
 let gridOff = 0;
 function drawNeon(dt){
@@ -913,7 +1018,7 @@ function frame(now){
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
-  if(skin === 'dsp') drawDSP(); else if(skin === 'vfd') drawVFD(); else if(skin === 'neon') drawNeon(dt); else if(skin === 'tape') drawTape(dt); else drawLED();
+  if(skin === 'dsp') drawDSP(); else if(skin === 'vfd') drawVFD(); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'neon') drawNeon(dt); else if(skin === 'tape') drawTape(dt); else drawLED();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
