@@ -170,6 +170,21 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .x{width:40px; height:40px; border-radius:10px; border:1px solid var(--line); background:#1b1c22; color:var(--fg); font-size:18px}
 .pbody{padding:16px; display:flex; flex-direction:column; gap:22px}
 .pbody h3{margin:0 0 10px; font:700 12px var(--font-print); letter-spacing:.18em; color:var(--muted)}
+.ptop{position:sticky; top:0; z-index:2; background:var(--panel); border-bottom:1px solid var(--line)}
+.ptop .phead{position:static; border-bottom:0; padding-bottom:8px}
+.ptabs{display:flex; gap:6px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none}
+.ptabs button, .hnav button{flex:none; border:1px solid var(--line); background:#14151a; color:var(--muted); border-radius:999px; padding:7px 15px; font:700 12px var(--font-ui)}
+.ptabs button[aria-pressed="true"]{color:#06070a; background:var(--illum); border-color:transparent; box-shadow:0 0 12px var(--illumglow)}
+.hnav{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px}
+.hnav button{padding:6px 12px; font-size:11.5px}
+.hnav button[aria-pressed="true"]{color:var(--fg); border-color:var(--illum); background:#22242b}
+.hsteps{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:12px; font-size:13px; line-height:1.7; color:#c9cad2}
+.hsteps small{color:var(--muted); font-size:12px}
+.kb{display:inline-block; padding:1px 7px; border:1px solid var(--line); border-radius:5px; background:#0c0d11; color:var(--illum); font:700 11px var(--font-print); letter-spacing:.06em; text-shadow:0 0 6px var(--illumglow)}
+.htab{width:100%; border-collapse:collapse; font-size:12.5px; color:#c9cad2}
+.htab th, .htab td{border-bottom:1px solid var(--line); padding:8px 6px; text-align:left; vertical-align:top; font-weight:500}
+.htab th{color:var(--muted); font-size:11px}
+.htab td:first-child{color:var(--illum); font:700 14px var(--font-seg); width:22px}
 .pbody p{margin:0; font-size:13px; line-height:1.75; color:#c9cad2}
 .chips{display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px}
 .chip{border:1px solid var(--line); background:#0c0d11; color:var(--muted); border-radius:10px; padding:8px; display:flex; flex-direction:column; align-items:center; gap:6px; font:700 11px var(--font-print); letter-spacing:.12em}
@@ -323,9 +338,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 
 <div class="sheet" id="sheet" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+    <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
+    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">見た目</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
+    </div>
     <div class="pbody">
-      <section>
+      <section data-tab="look">
         <h3>ディスプレイ <button class="mini" id="orderReset" hidden>元の順</button><button class="mini" id="orderBtn" aria-pressed="false">並び替え</button></h3>
         <div class="chips" id="skinChips">
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
@@ -348,7 +366,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdshuffle"><span class="sw shuffle"></span>VFD<small>SHUFFLE ランダム</small></button>
         </div>
       </section>
-      <section>
+      <section data-tab="look">
         <h3>スペアナ</h3>
         <div class="chips" id="specChips">
           <button class="chip" data-spec="bar"><span class="sw sp-bar"></span>BAR<small>バー</small></button>
@@ -359,7 +377,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-spec="fall"><span class="sw sp-fall"></span>WATERFALL<small>滝</small></button>
         </div>
       </section>
-      <section>
+      <section data-tab="look">
         <h3>キー照明</h3>
         <div class="chips" id="illChips">
           <button class="chip" data-illum="blue"><span class="dot" style="background:#4aa8ff;box-shadow:0 0 10px #4aa8ff"></span>BLUE</button>
@@ -373,7 +391,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
         </div>
       </section>
-      <section id="listSec">
+      <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
         <div class="row">
           <label class="pbtn pri" for="file" style="cursor:pointer">曲を追加</label>
@@ -382,7 +400,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <p id="empty" style="margin-top:10px">まだ曲が入っていません。「曲を追加」か、デッキ左上の「▲ DISC LOAD」でスマホの中の曲（MP3・AAC・WAV など）を選んでね。アプリとして使うと、入れた曲は次に開いたときも残ります。</p>
         <ul id="plist"></ul>
       </section>
-      <section>
+      <section data-tab="radio">
         <h3>ラジオ プリセット</h3>
         <ol id="presetList"></ol>
         <div class="rsearch"><input id="rq" type="search" placeholder="ジャンル・局名で検索（hiphop, soul, jazz…）" enterkeyhint="search"><button class="pbtn" id="rqBtn">検索</button></div>
@@ -393,7 +411,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </details>
         <p class="rnote">ラジオを聴きながら 1〜6 を長押しすると、今の局をそのボタンに登録できます。局によってはスペアナが音に反応せず、待機中の動きになります。</p>
       </section>
-      <section>
+      <section data-tab="app">
         <h3>アプリとして使う</h3>
         <div class="row" id="installRow" hidden><button class="pbtn pri" id="installBtn">ホーム画面にインストール</button></div>
         <p id="installState"></p>
@@ -403,30 +421,78 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <li>ホーム画面のアイコンから開くと、全画面・横向きで起動します</li>
         </ol>
       </section>
-      <section>
-        <h3>ボタンの説明</h3>
-        <dl class="help">
-          <dt>▲ DISC LOAD</dt><dd>スマホの中の曲を読み込む（まとめて選択OK）</dd>
-          <dt>SETUP ⚙ / FNC</dt><dd>この設定画面を開く</dd>
-          <dt>DISP</dt><dd>ディスプレイの柄を切り替え（画面タップでも切り替わる）</dd>
-          <dt>SRC</dt><dd>ソース切り替え（DISC → RADIO → DEMO）</dd>
-          <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
-          <dt>SEEK ∧∨</dt><dd>10秒送り／戻し</dd>
-          <dt>ATT</dt><dd>アッテネーター。一時的に音量をぐっと下げる</dd>
-          <dt>LOCK</dt><dd>キーロック（誤操作防止）。押すと、ボタンも画面タップも効かなくなる。解除は LOCK を約1.5秒長押し</dd>
-          <dt>ILLUMI</dt><dd>キー照明の色を切り替え（8色＋RANDOM。RANDOM は数秒ごとに色がゆっくり変わる）</dd>
-          <dt>LIST</dt><dd>プレイリストを開く</dd>
-          <dt>1 SCROLL</dt><dd>曲名のスクロール表示 ON/OFF</dd>
-          <dt>2 SCN</dt><dd>イントロスキャン。各曲の頭10秒ずつ再生</dd>
-          <dt>3 RDM</dt><dd>ランダム再生</dd>
-          <dt>4 REP</dt><dd>リピート（全曲 → 1曲 → オフ）</dd>
-          <dt>5 LOUD</dt><dd>ラウドネス。低音と高音を持ち上げる</dd>
-          <dt>6 DEMO</dt><dd>内蔵のデモ曲を再生／停止</dd>
-          <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生/一時停止・次の曲</dd>
-          <dt>RADIO 1〜6</dt><dd>ラジオ中は 1〜6 がプリセット局。SEEK と ◀◀ ▶▶ でも局を切り替え。聴いている局は 1〜6 を長押しでそのボタンに登録。局の検索・登録は ⚙ の「ラジオ プリセット」から</dd>
-        </dl>
+      <section data-tab="help">
+        <nav class="hnav" id="hnav">
+          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">見た目</button><button data-h="lock" aria-pressed="false">ロック</button>
+        </nav>
+        <div class="hpage" data-h="start">
+          <h3>はじめに</h3>
+          <ol class="hsteps">
+            <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません</small></li>
+            <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">6</b> でデモ曲が鳴ります</small></li>
+            <li><b class="kb">DISP</b> か画面タップで、ディスプレイの柄を切り替え</li>
+            <li><b class="kb">SRC</b> で <b>DISC → RADIO → DEMO</b> を切り替え</li>
+          </ol>
+        </div>
+        <div class="hpage" data-h="play" hidden>
+          <h3>再生</h3>
+          <dl class="help">
+            <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
+            <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
+            <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
+            <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
+            <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）</dd>
+            <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
+          </dl>
+        </div>
+        <div class="hpage" data-h="src" hidden>
+          <h3>SRC・ラジオ</h3>
+          <dl class="help">
+            <dt>DISC</dt><dd>スマホから入れた曲</dd>
+            <dt>RADIO</dt><dd>ネットラジオ。1〜6 のボタンが放送局になる</dd>
+            <dt>DEMO</dt><dd>内蔵のデモ曲</dd>
+          </dl>
+          <h3 style="margin-top:16px">局を入れ替えるには</h3>
+          <ol class="hsteps">
+            <li>⚙ の「ラジオ」タブで検索 → ▶ で試聴 → 1〜6 を押して登録</li>
+            <li>聴いている局は、1〜6 を<b>長押し</b>でそのボタンに登録</li>
+            <li>配信 URL がわかる局は「URLで登録する」から</li>
+          </ol>
+        </div>
+        <div class="hpage" data-h="keys" hidden>
+          <h3>1〜6 ボタン</h3>
+          <table class="htab">
+            <tr><th></th><th>DISC・DEMO 中</th></tr>
+            <tr><td>1</td><td>SCROLL　曲名のスクロール表示 ON/OFF</td></tr>
+            <tr><td>2</td><td>SCN　イントロスキャン（各曲の頭10秒ずつ）</td></tr>
+            <tr><td>3</td><td>RDM　ランダム再生</td></tr>
+            <tr><td>4</td><td>REP　リピート（全曲 → 1曲 → オフ）</td></tr>
+            <tr><td>5</td><td>LOUD　ラウドネス（低音と高音を持ち上げる）</td></tr>
+            <tr><td>6</td><td>DEMO　デモ曲の再生／停止</td></tr>
+          </table>
+          <p style="margin-top:12px"><b>RADIO 中</b>は 1〜6 がプリセット局になり、ボタンの上の文字も局名に変わります。長押しで今の局を登録できます。</p>
+        </div>
+        <div class="hpage" data-h="look" hidden>
+          <h3>見た目</h3>
+          <dl class="help">
+            <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「見た目」で並べた順）</dd>
+            <dt>ILLUMI</dt><dd>キー照明の色（8色＋RANDOM）</dd>
+            <dt>並び替え</dt><dd>⚙「見た目」→ ディスプレイ右上の「並び替え」。一番上の柄でアプリが起動します</dd>
+            <dt>スペアナ</dt><dd>⚙「見た目」で6種類から選べます</dd>
+            <dt>VFD BEACH</dt><dd>時刻に合わせて朝日・昼・夕日・月夜に変わります</dd>
+            <dt>SHUFFLE</dt><dd>ロゴの画面をランダムに切り替え続けます</dd>
+          </dl>
+        </div>
+        <div class="hpage" data-h="lock" hidden>
+          <h3>キーロック</h3>
+          <ol class="hsteps">
+            <li>左下の <b class="kb">LOCK</b> を押すとロック。ボタンも画面タップも効かなくなります</li>
+            <li>解除は <b class="kb">LOCK</b> を<b>約1.5秒長押し</b>（光のバーがいっぱいになったら解除）</li>
+            <li>ロック中も、スマホのロック画面やイヤホンのボタンでは操作できます</li>
+          </ol>
+        </div>
       </section>
-      <section>
+      <section data-tab="app">
         <h3>メモ</h3>
         <p>曲はこの端末の中だけで再生され、どこにも送信されません。iPhone では画面をロックすると再生が止まることがあります。再生中は画面が消えにくくなります。</p>
       </section>
@@ -1058,7 +1124,20 @@ seek.addEventListener('change', () => { if(mode === 'file' && audio.duration) au
 
 /* ⚙ sheet */
 const sheet = $('#sheet');
-function openSheet(focusList){ sheet.hidden = false; if(focusList) $('#listSec').scrollIntoView({block:'start'}); $('#closeSheet').focus(); }
+function openSheet(focusList){ sheet.hidden = false; if(focusList) showTab('music'); $('#closeSheet').focus(); }
+// SETUP is split into tabs; the how-to tab has its own small pages
+function showTab(t){
+  store.set('ptab', t);
+  document.querySelectorAll('#ptabs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.tab === t));
+  document.querySelectorAll('.pbody > section[data-tab]').forEach(s => s.hidden = s.dataset.tab !== t);
+  $('.panel').scrollTop = 0;
+}
+document.querySelectorAll('#ptabs button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+document.querySelectorAll('#hnav button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#hnav button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.hpage').forEach(p => p.hidden = p.dataset.h !== b.dataset.h);
+}));
+showTab(store.get('ptab', 'look'));
 function closeSheet(){ sheet.hidden = true; }
 on('#setupBar', () => openSheet()); on('#fncBtn', () => openSheet()); on('#listBtn', () => openSheet(true));
 on('#closeSheet', closeSheet);
