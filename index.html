@@ -35,6 +35,7 @@
 }
 :root[data-skin="vfd"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdb"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdsh"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfddx"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdasahi"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdfrisco"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
@@ -97,7 +98,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdsh"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -190,6 +191,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw{width:100%; height:22px; border-radius:4px; box-shadow:inset 0 1px 4px #000}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
+.sw.vfdsh{background:linear-gradient(90deg,transparent 30%,#ffa24a 30% 33%,transparent 33% 70%,#5ff6e6 70% 74%,transparent 74%) 0 0/100% 70% no-repeat,radial-gradient(circle at 31% 40%,#ffa24a 0 3px,transparent 4px),repeating-linear-gradient(90deg,rgba(95,246,230,.5) 0 2px,transparent 2px 6px) 0 100%/100% 25% no-repeat,#021311}
 .sw.vfddx{background:linear-gradient(180deg,transparent 30%,rgba(255,162,74,.9) 30% 36%,transparent 36% 50%,rgba(255,162,74,.9) 50% 56%,transparent 56%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 40% no-repeat,#021311}
 .sw.vfdasahi{background:radial-gradient(ellipse 45% 22% at 50% 45%,rgba(255,162,74,.95) 0 60%,transparent 64%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 35% no-repeat,#021311}
 .sw.logo{background:linear-gradient(180deg,transparent 22%,var(--c,#ffa24a) 22% 34%,transparent 34% 44%,var(--c,#ffa24a) 44% 58%,transparent 58%) 15% 0/70% 100% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
@@ -328,6 +330,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="chips" id="skinChips">
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
           <button class="chip" data-skin="vfdb"><span class="sw vfdb"></span>VFD BEACH<small>蛍光管サンセット</small></button>
+          <button class="chip" data-skin="vfdsh"><span class="sw vfdsh"></span>VFD SHANGHAI<small>蛍光管上海</small></button>
           <button class="chip" data-skin="vfddx"><span class="sw vfddx"></span>VFD<small>DX Record</small></button>
           <button class="chip" data-skin="vfdasahi"><span class="sw vfdasahi"></span>VFD<small>朝日レコード</small></button>
           <button class="chip" data-skin="vfdfrisco"><span class="sw logo"></span>VFD<small>喫茶フリスコ</small></button>
@@ -443,12 +446,13 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfdsh','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdsh:'VFD SHANGHAI', vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // an order nobody rearranged (the old default, VFD first) moves to the new default with VFD BEACH first
-const OLD_DEFAULT = ['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb')];
-if(ORDER.length && ORDER.join() === OLD_DEFAULT.slice(0, ORDER.length).join()) ORDER = [];
+const OLD_DEFAULT = ['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb' && s !== 'vfdsh')];
+const PREV_DEFAULT = SKINS.filter(s => s !== 'vfdsh');   // default before SHANGHAI was added
+if(ORDER.length && (ORDER.join() === OLD_DEFAULT.slice(0, ORDER.length).join() || ORDER.join() === PREV_DEFAULT.slice(0, ORDER.length).join())) ORDER = [];
 SKINS.forEach(s => { if(!ORDER.includes(s)) ORDER.push(s); });
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
 let vol = store.get('vol', 28), att = false;
@@ -1568,13 +1572,110 @@ function drawShuffle(dt){
   drawSpectrumFront(st);
 }
 
+/* VFD SHANGHAI: the Bund at night on the dot matrix: Pudong skyline (Pearl Tower, Jin Mao, SWFC, Shanghai Tower),
+   twinkling windows, neon signs flickering in the drizzle, ferries and traffic trails; the river glitter is the spectrum. */
+const shRain = Array.from({length:26}, (_, i) => [(i*47 + 13) % VB_C, (i*17) % 44, .6 + (i % 5)*.12]);
+const shBlocks = [[2,14,24,1],[16,8,21,2],[24,10,26,3],[50,9,22,4],[59,7,19,5],[100,9,23,6],[108,12,25,7],[119,11,21,8]];   // x, w, top, seed
+let shT = 0, shPulse = 0;
+function shHash(a, b){ const s = Math.sin(a*127.1 + b*311.7)*43758.5453; return s - Math.floor(s); }
+function shNeonText(txt, x, y, size, on){ if(!on) return; vbg.font = `bold ${size}px "Hiragino Sans","Noto Sans JP",sans-serif`; vbg.textAlign = 'center'; vbg.textBaseline = 'top'; vbg.fillText(txt, x, y); }
+function drawVFDShanghai(dt){
+  shT += dt;
+  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3;
+  shPulse += (bass - shPulse)*.2;
+  const cw = W/VB_C, ch = H/VB_R;
+  const key = W + 'x' + H + 'x' + DPR + C.dimt;
+  if(key !== vbKey){
+    vbKey = key;
+    [vbLit, vbDim].forEach(c => { c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); });
+    vbd.setTransform(DPR,0,0,DPR,0,0); vbd.clearRect(0,0,W,H); vbd.fillStyle = C.dimt;
+    for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++) vbd.fillRect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  const G = '#0f0', A = '#f00', hz = 30;            // G = cyan tube, A = amber tube
+  const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); };
+  vbg.fillStyle = '#000'; vbg.fillRect(0, 0, VB_C, VB_R);
+  // a few stars through the haze
+  [[8,2],[30,4],[61,1],[77,5],[118,3],[126,8]].forEach(([x, y], i) => { if(Math.sin(shT*1.1 + i*2) > .3) dot(x, y, G); });
+  // searchlight sweeping from the Shanghai Tower top
+  const ang = -Math.PI/2 + Math.sin(shT*.35)*.9;
+  for(let r=4;r<34;r+=2) dot(96 + Math.cos(ang)*r, 3 + Math.sin(ang)*r*.55 + 1, (r/2) % 2 ? A : '#000');
+  // background blocks with twinkling windows
+  shBlocks.forEach(([x0, w, top, sd]) => {
+    vbg.fillStyle = G;
+    for(let y=top;y<hz;y++){ dot(x0, y, G); dot(x0 + w - 1, y, G); }
+    for(let x=x0;x<x0+w;x++) dot(x, top, G);
+    for(let y=top+2;y<hz-1;y+=2) for(let x=x0+2;x<x0+w-2;x+=2) if(shHash(x + sd, y + Math.floor(shT*.4 + shHash(x, y)*6)) > .55) dot(x, y, shHash(x, y + sd) > .8 ? A : G);
+  });
+  // Jin Mao: stepped pagoda in amber
+  [[64,72,hz-1,18],[65,71,18,13],[66,70,13,9],[67,69,9,6]].forEach(([a, b, y1, y0]) => { for(let y=y0;y<=y1;y++){ dot(a, y, A); dot(b, y, A); } for(let x=a;x<=b;x++) dot(x, y0, A); });
+  dot(68, 4, A); dot(68, 5, A);
+  // SWFC: the "bottle opener" with its trapezoid hole
+  for(let y=4;y<hz;y++){ const half = 2 + (y - 4)*.13; dot(82 - half, y, G); dot(82 + half, y, G); }
+  for(let x=79;x<=85;x++) dot(x, 4, G);
+  for(let y=6;y<=8;y++){ dot(80, y, A); dot(84, y, A); } for(let x=80;x<=84;x++){ dot(x, 6, A); dot(x, 9, A); }
+  // Shanghai Tower: tallest, twisting, lights spiralling up
+  for(let y=0;y<hz;y++){
+    const half = 1.4 + (y/hz)*3.2, tw = Math.sin(y*.32 + shT*.25)*.6;
+    dot(96 - half + tw, y + 1, G); dot(96 + half + tw, y + 1, G);
+    if((y + Math.floor(shT*6)) % 9 === 0) dot(96 + tw, y + 1, A);
+  }
+  // Oriental Pearl Tower: legs, column and glowing spheres that swell with the bass
+  for(let y=4;y<hz;y++) dot(40, y, A);
+  for(let y=22;y<hz;y++){ const s = (y - 22)*.45; dot(40 - 1 - s, y, A); dot(40 + 1 + s, y, A); }
+  const sph = (cy, r, fill) => {
+    for(let a=0;a<Math.PI*2;a+=.18) dot(40 + Math.cos(a)*r, cy + Math.sin(a)*r, A);
+    if(fill){ for(let y=-r+1;y<r;y++) for(let x=-r+1;x<r;x++) if(x*x + y*y < (r-1)*(r-1) && (x + y + Math.floor(shT*3)) % 2 === 0) dot(40 + x, cy + y, A); }
+  };
+  sph(20, 4.2 + shPulse*1.2, shPulse > .35); sph(11, 2.6 + shPulse*.6, true); sph(6.5, 1.2, false);
+  for(let y=0;y<4;y++) dot(40, y, (y + Math.floor(shT*4)) % 3 ? A : '#000');
+  // the river: glitter streaks under the towers are the spectrum
+  dot(0, hz, '#000');
+  for(let x=0;x<VB_C;x+=1) if(Math.sin(x*.9 + shT*1.5) > .7) dot(x, hz, G);
+  for(let i=0;i<16;i++){
+    const x = 4 + i*8, v = st.v[i], len = Math.round(1 + v*7);
+    const col = (x > 34 && x < 46) || (x > 62 && x < 74) ? A : G;
+    for(let k=0;k<len;k++){ if((k + Math.floor(shT*5 + i)) % 2) continue; const jx = Math.round(Math.sin(shT*3 + k + i)*1.2); dot(x + jx, hz + 1 + k, col); dot(x + jx + 1, hz + 1 + k, col); }
+  }
+  // ferries gliding across with their deck lights
+  [[0, 34, .9, A], [70, 36, -.6, G]].forEach(([o, y, sp, c]) => {
+    const x = ((o + shT*sp*6) % (VB_C + 20) + VB_C + 20) % (VB_C + 20) - 10;
+    for(let i=0;i<7;i++) if(i % 2 === 0) dot(x + i, y, c); dot(x + 2, y - 1, c); dot(x + 4, y - 1, c);
+  });
+  // the Bund promenade: railing and traffic trails (tail lights one way, headlights the other)
+  for(let x=0;x<VB_C;x+=2) dot(x, 39, G);
+  for(let i=0;i<9;i++){ const x = ((i*17 + shT*14) % (VB_C + 8)) - 4; dot(x, 41, A); dot(x - 1, 41, A); }
+  for(let i=0;i<7;i++){ const x = VB_C - (((i*23 + shT*11) % (VB_C + 8)) - 4); dot(x, 42, G); dot(x + 1, 42, G); }
+  // neon signs on Nanjing Road, flickering like old tubes
+  const flick = k => !(Math.sin(shT*23 + k*7) > .96 || (Math.sin(shT*.7 + k) > .985));
+  vbg.fillStyle = A; shNeonText('上', 6, 1, 10, flick(1)); shNeonText('海', 6, 11, 10, flick(2));
+  for(let y=0;y<21;y++) if(y % 2 === 0){ dot(0, y, A); dot(12, y, A); }
+  vbg.fillStyle = G; shNeonText('夜', 125, 2, 10, flick(3)); shNeonText('景', 125, 12, 10, flick(4));
+  if(Math.sin(shT*2.1) > -.6){ for(let x=116;x<132;x+=2) dot(x, 23, G); }
+  // drizzle in front of the neon
+  shRain.forEach(([x0, y0, sp]) => { const y = (y0 + shT*sp*22) % 44, x = (x0 - shT*sp*4 + VB_C*4) % VB_C; if(y < 38) dot(x, y, G); });
+  // ---- light the tubes ----
+  const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
+  vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
+  const pc = new Path2D(), pa = new Path2D();
+  for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++){
+    const i = (y*VB_C + x)*4, rr = px[i], gg = px[i+1];
+    if(gg > 110) pc.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+    else if(rr > 110) pa.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  vbl.fillStyle = C.lit; vbl.fill(pc);
+  vbl.fillStyle = C.lit2; vbl.fill(pa);
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  g.drawImage(vbDim, 0, 0, W, H);
+  g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
+}
+
 /* ---------------- loop ---------------- */
 let last = performance.now();
 function frame(now){
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
-  if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD();
+  if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdsh') drawVFDShanghai(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'radio'){ cur = radioEl().currentTime; }
