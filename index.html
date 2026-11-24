@@ -173,6 +173,12 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .chips.reorder .chip .mv{display:flex}
 .chip .mv i{font-style:normal; font-size:12px; padding:3px 10px; border:1px solid var(--line); border-radius:6px; color:var(--fg); background:#15171d}
 .sw.shuffle{background:linear-gradient(90deg,#ff3d8b 0 20%,#ffa21f 20% 40%,#ffd21a 40% 60%,#2fd06a 60% 80%,#4fb6e0 80%) 15% 22%/70% 36% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
+.sw.sp-bar{background:repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 7px),linear-gradient(0deg,#5ff6e6 0 45%,#ffa24a 45% 55%,#021311 55%)}
+.sw.sp-center{background:repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 7px),linear-gradient(180deg,#021311 22%,#5ff6e6 22% 78%,#021311 78%)}
+.sw.sp-peak{background:repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 7px),linear-gradient(180deg,#021311 30%,#ffa24a 30% 42%,#021311 42% 70%,rgba(95,246,230,.5) 70% 80%,#021311 80%)}
+.sw.sp-meter{background:linear-gradient(90deg,transparent 78%,#021311 78%),linear-gradient(180deg,#021311 15%,#5ff6e6 15% 42%,#021311 42% 58%,#5ff6e6 58% 85%,#021311 85%)}
+.sw.sp-scope{background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 22%27%3E%3Cpath d=%27M0 11 Q12 0 25 11 T50 11 T75 11 T100 11%27 fill=%27none%27 stroke=%27%235ff6e6%27 stroke-width=%272.5%27/%3E%3C/svg%3E") center/100% 100% no-repeat,#021311}
+.sw.sp-fall{background:repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 7px),linear-gradient(180deg,#5ff6e6,rgba(95,246,230,.15) 80%,#021311)}
 .sw{width:100%; height:22px; border-radius:4px; box-shadow:inset 0 1px 4px #000}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
@@ -305,6 +311,17 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdnote"><span class="sw logo"></span>VFD<small>Note</small></button>
           <button class="chip" data-skin="vfdtower"><span class="sw logo"></span>VFD<small>TOWER RECORDS</small></button>
           <button class="chip" data-skin="vfdshuffle"><span class="sw shuffle"></span>VFD<small>SHUFFLE ランダム</small></button>
+        </div>
+      </section>
+      <section>
+        <h3>スペアナ</h3>
+        <div class="chips" id="specChips">
+          <button class="chip" data-spec="bar"><span class="sw sp-bar"></span>BAR<small>バー</small></button>
+          <button class="chip" data-spec="center"><span class="sw sp-center"></span>CENTER<small>センター対称</small></button>
+          <button class="chip" data-spec="peak"><span class="sw sp-peak"></span>PEAK<small>ピーク点</small></button>
+          <button class="chip" data-spec="meter"><span class="sw sp-meter"></span>L/R METER<small>レベルメーター</small></button>
+          <button class="chip" data-spec="scope"><span class="sw sp-scope"></span>SCOPE<small>オシロスコープ</small></button>
+          <button class="chip" data-spec="fall"><span class="sw sp-fall"></span>WATERFALL<small>滝</small></button>
         </div>
       </section>
       <section>
@@ -918,25 +935,150 @@ function levels(){
 function rr(x, y, w, h, r){ g.beginPath(); if(g.roundRect) g.roundRect(x, y, w, h, r); else g.rect(x, y, w, h); }
 
 /* ---------------- skins ---------------- */
-function drawVFD(){
-  g.fillStyle = C.screen; g.fillRect(0,0,W,H);
-  const n = 28, segs = 13, top = 6, bot = 18, pxx = 16;
-  const st = bands(n);
-  const cw = (W - pxx*2)/n, ch = (H - top - bot)/segs;
-  g.fillStyle = C.dimt;
-  for(let i=0;i<n;i++) for(let s=0;s<segs;s++) g.fillRect(pxx + i*cw + 2, H - bot - (s+1)*ch + 1, cw - 4, ch - 3);
-  g.shadowBlur = 9; g.shadowColor = C.lit;
-  for(let i=0;i<n;i++){
-    const lv = Math.round(st.v[i]*segs);
-    for(let s=0;s<lv;s++){ g.fillStyle = s >= segs-3 ? C.lit2 : C.lit; g.fillRect(pxx + i*cw + 2, H - bot - (s+1)*ch + 1, cw - 4, ch - 3); }
-    const ps = Math.min(segs-1, Math.round(st.p[i]*segs));
-    if(ps > lv){ g.fillStyle = C.lit2; g.fillRect(pxx + i*cw + 2, H - bot - (ps+1)*ch + 1, cw - 4, ch - 3); }
-  }
-  g.shadowBlur = 0;
+/* ---------------- spectrum styles: all drawn as VFD dot-matrix cells ---------------- */
+const SPECS = ['bar','center','peak','meter','scope','fall'];
+const SPEC_NAME = {bar:'BAR', center:'CENTER', peak:'PEAK', meter:'L/R METER', scope:'SCOPE', fall:'WATERFALL'};
+let spec = store.get('spec','bar'); if(!SPECS.includes(spec)) spec = 'bar';
+function setSpec(s, announce){
+  spec = s; store.set('spec', s);
+  document.querySelectorAll('#specChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.spec === s));
+  if(announce) flash('SPECTRUM  ' + SPEC_NAME[s], 900);
+}
+document.querySelectorAll('#specChips .chip').forEach(b => b.addEventListener('click', () => setSpec(b.dataset.spec, true)));
+
+const SPT = 6, SPB = 18, SPX = 16;                       // top / bottom / side margins of the matrix
+function freqLabels(){
   g.font = '10px "Share Tech Mono", monospace'; g.fillStyle = C.lit; g.globalAlpha = .55; g.textAlign = 'center';
-  [[63,'63'],[250,'250'],[1000,'1k'],[4000,'4k'],[15000,'15k']].forEach(([f,l]) => { const x = pxx + (Math.log(f/40)/Math.log(400))*(W-pxx*2); g.fillText(l, x, H-5); });
+  [[63,'63'],[250,'250'],[1000,'1k'],[4000,'4k'],[15000,'15k']].forEach(([f,l]) => { const x = SPX + (Math.log(f/40)/Math.log(400))*(W-SPX*2); g.fillText(l, x, H-5); });
   g.globalAlpha = 1;
 }
+// unlit grid: solo screens show it fully, logo screens keep it faint so the logo shows through
+function dimGrid(cols, rows, x0, y0, cw, ch, solo){
+  g.fillStyle = C.dimt; g.globalAlpha = solo ? 1 : .5;
+  for(let i=0;i<cols;i++) for(let s=0;s<rows;s++) g.fillRect(x0 + i*cw + 1, y0 + s*ch + 1, cw - 2, ch - 2);
+  g.globalAlpha = 1;
+}
+const litOn = (solo, col) => { g.globalAlpha = solo ? 1 : .9; g.shadowBlur = 9; g.shadowColor = col || C.lit; };
+const litOff = () => { g.shadowBlur = 0; g.globalAlpha = 1; };
+
+// 1. BAR: classic bars with peak caps
+function specBar(solo){
+  const n = 28, segs = 13, st = bands(n);
+  const cw = (W - SPX*2)/n, ch = (H - SPT - SPB)/segs, y0 = SPT;
+  g.fillStyle = C.dimt; g.globalAlpha = solo ? 1 : .5;
+  for(let i=0;i<n;i++) for(let s=0;s<segs;s++) g.fillRect(SPX + i*cw + 2, H - SPB - (s+1)*ch + 1, cw - 4, ch - 3);
+  litOn(solo);
+  for(let i=0;i<n;i++){
+    const lv = Math.round(st.v[i]*segs);
+    for(let s=0;s<lv;s++){ g.fillStyle = solo && s >= segs-3 ? C.lit2 : C.lit; g.fillRect(SPX + i*cw + 2, H - SPB - (s+1)*ch + 1, cw - 4, ch - 3); }
+    const ps = Math.min(segs-1, Math.round(st.p[i]*segs));
+    if(ps > lv){ g.fillStyle = solo ? C.lit2 : '#e8fffb'; g.fillRect(SPX + i*cw + 2, H - SPB - (ps+1)*ch + 1, cw - 4, ch - 3); }
+  }
+  litOff(); freqLabels();
+}
+// 2. CENTER: lows in the middle, spreading out to both sides and up/down from the center line
+function specCenter(solo){
+  const n = 30, half = 7, st = bands(n/2);
+  const cw = (W - SPX*2)/n, ch = (H - SPT - SPB)/(half*2), mid = SPT + half*ch;
+  dimGrid(n, half*2, SPX, SPT, cw, ch, solo);
+  litOn(solo);
+  for(let i=0;i<n;i++){
+    const k = Math.floor(Math.abs(i - (n-1)/2)), lv = Math.round(st.v[k]*half), pk = Math.min(half-1, Math.round(st.p[k]*half));
+    for(let s=0;s<lv;s++){
+      g.fillStyle = s >= half-2 ? C.lit2 : C.lit;
+      g.fillRect(SPX + i*cw + 1, mid - (s+1)*ch + 1, cw - 2, ch - 2); g.fillRect(SPX + i*cw + 1, mid + s*ch + 1, cw - 2, ch - 2);
+    }
+    if(pk >= lv && pk > 0){ g.fillStyle = solo ? C.lit2 : '#e8fffb'; g.fillRect(SPX + i*cw + 1, mid - (pk+1)*ch + 1, cw - 2, ch - 2); g.fillRect(SPX + i*cw + 1, mid + pk*ch + 1, cw - 2, ch - 2); }
+  }
+  litOff();
+}
+// 3. PEAK: only the falling peak dots, with a faint dot at the current level
+function specPeak(solo){
+  const n = 40, segs = 18, st = bands(n);
+  const cw = (W - SPX*2)/n, ch = (H - SPT - SPB)/segs;
+  dimGrid(n, segs, SPX, SPT, cw, ch, solo);
+  litOn(solo, C.lit2);
+  for(let i=0;i<n;i++){
+    const lv = Math.min(segs-1, Math.round(st.v[i]*(segs-1))), pk = Math.min(segs-1, Math.round(st.p[i]*(segs-1)));
+    g.fillStyle = C.lit; g.globalAlpha = (solo ? 1 : .9)*.55; g.fillRect(SPX + i*cw + 1, H - SPB - (lv+1)*ch + 1, cw - 2, ch - 2);
+    g.globalAlpha = solo ? 1 : .9; g.fillStyle = solo ? C.lit2 : '#e8fffb'; g.fillRect(SPX + i*cw + 1, H - SPB - (pk+1)*ch + 1, cw - 2, ch - 2);
+  }
+  litOff(); freqLabels();
+}
+// 4. L/R METER: two long level bars with peak hold, like a cassette deck
+const meterPk = {L: -60, R: -60, tL: 0, tR: 0};
+function specMeter(solo){
+  levels();
+  const segs = 44, x0 = SPX + 14, w = W - x0 - SPX, cw = w/segs, gap = 14;
+  const bh = (H - SPT - SPB - gap)/2, rows = 3, rh = bh/rows;
+  const pos = db => Math.max(0, Math.min(1, (db + 42)/45));   // -42 dB … +3 dB
+  [['L', levL, 0], ['R', levR, 1]].forEach(([chn, db, k]) => {
+    const y0 = SPT + k*(bh + gap);
+    if(db > meterPk[chn]){ meterPk[chn] = db; meterPk['t'+chn] = T; } else if(T - meterPk['t'+chn] > .8) meterPk[chn] -= .35;
+    dimGrid(segs, rows, x0, y0, cw, rh, solo);
+    const lit = Math.round(pos(db)*segs), pk = Math.min(segs-1, Math.round(pos(meterPk[chn])*segs));
+    litOn(solo);
+    for(let i=0;i<lit;i++){ g.fillStyle = i >= segs*42/45 ? C.lit2 : C.lit; for(let r=0;r<rows;r++) g.fillRect(x0 + i*cw + 1, y0 + r*rh + 1, cw - 2, rh - 2); }
+    g.fillStyle = solo ? C.lit2 : '#e8fffb'; for(let r=0;r<rows;r++) g.fillRect(x0 + pk*cw + 1, y0 + r*rh + 1, cw - 2, rh - 2);
+    litOff();
+    g.font = '12px "Share Tech Mono", monospace'; g.fillStyle = C.lit; g.textAlign = 'left'; g.globalAlpha = .8; g.fillText(chn, SPX - 2, y0 + bh/2 + 4); g.globalAlpha = 1;
+  });
+  g.font = '10px "Share Tech Mono", monospace'; g.fillStyle = C.lit; g.globalAlpha = .55; g.textAlign = 'center';
+  [-40,-20,-10,-5,0,3].forEach(d => g.fillText(d > 0 ? '+'+d : String(d), x0 + pos(d)*w, H-5));
+  g.globalAlpha = 1;
+}
+// 5. SCOPE: the waveform traced across the dot matrix
+let scopeBuf = null;
+function specScope(solo){
+  const cols = 110, rows = 23, cw = (W - SPX*2)/cols, ch = (H - SPT - SPB)/rows;
+  dimGrid(cols, rows, SPX, SPT, cw, ch, solo);
+  g.fillStyle = C.lit2; g.globalAlpha = solo ? .35 : .25;                     // graticule on the center line
+  for(let i=0;i<cols;i+=5) g.fillRect(SPX + i*cw + 1, SPT + Math.floor(rows/2)*ch + 1, cw - 2, ch - 2);
+  g.globalAlpha = 1;
+  const live = isActive() && analyser;
+  let get;
+  if(live){
+    if(!scopeBuf || scopeBuf.length !== analyser.fftSize) scopeBuf = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(scopeBuf);
+    let s0 = 0; for(let i=1;i<scopeBuf.length/2;i++) if(scopeBuf[i-1] < 0 && scopeBuf[i] >= 0){ s0 = i; break; }   // trigger on a rising edge
+    const span = Math.min(1024, scopeBuf.length - s0);
+    get = c => scopeBuf[s0 + Math.floor(c/cols*span)];
+  } else get = c => .28*Math.sin(c*.17 + T*2.2) + .1*Math.sin(c*.53 - T*3.1);
+  litOn(solo);
+  g.fillStyle = C.lit;
+  let prev = null;
+  for(let c=0;c<cols;c++){
+    const v = Math.max(-1, Math.min(1, get(c)*1.8)), r = Math.round((.5 - v*.5)*(rows-1));
+    const a = prev === null ? r : prev, lo = Math.min(a, r), hi = Math.max(a, r);
+    for(let k=lo;k<=hi;k++) g.fillRect(SPX + c*cw + 1, SPT + k*ch + 1, cw - 2, ch - 2);
+    prev = r;
+  }
+  litOff();
+}
+// 6. WATERFALL: each moment of the spectrum drops down the screen
+const fall = {rows: [], t: 0};
+function specFall(solo){
+  const n = 44, rows = 20, st = bands(n);
+  const cw = (W - SPX*2)/n, ch = (H - SPT - SPB)/rows;
+  if(T - fall.t > .07){ fall.t = T; fall.rows.unshift(Float32Array.from(st.v)); if(fall.rows.length > rows) fall.rows.pop(); }
+  dimGrid(n, rows, SPX, SPT, cw, ch, solo);
+  g.shadowBlur = 6; g.shadowColor = C.lit;
+  fall.rows.forEach((row, r) => {
+    const age = 1 - r/rows;
+    for(let i=0;i<n;i++){
+      const v = row[i]; if(v < .08) continue;
+      g.fillStyle = v > .72 ? C.lit2 : C.lit; g.globalAlpha = Math.min(1, v*1.25)*(.35 + .65*age)*(solo ? 1 : .9);
+      g.fillRect(SPX + i*cw + 1, SPT + r*ch + 1, cw - 2, ch - 2);
+    }
+  });
+  litOff(); freqLabels();
+}
+function drawSpec(solo){
+  if(spec === 'center') specCenter(solo); else if(spec === 'peak') specPeak(solo); else if(spec === 'meter') specMeter(solo);
+  else if(spec === 'scope') specScope(solo); else if(spec === 'fall') specFall(solo); else specBar(solo);
+}
+function drawVFD(){ g.fillStyle = C.screen; g.fillRect(0, 0, W, H); drawSpec(true); }
+setSpec(spec, false);
 
 /* VFD BEACH: a sunset beach with palms drawn on the fluorescent dot matrix (cyan + amber only);
    the sun's reflection on the sea is the spectrum */
@@ -1099,25 +1241,8 @@ function drawLogoArt(c, L, a){
   } else c.drawImage(L.cv, lx, ly, lw, lh);
   c.restore();
 }
-// Cyan dot-matrix spectrum in front; unlit cells stay faint so the logo shows through
-function drawSpectrumFront(st){
-  const n = 28, segs = 13, top = 6, bot = 18, pxx = 16;
-  const cw = (W - pxx*2)/n, ch = (H - top - bot)/segs;
-  g.fillStyle = C.dimt; g.globalAlpha = .5;
-  for(let i=0;i<n;i++) for(let s=0;s<segs;s++) g.fillRect(pxx + i*cw + 2, H - bot - (s+1)*ch + 1, cw - 4, ch - 3);
-  g.globalAlpha = .9; g.shadowBlur = 9; g.shadowColor = C.lit;
-  for(let i=0;i<n;i++){
-    const lv = Math.round(st.v[i]*segs);
-    g.fillStyle = C.lit;
-    for(let s=0;s<lv;s++) g.fillRect(pxx + i*cw + 2, H - bot - (s+1)*ch + 1, cw - 4, ch - 3);
-    const ps = Math.min(segs-1, Math.round(st.p[i]*segs));
-    if(ps > lv){ g.fillStyle = '#e8fffb'; g.fillRect(pxx + i*cw + 2, H - bot - (ps+1)*ch + 1, cw - 4, ch - 3); }
-  }
-  g.shadowBlur = 0; g.globalAlpha = 1;
-  g.font = '10px "Share Tech Mono", monospace'; g.fillStyle = C.lit; g.globalAlpha = .55; g.textAlign = 'center';
-  [[63,'63'],[250,'250'],[1000,'1k'],[4000,'4k'],[15000,'15k']].forEach(([f,l]) => { const x = pxx + (Math.log(f/40)/Math.log(400))*(W-pxx*2); g.fillText(l, x, H-5); });
-  g.globalAlpha = 1;
-}
+// Spectrum in front of the logo, in the chosen style (unlit cells stay faint so the logo shows through)
+function drawSpectrumFront(st){ drawSpec(false); }
 function drawVFDLogo(L){
   g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
   const st = bands(28), bass = (st.v[0] + st.v[1] + st.v[2])/3;
