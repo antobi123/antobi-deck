@@ -170,7 +170,8 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
 .sw.vfddx{background:linear-gradient(180deg,transparent 30%,rgba(255,162,74,.9) 30% 36%,transparent 36% 50%,rgba(255,162,74,.9) 50% 56%,transparent 56%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 40% no-repeat,#021311}
 .sw.vfdasahi{background:radial-gradient(ellipse 45% 22% at 50% 45%,rgba(255,162,74,.95) 0 60%,transparent 64%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 35% no-repeat,#021311}
-.sw.logo{background:linear-gradient(180deg,transparent 22%,rgba(255,162,74,.9) 22% 34%,transparent 34% 44%,rgba(255,162,74,.9) 44% 58%,transparent 58%) 15% 0/70% 100% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
+.sw.logo{background:linear-gradient(180deg,transparent 22%,var(--c,#ffa24a) 22% 34%,transparent 34% 44%,var(--c,#ffa24a) 44% 58%,transparent 58%) 15% 0/70% 100% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
+.sw.logo.rainbow{background:linear-gradient(90deg,#ff4d4d,#ffd21a,#3ddc4a,#4fb6e0,#b05cff,#ff3d8b) 15% 22%/70% 36% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
 .dot{width:22px; height:22px; border-radius:50%}
 .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 .pbtn{border:1px solid var(--line); background:#1b1c22; color:var(--fg); border-radius:10px; padding:10px 14px; font:13px var(--font-ui)}
@@ -291,7 +292,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdyuji"><span class="sw logo"></span>VFD<small>YUJI CAFE</small></button>
           <button class="chip" data-skin="vfdnote"><span class="sw logo"></span>VFD<small>Note</small></button>
           <button class="chip" data-skin="vfdtower"><span class="sw logo"></span>VFD<small>TOWER RECORDS</small></button>
-$CHIPS
         </div>
       </section>
       <section>
@@ -887,6 +887,8 @@ const LOGOS = {
   vfdface: makeLogo(FACE_SRC, false, WHITE_TUBE), vfdunion: makeLogo(UNION_SRC, false, '#ff2a2a'), vfdyuji: makeLogo(YUJI_SRC, false, '#2fd06a'),
   vfdnote: makeLogo(NOTE_SRC, false, WHITE_TUBE), vfdtower: makeLogo(TOWER_SRC, false, '#ff2a20')
 };
+// the ⚙ panel swatches take each logo's color
+document.querySelectorAll('#skinChips .chip').forEach(b => { const L = LOGOS[b.dataset.skin], sw = b.querySelector('.sw'); if(!L || !sw) return; sw.className = 'sw logo' + (L.color === 'rainbow' ? ' rainbow' : ''); if(L.color !== 'rainbow') sw.style.setProperty('--c', L.color); });
 function drawVFDLogo(L){
   g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
   const n = 28, segs = 13, top = 6, bot = 18, pxx = 16;
