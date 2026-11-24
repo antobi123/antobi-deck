@@ -191,6 +191,22 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .pbtn{border:1px solid var(--line); background:#1b1c22; color:var(--fg); border-radius:10px; padding:10px 14px; font:13px var(--font-ui)}
 .pbtn.pri{background:var(--illum); color:#06070a; border-color:transparent; font-weight:700}
 .pbtn.warn{color:#ff8a7a}
+#presetList, #rResults{list-style:none; margin:6px 0 0; padding:0; display:flex; flex-direction:column; gap:4px}
+#rResults{max-height:280px; overflow:auto}
+#presetList li, #rResults li{display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; background:rgba(255,255,255,.03)}
+#presetList .rpn{font:15px var(--font-seg); color:var(--illum); width:16px; text-align:center}
+.rpt{flex:1; min-width:0; display:flex; flex-direction:column}
+.rpt b, .rpt small{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:500}
+.rpt small{font-size:11px; color:var(--muted)}
+#presetList button, #rResults button{flex:none; border:1px solid var(--line); background:#15171d; color:var(--fg); border-radius:6px; padding:5px 9px; font:12px var(--font-ui)}
+#rResults .slots{display:flex; gap:3px; flex:none}
+#rResults .slots button{padding:5px 7px}
+#rResults button.ok{border-color:var(--illum); color:var(--illum)}
+.rsearch{display:flex; gap:8px; margin-top:12px}
+.rsearch input, .rurl input, .rurl select{flex:1; min-width:0; background:#0c0d11; border:1px solid var(--line); border-radius:8px; color:var(--fg); padding:9px 10px; font:13px var(--font-ui)}
+.rurl{display:flex; flex-direction:column; gap:6px; margin-top:8px}
+.pbody details summary{cursor:pointer; font-size:13px; color:var(--muted); margin-top:10px}
+.pbody p.rnote{font-size:12px; color:var(--muted); margin-top:6px}
 #plist{list-style:none; margin:10px 0 0; padding:0; display:flex; flex-direction:column; gap:2px; max-height:300px; overflow:auto}
 #plist button{width:100%; display:grid; grid-template-columns:34px 32px 1fr; align-items:center; gap:8px; text-align:left; border:0; background:transparent; color:var(--fg); padding:9px 6px; border-radius:8px; font:14px var(--font-disp)}
 #plist button span:last-child{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -343,6 +359,17 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <ul id="plist"></ul>
       </section>
       <section>
+        <h3>ラジオ プリセット</h3>
+        <ol id="presetList"></ol>
+        <div class="rsearch"><input id="rq" type="search" placeholder="ジャンル・局名で検索（hiphop, soul, jazz…）" enterkeyhint="search"><button class="pbtn" id="rqBtn">検索</button></div>
+        <p class="rnote" id="rqMsg">世界のネットラジオを検索できます（radio-browser.info）。</p>
+        <ul id="rResults"></ul>
+        <details><summary>URLで登録する</summary>
+          <div class="rurl"><input id="ruName" placeholder="局の名前"><input id="ruUrl" inputmode="url" placeholder="https:// で始まるストリームURL"><select id="ruSlot"><option value="0">1 に登録</option><option value="1">2 に登録</option><option value="2">3 に登録</option><option value="3">4 に登録</option><option value="4">5 に登録</option><option value="5">6 に登録</option></select><button class="pbtn" id="ruAdd">登録</button><p class="rnote" id="ruMsg"></p></div>
+        </details>
+        <p class="rnote">ラジオを聴きながら 1〜6 を長押しすると、今の局をそのボタンに登録できます。局によってはスペアナが音に反応せず、待機中の動きになります。</p>
+      </section>
+      <section>
         <h3>アプリとして使う</h3>
         <div class="row" id="installRow" hidden><button class="pbtn pri" id="installBtn">ホーム画面にインストール</button></div>
         <p id="installState"></p>
@@ -371,7 +398,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dt>5 LOUD</dt><dd>ラウドネス。低音と高音を持ち上げる</dd>
           <dt>6 DEMO</dt><dd>内蔵のデモ曲を再生／停止</dd>
           <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生/一時停止・次の曲</dd>
-          <dt>RADIO 1〜6</dt><dd>ラジオ中は 1〜6 がプリセット局（1 HIPHOP・2 WEST・3 XTRA・4 MOTOWN・5 SOUL・6 JFSR）。SEEK と ◀◀ ▶▶ でも局を切り替え</dd>
+          <dt>RADIO 1〜6</dt><dd>ラジオ中は 1〜6 がプリセット局。SEEK と ◀◀ ▶▶ でも局を切り替え。聴いている局は 1〜6 を長押しでそのボタンに登録。局の検索・登録は ⚙ の「ラジオ プリセット」から</dd>
         </dl>
       </section>
       <section>
@@ -440,7 +467,7 @@ function ensureAudio(){
   applyVol(); applyLoud();
 }
 const volGain = v => Math.pow(v/40, 2);
-function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1), AC.currentTime, .03); }
+function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1), AC.currentTime, .03); try{ plain.volume = Math.min(1, volGain(vol) * (att ? .1 : 1)); }catch(e){} }
 function applyLoud(){ if(!lowS) return; lowS.gain.value = loud ? 9 : 0; highS.gain.value = loud ? 6 : 0; }
 
 /* ---------------- demo synth (Am - F - C - G) ---------------- */
@@ -509,7 +536,7 @@ function startDemo(){
 function stopDemo(keep){ if(!demo.on) return; clearInterval(demo.timer); demo.on = false; if(AC) demo.acc = keep ? AC.currentTime - demo.t0 : 0; updateUI(); }
 
 /* ---------------- playback ---------------- */
-function isActive(){ return ((mode === 'file' || mode === 'radio') && !audio.paused) || (mode === 'demo' && demo.on); }
+function isActive(){ return (mode === 'file' && !audio.paused) || (mode === 'radio' && !radioEl().paused) || (mode === 'demo' && demo.on); }
 /* ---------------- song tags: title / artist / album / cover from MP3 (ID3), M4A/AAC (MP4) and FLAC ---------------- */
 const tdec = (enc, b) => { try{ return new TextDecoder(enc).decode(b); }catch(e){ return ''; } };
 const tclean = s => (s || '').replace(/\0+$/, '').replace(/\0/g, ' / ').trim();
@@ -690,7 +717,7 @@ function playIndex(i){
 }
 function togglePlay(){
   ensureAudio();
-  if(mode === 'radio'){ if(audio.paused) tune(radioCh); else audio.pause(); updateUI(); return; }
+  if(mode === 'radio'){ if(radioEl().paused){ if(radioNow) playStation(radioNow, $('#trk').textContent); else tune(radioCh); } else { audio.pause(); plain.pause(); } updateUI(); return; }
   if(mode === 'file'){ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); }
   else if(mode === 'demo'){ demo.on ? stopDemo(true) : startDemo(); }
   else if(tracks.length) playIndex(Math.max(0, idx)); else startDemo();
@@ -737,7 +764,7 @@ function updateUI(){
   $('#iRep').textContent = repeat === 'one' ? 'REP1' : 'REP';
   const key = (id, v) => $(id).classList.toggle('on', !!v);
   key('#p1', scroll); key('#p2', scan); key('#p3', shuffle); key('#p4', repeat !== 'off'); key('#p5', loud); key('#p6', mode === 'demo' && demo.on); key('#attBtn', att);
-  if(mode === 'radio') ['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => key(id, i === radioCh));
+  if(mode === 'radio') ['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => key(id, !!radioNow && STATIONS[i].url === radioNow.url));
 }
 function renderList(){
   const ul = $('#plist'); ul.innerHTML = '';
@@ -785,7 +812,7 @@ on('#disp', e => { if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)
 on('#illBtn', () => setIllum(ILLUMS[(ILLUMS.indexOf(illum)+1) % ILLUMS.length], true));
 on('#attBtn', () => { att = !att; applyVol(); flash(att ? 'ATT  ON' : 'ATT  OFF', 900); updateUI(); });
 /* ---------------- RADIO: internet radio on presets 1-6 (all streams allow the spectrum to read them) ---------------- */
-const STATIONS = [   // 1-3 hip-hop, 4-6 soul; each checked to play with CORS so the spectrum follows it
+const DEFAULT_STATIONS = [   // 1-3 hip-hop, 4-6 soul; each checked to play with CORS so the spectrum follows it
   { short:'HIPHOP', name:'100 HIP HOP AND RNB FM',     genre:'HIP-HOP / R&B',        url:'https://streaming.shoutcast.com/100-hip-hop-and-rnb-fm' },
   { short:'WEST',   name:'WEST COAST',                 genre:'G-FUNK / HIP-HOP',     url:'https://r.bgp.rodeo/listen/west_coast/radio.mp3' },
   { short:'XTRA',   name:'CAPITAL XTRA',               genre:'HIP-HOP / R&B',        url:'https://media-the.musicradio.com/CapitalXTRALondonMP3' },
@@ -793,24 +820,133 @@ const STATIONS = [   // 1-3 hip-hop, 4-6 soul; each checked to play with CORS so
   { short:'SOUL',   name:'SOUL CONNEXION RADIO',       genre:'SOUL',                 url:'https://stream.soulconnexionradio.com/1045' },
   { short:'JFSR',   name:'JAZZ FUNK SOUL RADIO',       genre:'JAZZ / FUNK / SOUL',   url:'https://s2.radio.co/s22ae5a8a6/listen' }
 ];
+// presets are editable and saved; anything missing falls back to the default for that button
+let STATIONS = DEFAULT_STATIONS.map((d, i) => { const s = (store.get('presets', []) || [])[i]; return s && s.url ? s : {...d}; });
 let radioCh = store.get('radioCh', 0); if(!STATIONS[radioCh]) radioCh = 0;
+let radioNow = null;            // the station on air (a preset or a search result being tried)
 const presetLbls = [...document.querySelectorAll('.lbl')].filter(l => ['SCROLL','SCN','RDM','REP','LOUD','DEMO'].includes(l.textContent));
 const presetFn = presetLbls.map(l => l.textContent);
 function presetLabels(radio){ presetLbls.forEach((l, i) => l.textContent = radio ? STATIONS[i].short : presetFn[i]); }
-function tune(ch){
+const shortName = n => {   // a short button label: the first meaningful word that fits in 6 letters
+  const ws = (n || 'RADIO').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim().split(' ').filter(w => w.length >= 2 && !/^\d+$/.test(w) && !/^(THE|RADIO|FM|AM|WEB|NET|ONLINE|AND)$/.test(w));
+  return (ws.find(w => w.length <= 6) || ws[0] || 'RADIO').slice(0, 6);
+};
+
+// Streams that don't allow the spectrum to read them would play silent through the audio graph,
+// so they fall back to a plain player (sound is fine, the spectrum shows its idle motion instead).
+const plain = new Audio(); plain.preload = 'none'; plain.setAttribute('playsinline', '');
+let radioPlain = false;
+const radioEl = () => radioPlain ? plain : audio;
+function playStation(st, label){
   ensureAudio(); stopDemo(false);
-  radioCh = (ch + STATIONS.length) % STATIONS.length; store.set('radioCh', radioCh);
-  const s = STATIONS[radioCh];
-  mode = 'radio'; scan = false; presetLabels(true);
-  audio.src = s.url; audio.play().catch(() => {});
-  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = 'P' + (radioCh + 1);
-  setTitle(`${s.name} ── ${s.genre}`);
-  flash(`P${radioCh + 1}  ${s.short}`, 1200);
+  mode = 'radio'; scan = false; radioNow = st; presetLabels(true);
+  plain.pause(); plain.removeAttribute('src'); radioPlain = false;
+  audio.src = st.url; audio.play().catch(() => {});
+  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = label;
+  setTitle(`${st.name} ── ${st.genre}`);
+  flash(`${label}  ${st.short}`, 1200);
   mediaMeta(); updateUI();
 }
-function leaveRadio(){ if(mode !== 'radio') return; audio.pause(); audio.removeAttribute('src'); audio.load(); mode = 'idle'; presetLabels(false); }
-audio.addEventListener('waiting', () => { if(mode === 'radio') flash('TUNING...', 1500); });
-audio.addEventListener('playing', () => { if(mode === 'radio' && flashT) flash(`P${radioCh + 1}  ${STATIONS[radioCh].short}`, 900); });
+function tune(ch){
+  radioCh = (ch + STATIONS.length) % STATIONS.length; store.set('radioCh', radioCh);
+  playStation(STATIONS[radioCh], 'P' + (radioCh + 1));
+}
+function leaveRadio(){
+  if(mode !== 'radio') return;
+  audio.pause(); audio.removeAttribute('src'); audio.load(); plain.pause(); plain.removeAttribute('src');
+  radioPlain = false; mode = 'idle'; presetLabels(false);
+}
+function savePreset(i, st){
+  STATIONS[i] = { short: (st.short || shortName(st.name)).slice(0, 6), name: st.name, genre: st.genre || '', url: st.url };
+  store.set('presets', STATIONS);
+  if(mode === 'radio'){ presetLabels(true); if(radioNow && radioNow.url === st.url){ radioCh = i; store.set('radioCh', i); $('#trk').textContent = 'P' + (i + 1); } }
+  renderPresets(); updateUI();
+}
+audio.addEventListener('error', () => {
+  if(mode !== 'radio' || radioPlain || !radioNow) return;
+  radioPlain = true; audio.removeAttribute('src'); audio.load();
+  plain.src = radioNow.url; plain.volume = Math.min(1, volGain(vol)*(att ? .1 : 1));
+  plain.play().catch(() => flash('NO SIGNAL', 1600));
+});
+plain.addEventListener('error', () => { if(mode === 'radio' && radioPlain) flash('NO SIGNAL', 1600); });
+[audio, plain].forEach(el => {
+  el.addEventListener('waiting', () => { if(mode === 'radio' && el === radioEl()) flash('TUNING...', 1500); });
+  el.addEventListener('playing', () => { if(mode === 'radio' && el === radioEl()){ flash($('#trk').textContent + '  ' + radioNow.short, 900); updateUI(); wake(true); } });
+});
+plain.addEventListener('pause', () => { updateUI(); });
+
+// hold 1-6 while listening to store the current station on that button, like a car radio
+['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => {
+  const el = $(id); let t = 0, held = false;
+  el.addEventListener('pointerdown', () => { held = false; if(mode !== 'radio' || !radioNow) return; t = setTimeout(() => { held = true; savePreset(i, radioNow); flash(`MEMORY  P${i + 1}`, 1400); }, 900); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => el.addEventListener(ev, () => clearTimeout(t)));
+  el.addEventListener('click', e => { if(held){ e.stopImmediatePropagation(); held = false; } }, true);
+});
+
+/* preset editor + station search in the ⚙ panel */
+function renderPresets(){
+  const ol = $('#presetList'); ol.innerHTML = '';
+  STATIONS.forEach((s, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="rpn">${i + 1}</span><span class="rpt"><b></b><small></small></span><button data-a="play" aria-label="聴く">▶</button><button data-a="name">名前</button><button data-a="reset">初期</button>`;
+    li.querySelector('b').textContent = s.short; li.querySelector('small').textContent = s.name + (s.genre ? ' · ' + s.genre : '');
+    li.addEventListener('click', e => {
+      const a = e.target.dataset && e.target.dataset.a; if(!a) return;
+      if(a === 'play'){ tune(i); }
+      else if(a === 'name'){ const v = prompt('ボタンに出す名前（6文字まで）', s.short); if(v && v.trim()){ savePreset(i, {...s, short: v.trim().toUpperCase()}); } }
+      else if(a === 'reset'){ savePreset(i, DEFAULT_STATIONS[i]); flash(`P${i + 1}  RESET`, 900); }
+    });
+    ol.append(li);
+  });
+}
+const RB_HOSTS = ['de1.api.radio-browser.info', 'nl1.api.radio-browser.info', 'at1.api.radio-browser.info'];
+async function rbSearch(q){
+  const p = `hidebroken=true&is_https=true&order=clickcount&reverse=true&limit=25`;
+  for(const h of RB_HOSTS){
+    try{
+      const [a, b] = await Promise.all([
+        fetch(`https://${h}/json/stations/search?tag=${encodeURIComponent(q.toLowerCase())}&${p}`).then(r => r.json()),
+        fetch(`https://${h}/json/stations/search?name=${encodeURIComponent(q)}&${p}`).then(r => r.json())
+      ]);
+      const seen = new Set(); return [...a, ...b].filter(s => s.url_resolved && s.url_resolved.startsWith('https://') && !seen.has(s.stationuuid) && seen.add(s.stationuuid)).slice(0, 30);
+    }catch(e){}
+  }
+  return null;
+}
+function stationFromRB(s){
+  const name = s.name.trim().toUpperCase().slice(0, 40);
+  const genre = (s.tags || '').split(',').map(t => t.trim()).filter(Boolean).slice(0, 2).join(' / ').toUpperCase();
+  return { short: shortName(s.name), name, genre, url: s.url_resolved };
+}
+async function doSearch(){
+  const q = $('#rq').value.trim(); if(!q) return;
+  const msg = $('#rqMsg'), ul = $('#rResults'); msg.textContent = '検索中…'; ul.innerHTML = '';
+  const res = await rbSearch(q);
+  if(res === null){ msg.textContent = '検索できませんでした。通信を確認してね。'; return; }
+  if(!res.length){ msg.textContent = '見つかりませんでした。英語のジャンル名（hiphop, soul, jazz など）でも試してみてね。'; return; }
+  msg.textContent = `${res.length}局。▶ で試聴、1〜6 でそのボタンに登録。`;
+  res.forEach(s => {
+    const st = stationFromRB(s), li = document.createElement('li');
+    li.innerHTML = `<span class="rpt"><b></b><small></small></span><button data-a="try" aria-label="試聴">▶</button><span class="slots">${[1,2,3,4,5,6].map(n => `<button data-a="${n}">${n}</button>`).join('')}</span>`;
+    li.querySelector('b').textContent = s.name.trim();
+    li.querySelector('small').textContent = [st.genre, s.countrycode, s.bitrate ? s.bitrate + 'k' : ''].filter(Boolean).join(' · ');
+    li.addEventListener('click', e => {
+      const a = e.target.dataset && e.target.dataset.a; if(!a) return;
+      if(a === 'try') playStation(st, 'P-');
+      else { savePreset(+a - 1, st); flash(`MEMORY  P${a}`, 1200); e.target.classList.add('ok'); }
+    });
+    ul.append(li);
+  });
+}
+on('#rqBtn', doSearch);
+$('#rq').addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
+on('#ruAdd', () => {
+  const url = $('#ruUrl').value.trim(), name = $('#ruName').value.trim() || 'MY RADIO', slot = +$('#ruSlot').value;
+  if(!/^https:\/\//i.test(url)){ $('#ruMsg').textContent = 'https:// で始まるURLを入れてね（http は使えません）'; return; }
+  savePreset(slot, { short: shortName(name), name: name.toUpperCase(), genre: '', url });
+  $('#ruMsg').textContent = `${slot + 1} に登録しました`; flash(`MEMORY  P${slot + 1}`, 1200);
+});
+renderPresets();
 on('#srcBtn', () => {            // SRC: DISC → RADIO → DEMO → DISC
   ensureAudio();
   const cur = mode === 'radio' ? 'radio' : mode === 'demo' ? 'demo' : 'disc';
@@ -907,7 +1043,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:' || location.ho
 function mediaMeta(){
   if(!('mediaSession' in navigator) || (idx < 0 && mode !== 'radio')) return;
   try{
-    const t = mode === 'radio' ? { title: STATIONS[radioCh].name, artist: STATIONS[radioCh].genre, album: 'ANTOBi Deck RADIO' } : tracks[idx];
+    const t = mode === 'radio' && radioNow ? { title: radioNow.name, artist: radioNow.genre || 'RADIO', album: 'ANTOBi Deck RADIO' } : tracks[idx];
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => audio.play());
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
@@ -942,7 +1078,7 @@ const bandState = {};
 let T = 0, levL = -30, levR = -30;
 function bands(n){
   const st = bandState[n] || (bandState[n] = { v:new Float32Array(n), p:new Float32Array(n), pt:new Float32Array(n) });
-  const act = isActive() && freq;
+  const act = isActive() && freq && !radioPlain;
   const binHz = AC ? AC.sampleRate/2048 : 21.5;
   for(let i=0;i<n;i++){
     let tg;
@@ -964,7 +1100,7 @@ function bands(n){
 function rms(an, buf){ an.getFloatTimeDomainData(buf); let s = 0; for(let i=0;i<buf.length;i++) s += buf[i]*buf[i]; return Math.sqrt(s/buf.length); }
 function levels(){
   let l, r;
-  if(isActive() && anL){ l = 20*Math.log10(rms(anL, tdL)+1e-6); r = 20*Math.log10(rms(anR, tdR)+1e-6); }
+  if(isActive() && anL && !radioPlain){ l = 20*Math.log10(rms(anL, tdL)+1e-6); r = 20*Math.log10(rms(anR, tdR)+1e-6); }
   else { l = -26 + 6*Math.sin(T*1.7); r = -26 + 6*Math.sin(T*1.7 + .9); }
   levL += (l - levL) * (l > levL ? .35 : .08);
   levR += (r - levR) * (r > levR ? .35 : .08);
@@ -1072,7 +1208,7 @@ function specScope(solo){
   g.fillStyle = C.lit2; g.globalAlpha = solo ? .35 : .25;                     // graticule on the center line
   for(let i=0;i<cols;i+=5) g.fillRect(SPX + i*cw + 1, SPT + Math.floor(rows/2)*ch + 1, cw - 2, ch - 2);
   g.globalAlpha = 1;
-  const live = isActive() && analyser;
+  const live = isActive() && analyser && !radioPlain;
   let get;
   if(live){
     if(!scopeBuf || scopeBuf.length !== analyser.fftSize) scopeBuf = new Float32Array(analyser.fftSize);
@@ -1345,7 +1481,7 @@ function frame(now){
   if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
-  else if(mode === 'radio'){ cur = audio.currentTime; }
+  else if(mode === 'radio'){ cur = radioEl().currentTime; }
   else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
   if(scan && mode === 'file' && !audio.paused && cur >= 10) step(1, true);
   $('#time').textContent = fmt(cur);
