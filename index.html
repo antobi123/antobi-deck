@@ -358,7 +358,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dt>▲ DISC LOAD</dt><dd>スマホの中の曲を読み込む（まとめて選択OK）</dd>
           <dt>SETUP ⚙ / FNC</dt><dd>この設定画面を開く</dd>
           <dt>DISP</dt><dd>ディスプレイの柄を切り替え（画面タップでも切り替わる）</dd>
-          <dt>SRC</dt><dd>ソース切り替え（DISC ⇄ DEMO）</dd>
+          <dt>SRC</dt><dd>ソース切り替え（DISC → RADIO → DEMO）</dd>
           <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
           <dt>SEEK ∧∨</dt><dd>10秒送り／戻し</dd>
           <dt>ATT</dt><dd>アッテネーター。一時的に音量をぐっと下げる</dd>
@@ -371,6 +371,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dt>5 LOUD</dt><dd>ラウドネス。低音と高音を持ち上げる</dd>
           <dt>6 DEMO</dt><dd>内蔵のデモ曲を再生／停止</dd>
           <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生/一時停止・次の曲</dd>
+          <dt>RADIO 1〜6</dt><dd>ラジオ中は 1〜6 がプリセット局（1 HIPHOP・2 WEST・3 XTRA・4 MOTOWN・5 SOUL・6 JFSR）。SEEK と ◀◀ ▶▶ でも局を切り替え</dd>
         </dl>
       </section>
       <section>
@@ -402,7 +403,7 @@ let loud = store.get('loud', false), shuffle = store.get('shuffle', false), repe
 let scroll = store.get('scroll', true), scan = false;
 const tracks = []; let idx = -1;
 let mode = 'idle'; // idle | file | demo
-const audio = new Audio(); audio.preload = 'auto'; audio.setAttribute('playsinline','');
+const audio = new Audio(); audio.crossOrigin = 'anonymous'; audio.preload = 'auto'; audio.setAttribute('playsinline','');
 
 /* ---------------- saved library (IndexedDB) ---------------- */
 const DB = {
@@ -496,6 +497,7 @@ function playStep(s, t){
 }
 function sched(){ while(demo.next < AC.currentTime + .14){ playStep(demo.step, demo.next); demo.next += S16; demo.step++; } }
 function startDemo(){
+  if(mode === 'radio') leaveRadio();
   ensureAudio(); if(!demo.bus) buildDemo();
   audio.pause(); mode = 'demo';
   demo.on = true; demo.next = AC.currentTime + .06; demo.t0 = AC.currentTime - demo.acc;
@@ -507,7 +509,7 @@ function startDemo(){
 function stopDemo(keep){ if(!demo.on) return; clearInterval(demo.timer); demo.on = false; if(AC) demo.acc = keep ? AC.currentTime - demo.t0 : 0; updateUI(); }
 
 /* ---------------- playback ---------------- */
-function isActive(){ return (mode === 'file' && !audio.paused) || (mode === 'demo' && demo.on); }
+function isActive(){ return ((mode === 'file' || mode === 'radio') && !audio.paused) || (mode === 'demo' && demo.on); }
 /* ---------------- song tags: title / artist / album / cover from MP3 (ID3), M4A/AAC (MP4) and FLAC ---------------- */
 const tdec = (enc, b) => { try{ return new TextDecoder(enc).decode(b); }catch(e){ return ''; } };
 const tclean = s => (s || '').replace(/\0+$/, '').replace(/\0/g, ' / ').trim();
@@ -677,7 +679,7 @@ async function loadLibrary(){
 function playIndex(i){
   if(!tracks[i]) return;
   ensureAudio(); stopDemo(false);
-  idx = i; mode = 'file';
+  idx = i; mode = 'file'; presetLabels(false);
   audio.src = tracks[i].url;
   audio.play().catch(() => {});
   $('#srcl').textContent = 'DISC';
@@ -688,12 +690,14 @@ function playIndex(i){
 }
 function togglePlay(){
   ensureAudio();
+  if(mode === 'radio'){ if(audio.paused) tune(radioCh); else audio.pause(); updateUI(); return; }
   if(mode === 'file'){ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); }
   else if(mode === 'demo'){ demo.on ? stopDemo(true) : startDemo(); }
   else if(tracks.length) playIndex(Math.max(0, idx)); else startDemo();
   updateUI();
 }
 function step(dir, auto){
+  if(mode === 'radio'){ tune(radioCh + dir); return; }
   if(mode !== 'file' || !tracks.length){ flash(tracks.length ? 'PRESS SRC' : 'NO DISC', 900); return; }
   if(!auto && dir < 0 && audio.currentTime > 3){ audio.currentTime = 0; return; }
   let n;
@@ -733,6 +737,7 @@ function updateUI(){
   $('#iRep').textContent = repeat === 'one' ? 'REP1' : 'REP';
   const key = (id, v) => $(id).classList.toggle('on', !!v);
   key('#p1', scroll); key('#p2', scan); key('#p3', shuffle); key('#p4', repeat !== 'off'); key('#p5', loud); key('#p6', mode === 'demo' && demo.on); key('#attBtn', att);
+  if(mode === 'radio') ['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => key(id, i === radioCh));
 }
 function renderList(){
   const ul = $('#plist'); ul.innerHTML = '';
@@ -779,20 +784,51 @@ on('#dispBtn', () => setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true
 on('#disp', e => { if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true); });
 on('#illBtn', () => setIllum(ILLUMS[(ILLUMS.indexOf(illum)+1) % ILLUMS.length], true));
 on('#attBtn', () => { att = !att; applyVol(); flash(att ? 'ATT  ON' : 'ATT  OFF', 900); updateUI(); });
-on('#srcBtn', () => {
+/* ---------------- RADIO: internet radio on presets 1-6 (all streams allow the spectrum to read them) ---------------- */
+const STATIONS = [   // 1-3 hip-hop, 4-6 soul; each checked to play with CORS so the spectrum follows it
+  { short:'HIPHOP', name:'100 HIP HOP AND RNB FM',     genre:'HIP-HOP / R&B',        url:'https://streaming.shoutcast.com/100-hip-hop-and-rnb-fm' },
+  { short:'WEST',   name:'WEST COAST',                 genre:'G-FUNK / HIP-HOP',     url:'https://r.bgp.rodeo/listen/west_coast/radio.mp3' },
+  { short:'XTRA',   name:'CAPITAL XTRA',               genre:'HIP-HOP / R&B',        url:'https://media-the.musicradio.com/CapitalXTRALondonMP3' },
+  { short:'MOTOWN', name:'RADIO MOTOWN',               genre:'MOTOWN / SOUL',        url:'https://broadcast.miami/proxy/motown?mp=/stream/;' },
+  { short:'SOUL',   name:'SOUL CONNEXION RADIO',       genre:'SOUL',                 url:'https://stream.soulconnexionradio.com/1045' },
+  { short:'JFSR',   name:'JAZZ FUNK SOUL RADIO',       genre:'JAZZ / FUNK / SOUL',   url:'https://s2.radio.co/s22ae5a8a6/listen' }
+];
+let radioCh = store.get('radioCh', 0); if(!STATIONS[radioCh]) radioCh = 0;
+const presetLbls = [...document.querySelectorAll('.lbl')].filter(l => ['SCROLL','SCN','RDM','REP','LOUD','DEMO'].includes(l.textContent));
+const presetFn = presetLbls.map(l => l.textContent);
+function presetLabels(radio){ presetLbls.forEach((l, i) => l.textContent = radio ? STATIONS[i].short : presetFn[i]); }
+function tune(ch){
+  ensureAudio(); stopDemo(false);
+  radioCh = (ch + STATIONS.length) % STATIONS.length; store.set('radioCh', radioCh);
+  const s = STATIONS[radioCh];
+  mode = 'radio'; scan = false; presetLabels(true);
+  audio.src = s.url; audio.play().catch(() => {});
+  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = 'P' + (radioCh + 1);
+  setTitle(`${s.name} ── ${s.genre}`);
+  flash(`P${radioCh + 1}  ${s.short}`, 1200);
+  mediaMeta(); updateUI();
+}
+function leaveRadio(){ if(mode !== 'radio') return; audio.pause(); audio.removeAttribute('src'); audio.load(); mode = 'idle'; presetLabels(false); }
+audio.addEventListener('waiting', () => { if(mode === 'radio') flash('TUNING...', 1500); });
+audio.addEventListener('playing', () => { if(mode === 'radio' && flashT) flash(`P${radioCh + 1}  ${STATIONS[radioCh].short}`, 900); });
+on('#srcBtn', () => {            // SRC: DISC → RADIO → DEMO → DISC
   ensureAudio();
-  if(mode === 'demo' || mode === 'idle' && !tracks.length){
-    if(mode === 'demo' && tracks.length){ playIndex(Math.max(0, idx)); flash('SOURCE  DISC', 900); }
-    else if(mode === 'demo'){ stopDemo(false); mode = 'idle'; $('#srcl').textContent = 'DISC'; setTitle('NO DISC ── ▲ DISC LOAD で曲を入れてね'); updateUI(); }
-    else startDemo();
-  } else { startDemo(); flash('SOURCE  DEMO', 900); }
+  const cur = mode === 'radio' ? 'radio' : mode === 'demo' ? 'demo' : 'disc';
+  const next = {disc:'radio', radio:'demo', demo:'disc'}[cur];
+  if(next === 'radio'){ audio.pause(); tune(radioCh); }
+  else if(next === 'demo'){ leaveRadio(); startDemo(); flash('SOURCE  DEMO', 900); }
+  else {
+    leaveRadio(); stopDemo(false);
+    if(tracks.length){ playIndex(Math.max(0, idx)); flash('SOURCE  DISC', 900); }
+    else { mode = 'idle'; $('#srcl').textContent = 'DISC'; setTitle('NO DISC ── ▲ DISC LOAD で曲を入れてね'); updateUI(); flash('SOURCE  DISC', 900); }
+  }
 });
-on('#p1', () => { scroll = !scroll; store.set('scroll', scroll); renderMarq(titleText); updateUI(); });
-on('#p2', () => { if(mode !== 'file'){ flash('DISC ONLY', 900); return; } scan = !scan; flash(scan ? 'INTRO SCAN' : 'SCAN  OFF', 900); if(scan) audio.currentTime = 0; updateUI(); });
-on('#p3', () => { shuffle = !shuffle; store.set('shuffle', shuffle); flash(shuffle ? 'RANDOM  ON' : 'RANDOM  OFF', 900); updateUI(); });
-on('#p4', () => { repeat = {all:'one', one:'off', off:'all'}[repeat]; store.set('repeat', repeat); flash({all:'REPEAT  ALL', one:'REPEAT  1', off:'REPEAT  OFF'}[repeat], 900); updateUI(); });
-on('#p5', () => { loud = !loud; store.set('loud', loud); applyLoud(); flash(loud ? 'LOUDNESS  ON' : 'LOUDNESS  OFF', 900); updateUI(); });
-on('#p6', () => { if(mode === 'demo' && demo.on) stopDemo(true); else startDemo(); });
+on('#p1', () => { if(mode === 'radio'){ tune(1 - 1); return; } scroll = !scroll; store.set('scroll', scroll); renderMarq(titleText); updateUI(); });
+on('#p2', () => { if(mode === 'radio'){ tune(2 - 1); return; } if(mode !== 'file'){ flash('DISC ONLY', 900); return; } scan = !scan; flash(scan ? 'INTRO SCAN' : 'SCAN  OFF', 900); if(scan) audio.currentTime = 0; updateUI(); });
+on('#p3', () => { if(mode === 'radio'){ tune(3 - 1); return; } shuffle = !shuffle; store.set('shuffle', shuffle); flash(shuffle ? 'RANDOM  ON' : 'RANDOM  OFF', 900); updateUI(); });
+on('#p4', () => { if(mode === 'radio'){ tune(4 - 1); return; } repeat = {all:'one', one:'off', off:'all'}[repeat]; store.set('repeat', repeat); flash({all:'REPEAT  ALL', one:'REPEAT  1', off:'REPEAT  OFF'}[repeat], 900); updateUI(); });
+on('#p5', () => { if(mode === 'radio'){ tune(5 - 1); return; } loud = !loud; store.set('loud', loud); applyLoud(); flash(loud ? 'LOUDNESS  ON' : 'LOUDNESS  OFF', 900); updateUI(); });
+on('#p6', () => { if(mode === 'radio'){ tune(6 - 1); return; } if(mode === 'demo' && demo.on) stopDemo(true); else startDemo(); });
 
 function holdRepeat(el, fn){
   el.querySelectorAll('button').forEach(b => {
@@ -805,6 +841,7 @@ function holdRepeat(el, fn){
 }
 holdRepeat($('#volRk'), d => setVol(vol + d, true));
 holdRepeat($('#seekRk'), d => {
+  if(mode === 'radio'){ tune(radioCh + d); return; }
   if(mode !== 'file' || !audio.duration){ flash('DISC ONLY', 700); return; }
   audio.currentTime = Math.max(0, Math.min(audio.duration - .5, audio.currentTime + d*10));
   flash((d > 0 ? '▶▶ ' : '◀◀ ') + fmt(audio.currentTime), 700);
@@ -868,9 +905,9 @@ if('serviceWorker' in navigator && location.protocol === 'https:' || location.ho
 
 /* lock-screen controls + keep screen on while playing */
 function mediaMeta(){
-  if(!('mediaSession' in navigator) || idx < 0) return;
+  if(!('mediaSession' in navigator) || (idx < 0 && mode !== 'radio')) return;
   try{
-    const t = tracks[idx];
+    const t = mode === 'radio' ? { title: STATIONS[radioCh].name, artist: STATIONS[radioCh].genre, album: 'ANTOBi Deck RADIO' } : tracks[idx];
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => audio.play());
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
@@ -1308,6 +1345,7 @@ function frame(now){
   if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
+  else if(mode === 'radio'){ cur = audio.currentTime; }
   else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
   if(scan && mode === 'file' && !audio.paused && cur >= 10) step(1, true);
   $('#time').textContent = fmt(cur);
