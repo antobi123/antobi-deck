@@ -49,6 +49,7 @@
 :root[data-skin="vfdyuji"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdnote"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdtower"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdshuffle"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 
 
 :root[data-illum="green"]{ --illum:#5dff8a; --illumglow:rgba(70,255,120,.55); }
@@ -88,7 +89,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -165,6 +166,13 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .chip{border:1px solid var(--line); background:#0c0d11; color:var(--muted); border-radius:10px; padding:8px; display:flex; flex-direction:column; align-items:center; gap:6px; font:700 11px var(--font-print); letter-spacing:.12em}
 .chip small{font:11px var(--font-ui); letter-spacing:0; color:#7c7e88}
 .chip[aria-pressed="true"]{border-color:var(--illum); color:var(--fg); box-shadow:0 0 12px var(--illumglow)}
+.pbody h3 .mini{float:right; margin-left:6px; font:700 10px var(--font-print); letter-spacing:.1em; color:var(--fg); background:#15171d; border:1px solid var(--line); border-radius:6px; padding:4px 9px}
+.pbody h3 .mini[aria-pressed="true"]{border-color:var(--illum); box-shadow:0 0 10px var(--illumglow)}
+.chip .mv{display:none; gap:6px}
+.chips.reorder .chip{border-style:dashed}
+.chips.reorder .chip .mv{display:flex}
+.chip .mv i{font-style:normal; font-size:12px; padding:3px 10px; border:1px solid var(--line); border-radius:6px; color:var(--fg); background:#15171d}
+.sw.shuffle{background:linear-gradient(90deg,#ff3d8b 0 20%,#ffa21f 20% 40%,#ffd21a 40% 60%,#2fd06a 60% 80%,#4fb6e0 80%) 15% 22%/70% 36% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
 .sw{width:100%; height:22px; border-radius:4px; box-shadow:inset 0 1px 4px #000}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
@@ -274,7 +282,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
     <div class="pbody">
       <section>
-        <h3>ディスプレイ</h3>
+        <h3>ディスプレイ <button class="mini" id="orderReset" hidden>元の順</button><button class="mini" id="orderBtn" aria-pressed="false">並び替え</button></h3>
         <div class="chips" id="skinChips">
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
           <button class="chip" data-skin="vfdb"><span class="sw vfdb"></span>VFD BEACH<small>蛍光管サンセット</small></button>
@@ -292,6 +300,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdyuji"><span class="sw logo"></span>VFD<small>YUJI CAFE</small></button>
           <button class="chip" data-skin="vfdnote"><span class="sw logo"></span>VFD<small>Note</small></button>
           <button class="chip" data-skin="vfdtower"><span class="sw logo"></span>VFD<small>TOWER RECORDS</small></button>
+          <button class="chip" data-skin="vfdshuffle"><span class="sw shuffle"></span>VFD<small>SHUFFLE ランダム</small></button>
         </div>
       </section>
       <section>
@@ -363,8 +372,9 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfd','vfdb','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower'], SKIN_NAME = {vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber'];
+const SKINS = ['vfd','vfdb','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
+let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s)); SKINS.forEach(s => { if(!ORDER.includes(s)) ORDER.push(s); });
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
 let vol = store.get('vol', 28), att = false;
 let loud = store.get('loud', false), shuffle = store.get('shuffle', false), repeat = store.get('repeat', 'all');
@@ -599,8 +609,8 @@ on('#play', togglePlay);
 on('#prev', () => step(-1));
 on('#next', () => step(1));
 $('#file').addEventListener('change', e => { ensureAudio(); addFiles(e.target.files); e.target.value = ''; });
-on('#dispBtn', () => setSkin(SKINS[(SKINS.indexOf(skin)+1) % SKINS.length], true));
-on('#disp', e => { if(e.target.id !== 'seek') setSkin(SKINS[(SKINS.indexOf(skin)+1) % SKINS.length], true); });
+on('#dispBtn', () => setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true));
+on('#disp', e => { if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true); });
 on('#illBtn', () => setIllum(ILLUMS[(ILLUMS.indexOf(illum)+1) % ILLUMS.length], true));
 on('#attBtn', () => { att = !att; applyVol(); flash(att ? 'ATT  ON' : 'ATT  OFF', 900); updateUI(); });
 on('#srcBtn', () => {
@@ -647,7 +657,24 @@ on('#setupBar', () => openSheet()); on('#fncBtn', () => openSheet()); on('#listB
 on('#closeSheet', closeSheet);
 sheet.addEventListener('click', e => { if(e.target === sheet) closeSheet(); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape' && !sheet.hidden) closeSheet(); });
-document.querySelectorAll('#skinChips .chip').forEach(b => b.addEventListener('click', () => setSkin(b.dataset.skin, true)));
+// Display order: chips can be rearranged in the ⚙ panel; DISP follows the same order
+const skinBox = $('#skinChips');
+function applyOrder(){ ORDER.forEach(s => { const b = skinBox.querySelector(`.chip[data-skin="${s}"]`); if(b) skinBox.appendChild(b); }); store.set('order', ORDER); }
+skinBox.querySelectorAll('.chip').forEach(b => {
+  const mv = document.createElement('span'); mv.className = 'mv'; mv.innerHTML = '<i data-d="-1">◀</i><i data-d="1">▶</i>'; b.appendChild(mv);
+  b.addEventListener('click', e => {
+    if(!skinBox.classList.contains('reorder')){ setSkin(b.dataset.skin, true); return; }
+    const d = +((e.target.dataset && e.target.dataset.d) || 0); if(!d) return;
+    const i = ORDER.indexOf(b.dataset.skin), j = i + d; if(j < 0 || j >= ORDER.length) return;
+    [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; applyOrder();
+  });
+});
+on('#orderBtn', () => {
+  const m = skinBox.classList.toggle('reorder');
+  $('#orderBtn').setAttribute('aria-pressed', m); $('#orderBtn').textContent = m ? '完了' : '並び替え'; $('#orderReset').hidden = !m;
+});
+on('#orderReset', () => { ORDER = SKINS.slice(); applyOrder(); });
+applyOrder();
 document.querySelectorAll('#illChips .chip').forEach(b => b.addEventListener('click', () => setIllum(b.dataset.illum, true)));
 let clearArm = 0;
 on('#clearBtn', async () => {
@@ -889,36 +916,42 @@ const LOGOS = {   // 'native' = the image keeps its own colors; the last value i
 };
 // the ⚙ panel swatches take each logo's color
 document.querySelectorAll('#skinChips .chip').forEach(b => { const L = LOGOS[b.dataset.skin], sw = b.querySelector('.sw'); if(!L || !sw) return; sw.className = 'sw logo' + (L.color === 'rainbow' || b.dataset.skin === 'vfdasahi' ? ' rainbow' : ''); if(L.color !== 'rainbow') sw.style.setProperty('--c', L.glow || L.color); });
-function drawVFDLogo(L){
-  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
-  const n = 28, segs = 13, top = 6, bot = 18, pxx = 16;
-  const st = bands(n), bass = (st.v[0] + st.v[1] + st.v[2])/3;
-  L.pulse += (bass - L.pulse)*.12;
-  const col = L.color === 'rainbow' ? `hsl(${Math.round(T*24) % 360},100%,62%)` : L.color === 'native' ? L.glow : (L.color || C.lit2);   // rainbow slowly cycles hue
-  if(L.img.complete && L.img.naturalWidth){
-    if(L.color === 'native'){ if(!L.key){ L.key = 'native'; L.cv.width = L.img.naturalWidth; L.cv.height = L.img.naturalHeight; L.cx.drawImage(L.img, 0, 0); } }
-    else if(L.key !== col){                         // tint the white logo with the amber tube color
-      L.key = col; L.cv.width = L.img.naturalWidth; L.cv.height = L.img.naturalHeight;
-      L.cx.globalCompositeOperation = 'source-over'; L.cx.clearRect(0, 0, L.cv.width, L.cv.height);
-      L.cx.drawImage(L.img, 0, 0); L.cx.globalCompositeOperation = 'source-in';
-      L.cx.fillStyle = col; L.cx.fillRect(0, 0, L.cv.width, L.cv.height);
-    }
-    let lh = H - 22, lw = lh*L.cv.width/L.cv.height;
-    if(lw > W - 24){ lw = W - 24; lh = lw*L.cv.height/L.cv.width; }
-    const lx = (W - lw)/2, ly = 4 + (H - 22 - lh)/2;
-    g.save();
-    g.globalAlpha = .55 + L.pulse*.35 + Math.sin(T*9)*.015;   // tube shimmer, brightens on the beat
-    g.shadowBlur = 14 + L.pulse*10; g.shadowColor = col;
-    if(L.wobble){                                  // slow liquid wobble, drawn in horizontal slices
-      const sl = 48, sh = L.cv.height/sl, dh = lh/sl;
-      for(let i=0;i<sl;i++){
-        const off = Math.sin(T*1.3 + i*.28)*3 + Math.sin(T*.7 - i*.13)*2;
-        g.drawImage(L.cv, 0, i*sh, L.cv.width, sh + .5, lx + off, ly + i*dh, lw, dh + .6);
-      }
-    } else g.drawImage(L.cv, lx, ly, lw, lh);
-    g.restore();
+function logoCol(L){ return L.color === 'rainbow' ? `hsl(${Math.round(T*24) % 360},100%,62%)` : L.color === 'native' ? L.glow : (L.color || C.lit2); }
+function logoReady(L){
+  if(!(L.img.complete && L.img.naturalWidth)) return false;
+  const col = logoCol(L);
+  if(L.color === 'native'){ if(!L.key){ L.key = 'native'; L.cv.width = L.img.naturalWidth; L.cv.height = L.img.naturalHeight; L.cx.drawImage(L.img, 0, 0); } }
+  else if(L.key !== col){                          // tint the white logo with its tube color
+    L.key = col; L.cv.width = L.img.naturalWidth; L.cv.height = L.img.naturalHeight;
+    L.cx.globalCompositeOperation = 'source-over'; L.cx.clearRect(0, 0, L.cv.width, L.cv.height);
+    L.cx.drawImage(L.img, 0, 0); L.cx.globalCompositeOperation = 'source-in';
+    L.cx.fillStyle = col; L.cx.fillRect(0, 0, L.cv.width, L.cv.height);
   }
-  // spectrum in front: unlit cells stay faint so the logo shows through
+  return true;
+}
+function logoPulse(L, bass){ L.pulse += (bass - L.pulse)*.12; }
+// Draws a logo onto context c; a scales its brightness
+function drawLogoArt(c, L, a){
+  if(!L || !logoReady(L)) return;
+  const col = logoCol(L);
+  let lh = H - 22, lw = lh*L.cv.width/L.cv.height;
+  if(lw > W - 24){ lw = W - 24; lh = lw*L.cv.height/L.cv.width; }
+  const lx = (W - lw)/2, ly = 4 + (H - 22 - lh)/2;
+  c.save();
+  c.globalAlpha = Math.max(0, Math.min(1, (.55 + L.pulse*.35 + Math.sin(T*9)*.015)*a));   // tube shimmer, brightens on the beat
+  c.shadowBlur = 14 + L.pulse*10; c.shadowColor = col;
+  if(L.wobble){                                    // slow liquid wobble, drawn in horizontal slices
+    const sl = 48, sh = L.cv.height/sl, dh = lh/sl;
+    for(let i=0;i<sl;i++){
+      const off = Math.sin(T*1.3 + i*.28)*3 + Math.sin(T*.7 - i*.13)*2;
+      c.drawImage(L.cv, 0, i*sh, L.cv.width, sh + .5, lx + off, ly + i*dh, lw, dh + .6);
+    }
+  } else c.drawImage(L.cv, lx, ly, lw, lh);
+  c.restore();
+}
+// Cyan dot-matrix spectrum in front; unlit cells stay faint so the logo shows through
+function drawSpectrumFront(st){
+  const n = 28, segs = 13, top = 6, bot = 18, pxx = 16;
   const cw = (W - pxx*2)/n, ch = (H - top - bot)/segs;
   g.fillStyle = C.dimt; g.globalAlpha = .5;
   for(let i=0;i<n;i++) for(let s=0;s<segs;s++) g.fillRect(pxx + i*cw + 2, H - bot - (s+1)*ch + 1, cw - 4, ch - 3);
@@ -935,6 +968,61 @@ function drawVFDLogo(L){
   [[63,'63'],[250,'250'],[1000,'1k'],[4000,'4k'],[15000,'15k']].forEach(([f,l]) => { const x = pxx + (Math.log(f/40)/Math.log(400))*(W-pxx*2); g.fillText(l, x, H-5); });
   g.globalAlpha = 1;
 }
+function drawVFDLogo(L){
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  const st = bands(28), bass = (st.v[0] + st.v[1] + st.v[2])/3;
+  logoPulse(L, bass); drawLogoArt(g, L, 1); drawSpectrumFront(st);
+}
+
+/* VFD SHUFFLE: hops between the logo displays at random. Each change rains down the screen dot by dot:
+   the old logo fades out cell by cell while the next one ignites with a tube flicker under a soft scan beam. */
+const SHUF_HOLD = 16, SHUF_FADE = 2.6;
+const shuf = {cur: null, next: null, t: 0, fading: false, grid: null};
+const shA = document.createElement('canvas'), sha = shA.getContext('2d');
+const shB = document.createElement('canvas'), shb = shB.getContext('2d');
+const shM = document.createElement('canvas'), shm = shM.getContext('2d');
+function shufPick(){ const keys = Object.keys(LOGOS).filter(k => k !== shuf.cur); return keys[Math.floor(Math.random()*keys.length)]; }
+function shufStart(){
+  shuf.next = shufPick(); shuf.fading = true; shuf.t = 0; shuf.grid = null;
+  flash('♪ ' + SKIN_NAME[shuf.next].replace(/^VFD /, ''), 2600);
+}
+function drawShuffle(dt){
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  const st = bands(28), bass = (st.v[0] + st.v[1] + st.v[2])/3;
+  if(!shuf.cur && !shuf.fading) shufStart();
+  shuf.t += dt;
+  const A = shuf.cur ? LOGOS[shuf.cur] : null;
+  if(A) logoPulse(A, bass);
+  if(!shuf.fading){
+    drawLogoArt(g, A, 1);
+    if(shuf.t > SHUF_HOLD) shufStart();
+  } else {
+    const B = LOGOS[shuf.next]; logoPulse(B, bass);
+    const p = Math.min(1, shuf.t/SHUF_FADE);
+    const pw = Math.round(W*DPR), ph = Math.round(H*DPR);
+    [shA, shB, shM].forEach(c => { if(c.width !== pw || c.height !== ph){ c.width = pw; c.height = ph; } });
+    const cs = 6, cols = Math.ceil(W/cs), rows = Math.ceil(H/cs);
+    if(!shuf.grid || shuf.grid.length !== cols*rows)   // each cell's turn: mostly top to bottom, scattered
+      shuf.grid = Float32Array.from({length: cols*rows}, (_, i) => .55*Math.random() + .45*(Math.floor(i/cols)/rows));
+    const q = p*1.15;
+    shm.setTransform(DPR,0,0,DPR,0,0); shm.clearRect(0, 0, W, H); shm.fillStyle = '#fff';
+    for(let i=0;i<shuf.grid.length;i++) if(shuf.grid[i] < q) shm.fillRect((i % cols)*cs, Math.floor(i/cols)*cs, cs, cs);
+    if(A){                                         // old logo: dims and loses the cells that have switched
+      sha.setTransform(DPR,0,0,DPR,0,0); sha.clearRect(0, 0, W, H); drawLogoArt(sha, A, 1 - p*.5);
+      sha.setTransform(1,0,0,1,0,0); sha.globalCompositeOperation = 'destination-out'; sha.drawImage(shM, 0, 0); sha.globalCompositeOperation = 'source-over';
+      g.drawImage(shA, 0, 0, W, H);
+    }
+    const flick = p < .85 ? .55 + .45*Math.abs(Math.sin(shuf.t*23))*(Math.random() < .85 ? 1 : .3) : 1;
+    shb.setTransform(DPR,0,0,DPR,0,0); shb.clearRect(0, 0, W, H); drawLogoArt(shb, B, flick*(.6 + .4*p));
+    shb.setTransform(1,0,0,1,0,0); shb.globalCompositeOperation = 'destination-in'; shb.drawImage(shM, 0, 0); shb.globalCompositeOperation = 'source-over';
+    g.drawImage(shB, 0, 0, W, H);
+    const by = q*H - 10, beam = g.createLinearGradient(0, by - 18, 0, by + 18);   // soft scan beam
+    beam.addColorStop(0, 'rgba(255,255,255,0)'); beam.addColorStop(.5, `rgba(255,255,255,${.22*(1 - p)})`); beam.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = beam; g.fillRect(0, by - 18, W, 36);
+    if(p >= 1){ shuf.cur = shuf.next; shuf.next = null; shuf.fading = false; shuf.t = 0; }
+  }
+  drawSpectrumFront(st);
+}
 
 /* ---------------- loop ---------------- */
 let last = performance.now();
@@ -942,7 +1030,7 @@ function frame(now){
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
-  if(skin === 'vfdb') drawVFDBeach(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD();
+  if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
