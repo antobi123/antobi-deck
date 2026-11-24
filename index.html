@@ -37,7 +37,6 @@
 :root[data-skin="neon"]{ --lit:#ff5fd2; --lit2:#3fe9ff; --dimt:rgba(255,95,210,.18); --glow:rgba(255,95,210,.55); --screen:#13041d; }
 :root[data-skin="tape"]{ --lit:#ffb13a; --lit2:#ff5c2b; --dimt:rgba(255,177,58,.16); --glow:rgba(255,160,40,.5); --screen:#150a02; }
 :root[data-skin="beach"]{ --lit:#ffd27a; --lit2:#4fe8d0; --dimt:rgba(255,210,122,.16); --glow:rgba(255,170,90,.6); --screen:#0c2a30; }
-:root[data-skin="palm"]{ --lit:#ffe2bf; --lit2:#ff8a6a; --dimt:rgba(255,226,191,.16); --glow:rgba(255,180,130,.6); --screen:#2a1410; }
 :root[data-skin="led"]{ --lit:#45ff76; --lit2:#ff3b3b; --dimt:rgba(69,255,118,.15); --glow:rgba(69,255,118,.45); --screen:#040706; }
 :root[data-illum="green"]{ --illum:#5dff8a; --illumglow:rgba(70,255,120,.55); }
 :root[data-illum="red"]{ --illum:#ff4d3d; --illumglow:rgba(255,70,50,.6); }
@@ -159,7 +158,6 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.neon{background:linear-gradient(180deg,#2a0838,#ff5fd2 60%,#ffcf5a 61%,#13041d 62%)}
 .sw.tape{background:radial-gradient(circle at 28% 50%,#ffb13a 0 5px,#150a02 6px),radial-gradient(circle at 72% 50%,#ffb13a 0 5px,#150a02 6px)}
 .sw.beach{background:radial-gradient(circle at 50% 50%,#ffe08a 0 6px,transparent 7px),linear-gradient(180deg,#1e1046,#5e2670 22%,#ff8f48 46%,#2e8496 50%,#10385a 78%,#a8645a 80%,#4a2236)}
-.sw.palm{background:radial-gradient(circle at 72% 42%,#fff6d8 0 4px,rgba(255,210,150,.6) 5px,transparent 12px),repeating-linear-gradient(100deg,transparent 0 5px,#2a1410 5px 6px) 0 0/100% 55% no-repeat,linear-gradient(180deg,#d98c80,#f6c2a4 62%,#eab8a2 64%,#b97a7a)}
 .sw.led{background:linear-gradient(90deg,#45ff76 0 55%,#ffe03a 55% 78%,#ff3b3b 78%)}
 .dot{width:22px; height:22px; border-radius:50%}
 .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
@@ -269,7 +267,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
           <button class="chip" data-skin="neon"><span class="sw neon"></span>NEON<small>シンセウェイブ</small></button>
           <button class="chip" data-skin="beach"><span class="sw beach"></span>BEACH<small>サンセット</small></button>
-          <button class="chip" data-skin="palm"><span class="sw palm"></span>PALM<small>ヤシ越しの夕日</small></button>
           <button class="chip" data-skin="tape"><span class="sw tape"></span>TAPE<small>カセット</small></button>
           <button class="chip" data-skin="led"><span class="sw led"></span>LED<small>イルミ</small></button>
         </div>
@@ -343,7 +340,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['dsp','vfd','neon','beach','palm','tape','led'], ILLUMS = ['blue','green','red','amber'];
+const SKINS = ['dsp','vfd','neon','beach','tape','led'], ILLUMS = ['blue','green','red','amber'];
 let skin = store.get('skin2','dsp'); if(!SKINS.includes(skin)) skin = 'dsp';
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
 let vol = store.get('vol', 28), att = false;
@@ -1004,101 +1001,6 @@ function drawBeach(dt){
   hibiscus(W - 36, H - 26, 8, 2 + beachT*.18, '#ff4a3a');
 }
 
-/* PALM: sunset seen through hanging palm fronds swaying in the wind; the sun's glitter on the sea is the spectrum */
-// [anchorX, anchorY, startAngle, length, phase, leaflet length]
-const FRONDS = [[-40,-6,.2,250,0,62],[130,-20,.55,240,1.3,70],[262,-18,2.5,190,2.6,58],[352,-24,1.15,250,.7,72],[478,-24,.95,280,2.0,78],[628,-18,2.35,240,3.4,70],[724,-8,2.75,200,4.4,62]];
-const palmGlit = Array.from({length:70}, () => [Math.random(), Math.random(), Math.random()*6, .4 + Math.random()]);
-let palmT = 0, palmPulse = 0;
-// Sea breeze strength over time: a steady breeze plus slow gusts (0..~1)
-function breeze(t){
-  const gust = Math.max(0, Math.sin(t*.27 + 1.1));
-  return .3 + .14*Math.sin(t*.53) + .1*Math.sin(t*1.21 + 2) + .45*gust*gust*(.7 + .3*Math.sin(t*2.3));
-}
-// A hanging frond: the stiff base barely moves, the bend builds toward the tip and lags behind it,
-// and the leaflets stream downwind together with a ripple running down the frond.
-function hangFrond(ax, ay, a0, L, ph, ll){
-  const S = 38, dl = L/S, lag = ax/420;              // gusts sweep across from left to right
-  const w0 = breeze(palmT - lag);
-  let x = ax, y = ay, a = a0 - w0*.05;
-  g.strokeStyle = '#2a1410'; g.lineCap = 'round';
-  for(let i=1;i<=S;i++){
-    const t = i/S;
-    const w = breeze(palmT - lag - t*.9);           // tip responds later than the base
-    a += (Math.PI/2 - a)*.035;                       // gravity
-    a -= w*.011*t + Math.sin(palmT*1.9 - t*3 + ph)*.004*t;   // pushed downwind, a little bounce
-    const nx = x + Math.cos(a)*dl, ny = y + Math.sin(a)*dl;
-    g.lineWidth = 4.2*(1 - t*.7);
-    g.beginPath(); g.moveTo(x, y); g.lineTo(nx, ny); g.stroke();
-    const len = ll*(t < .3 ? .45 + t*1.8 : 1 - (t - .3)*1.1);
-    const ripple = Math.sin(palmT*3.2 - t*7 + ph)*.1*(.4 + w);
-    for(const sd of [-1, 1]){
-      const da = a + sd*1.05;
-      const ex = nx + Math.cos(da)*len*.5, ey = ny + Math.sin(da)*len*.5;
-      const ta = Math.PI/2 + sd*.3 - w*.55 + ripple;     // leaflets stream with the wind
-      const tx = ex + Math.cos(ta)*len*.8, ty = ey + Math.sin(ta)*len*.8;
-      g.lineWidth = 2.5*(1 - t*.45);
-      g.beginPath(); g.moveTo(nx, ny); g.quadraticCurveTo(ex, ey, tx, ty); g.stroke();
-    }
-    x = nx; y = ny;
-  }
-}
-function drawPalm(dt){
-  palmT += dt;
-  const hz = H*.64, sx = W*.74, sy = H*.4;
-  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3;
-  palmPulse += (bass - palmPulse)*.15;
-  // hazy peach sky
-  const sky = g.createLinearGradient(0, 0, 0, hz);
-  sky.addColorStop(0, '#d98c80'); sky.addColorStop(.5, '#efab92'); sky.addColorStop(1, '#f6c2a4');
-  g.fillStyle = sky; g.fillRect(0, 0, W, hz);
-  g.fillStyle = 'rgba(190,110,110,.25)';
-  [[.1,.42,180,6,.5],[.45,.5,240,5,.3],[.8,.3,160,4,.7]].forEach(([x0,y0,w,h,sp]) => { const x = ((x0*W + palmT*sp*3) % (W + w)) - w/2; g.beginPath(); g.ellipse(x, y0*H, w/2, h/2, 0, 0, Math.PI*2); g.fill(); });
-  // sun + bloom
-  const bloom = g.createRadialGradient(sx, sy, 4, sx, sy, 150 + palmPulse*30);
-  bloom.addColorStop(0, 'rgba(255,240,200,.95)'); bloom.addColorStop(.12, 'rgba(255,200,130,.6)'); bloom.addColorStop(1, 'rgba(255,170,130,0)');
-  g.fillStyle = bloom; g.fillRect(0, 0, W, H);
-  g.fillStyle = '#fff8e0'; g.shadowBlur = 30; g.shadowColor = '#ffd080';
-  g.beginPath(); g.arc(sx, sy, 13 + palmPulse*2, 0, Math.PI*2); g.fill(); g.shadowBlur = 0;
-  // calm sea
-  const sea = g.createLinearGradient(0, hz, 0, H);
-  sea.addColorStop(0, '#eab8a2'); sea.addColorStop(.5, '#d79a8e'); sea.addColorStop(1, '#b97a7a');
-  g.fillStyle = sea; g.fillRect(0, hz, W, H - hz);
-  g.fillStyle = 'rgba(150,80,90,.35)'; g.fillRect(0, hz - .5, W, 1.2);
-  for(let k=0;k<12;k++){
-    const d = (k + 1)/12, y = hz + (H - hz)*Math.pow(d, 1.4);
-    g.strokeStyle = `rgba(130,60,70,${.08 + d*.18})`; g.lineWidth = .6 + d;
-    g.beginPath();
-    for(let x=0;x<=W;x+=8){ const yy = y + Math.sin(x*(.04 - d*.02) + palmT*(1 + d*.8) + k*2.1)*(1 + d*2.5); x ? g.lineTo(x, yy) : g.moveTo(x, yy); }
-    g.stroke();
-  }
-  // glitter everywhere, strongest under the sun
-  palmGlit.forEach(([gx, gy, ph, s]) => {
-    const a = Math.sin(palmT*2.4*s + ph*3); if(a < .4) return;
-    const x = gx*W, y = hz + 3 + gy*(H - hz - 4), near = Math.max(0, 1 - Math.abs(x - sx)/180);
-    g.fillStyle = '#fff4dc'; g.globalAlpha = (a - .4)*(.5 + near);
-    g.fillRect(x - 3 - near*3, y, 6 + near*6, 1.1);
-  });
-  g.globalAlpha = 1;
-  // sun pillar = spectrum
-  for(let k=0;k<16;k++){
-    const d = (k + 1)/16, y = hz + 2 + (H - hz - 4)*d;
-    const v = st.v[15 - k], w = (8 + d*34)*(.4 + v*1.3), jx = Math.sin(palmT*3 + k*1.7)*(2 + d*4);
-    g.fillStyle = k % 2 ? '#fff6d0' : '#ffd890'; g.globalAlpha = .45 + v*.55; g.shadowBlur = 10; g.shadowColor = '#ffd890';
-    g.fillRect(sx - w/2 + jx, y - 1, w, 1.5 + d*1.6);
-  }
-  g.shadowBlur = 0; g.globalAlpha = 1;
-  // canopy stems along the top, then the hanging fronds
-  g.strokeStyle = '#2a1410'; g.lineWidth = 7; g.lineCap = 'round';
-  g.beginPath(); g.moveTo(-10, 4); g.quadraticCurveTo(W*.3, -6, W*.55, 2); g.quadraticCurveTo(W*.8, 8, W + 10, -2); g.stroke();
-  FRONDS.forEach(f => hangFrond(...f));
-  // light bleeding through the leaves
-  g.globalCompositeOperation = 'lighter';
-  const bleed = g.createRadialGradient(sx, sy, 2, sx, sy, 60 + palmPulse*14);
-  bleed.addColorStop(0, 'rgba(255,220,150,.55)'); bleed.addColorStop(1, 'rgba(255,160,100,0)');
-  g.fillStyle = bleed; g.fillRect(sx - 80, sy - 80, 160, 160);
-  g.globalCompositeOperation = 'source-over';
-}
-
 let angL = 0, angR = 0, vuL = -20, vuR = -20;
 function drawTape(dt){
   g.fillStyle = C.screen; g.fillRect(0,0,W,H);
@@ -1199,7 +1101,7 @@ function frame(now){
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
-  if(skin === 'dsp') drawDSP(); else if(skin === 'vfd') drawVFD(); else if(skin === 'neon') drawNeon(dt); else if(skin === 'beach') drawBeach(dt); else if(skin === 'palm') drawPalm(dt); else if(skin === 'tape') drawTape(dt); else drawLED();
+  if(skin === 'dsp') drawDSP(); else if(skin === 'vfd') drawVFD(); else if(skin === 'neon') drawNeon(dt); else if(skin === 'beach') drawBeach(dt); else if(skin === 'tape') drawTape(dt); else drawLED();
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
