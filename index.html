@@ -55,6 +55,14 @@
 :root[data-illum="green"]{ --illum:#5dff8a; --illumglow:rgba(70,255,120,.55); }
 :root[data-illum="red"]{ --illum:#ff4d3d; --illumglow:rgba(255,70,50,.6); }
 :root[data-illum="amber"]{ --illum:#ffb23a; --illumglow:rgba(255,170,40,.6); }
+:root[data-illum="pink"]{ --illum:#ff5fb0; --illumglow:rgba(255,80,170,.6); }
+:root[data-illum="purple"]{ --illum:#a970ff; --illumglow:rgba(160,100,255,.6); }
+:root[data-illum="aqua"]{ --illum:#2ff2d6; --illumglow:rgba(40,240,210,.55); }
+:root[data-illum="white"]{ --illum:#eef2ff; --illumglow:rgba(220,230,255,.5); }
+/* key light colors fade into each other instead of snapping */
+@property --illum{ syntax:"<color>"; inherits:true; initial-value:#4aa8ff; }
+@property --illumglow{ syntax:"<color>"; inherits:true; initial-value:rgba(60,140,255,.65); }
+:root{ transition:--illum 1.6s ease, --illumglow 1.6s ease; }
 
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -347,6 +355,11 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="green"><span class="dot" style="background:#5dff8a;box-shadow:0 0 10px #5dff8a"></span>GREEN</button>
           <button class="chip" data-illum="red"><span class="dot" style="background:#ff4d3d;box-shadow:0 0 10px #ff4d3d"></span>RED</button>
           <button class="chip" data-illum="amber"><span class="dot" style="background:#ffb23a;box-shadow:0 0 10px #ffb23a"></span>AMBER</button>
+          <button class="chip" data-illum="pink"><span class="dot" style="background:#ff5fb0;box-shadow:0 0 10px #ff5fb0"></span>PINK</button>
+          <button class="chip" data-illum="purple"><span class="dot" style="background:#a970ff;box-shadow:0 0 10px #a970ff"></span>PURPLE</button>
+          <button class="chip" data-illum="aqua"><span class="dot" style="background:#2ff2d6;box-shadow:0 0 10px #2ff2d6"></span>AQUA</button>
+          <button class="chip" data-illum="white"><span class="dot" style="background:#eef2ff;box-shadow:0 0 10px #eef2ff"></span>WHITE</button>
+          <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
         </div>
       </section>
       <section id="listSec">
@@ -389,7 +402,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
           <dt>SEEK ∧∨</dt><dd>10秒送り／戻し</dd>
           <dt>ATT</dt><dd>アッテネーター。一時的に音量をぐっと下げる</dd>
-          <dt>ILLUMI</dt><dd>キー照明の色を切り替え</dd>
+          <dt>ILLUMI</dt><dd>キー照明の色を切り替え（8色＋RANDOM。RANDOM は数秒ごとに色がゆっくり変わる）</dd>
           <dt>LIST</dt><dd>プレイリストを開く</dd>
           <dt>1 SCROLL</dt><dd>曲名のスクロール表示 ON/OFF</dd>
           <dt>2 SCN</dt><dd>イントロスキャン。各曲の頭10秒ずつ再生</dd>
@@ -421,7 +434,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfd','vfdb','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber'];
+const SKINS = ['vfd','vfdb','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s)); SKINS.forEach(s => { if(!ORDER.includes(s)) ORDER.push(s); });
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
@@ -789,9 +802,22 @@ function setSkin(s, announce){
   readColors();
   if(announce) flash('DISPLAY  ' + (SKIN_NAME[s] || s.toUpperCase()), 900);
 }
+const ILLUM_COL = {
+  blue:['#4aa8ff','rgba(60,140,255,.65)'], green:['#5dff8a','rgba(70,255,120,.55)'], red:['#ff4d3d','rgba(255,70,50,.6)'], amber:['#ffb23a','rgba(255,170,40,.6)'],
+  pink:['#ff5fb0','rgba(255,80,170,.6)'], purple:['#a970ff','rgba(160,100,255,.6)'], aqua:['#2ff2d6','rgba(40,240,210,.55)'], white:['#eef2ff','rgba(220,230,255,.5)']
+};
+let illumTimer = 0, illumNow = '';
+function illumStep(){   // RANDOM: drift to another color every few seconds (the color change itself fades, see @property)
+  const keys = Object.keys(ILLUM_COL).filter(k => k !== illumNow);
+  illumNow = keys[Math.floor(Math.random()*keys.length)];
+  root.style.setProperty('--illum', ILLUM_COL[illumNow][0]); root.style.setProperty('--illumglow', ILLUM_COL[illumNow][1]);
+}
 function setIllum(c, announce){
   illum = c; root.setAttribute('data-illum', c); store.set('illum', c);
   document.querySelectorAll('#illChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.illum === c));
+  clearInterval(illumTimer);
+  if(c === 'random'){ illumStep(); illumTimer = setInterval(illumStep, 7000); }
+  else { illumNow = ''; root.style.removeProperty('--illum'); root.style.removeProperty('--illumglow'); }
   if(announce) flash('ILLUMI  ' + c.toUpperCase(), 900);
 }
 function setVol(v, show){
