@@ -286,7 +286,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="inds">
           <span class="ind" id="iSt">ST</span><span class="ind" id="iLoud">LOUD</span><span class="ind" id="iAtt">ATT</span>
-          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span>
+          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span><span class="ind" id="iSlp">SLP</span><span class="ind" id="iAlm">ALM</span>
         </div>
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
@@ -394,6 +394,38 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-clubc="red"><span class="sw" style="background:linear-gradient(0deg,#ffd24f 0 40%,#ff3a3a 40% 46%,#1a0204 46%)"></span>レッド</button>
           <button class="chip" data-clubc="green"><span class="sw" style="background:linear-gradient(0deg,#c8ff7a 0 40%,#20d98a 40% 46%,#01140c 46%)"></span>グリーン</button>
         </div>
+      </section>
+      <section data-tab="look">
+        <h3>省電力モード</h3>
+        <div class="chips" id="ecoChips">
+          <button class="chip" data-eco="0">OFF</button>
+          <button class="chip" data-eco="1">ON</button>
+        </div>
+        <p class="rnote">描画を毎秒15回に減らし、光のにじみをなくして電池と発熱を抑えます。見た目は少しシンプルになります。</p>
+      </section>
+      <section data-tab="look">
+        <h3>おやすみモード <span id="sleepLeft" style="float:right"></span></h3>
+        <div class="chips" id="sleepChips">
+          <button class="chip" data-sleep="0">OFF</button>
+          <button class="chip" data-sleep="15">15分</button>
+          <button class="chip" data-sleep="30">30分</button>
+          <button class="chip" data-sleep="60">60分</button>
+          <button class="chip" data-sleep="90">90分</button>
+        </div>
+        <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップすると明るく戻ります。</p>
+      </section>
+      <section data-tab="look">
+        <h3>目覚まし <span id="alarmLeft" style="float:right"></span></h3>
+        <div class="chips" id="alarmChips">
+          <button class="chip" data-alarm="0">OFF</button>
+          <button class="chip" data-alarm="1">ON</button>
+          <input type="time" id="alarmTime" value="07:00" style="background:#0c0d11; border:1px solid var(--line); border-radius:8px; color:var(--fg); padding:7px 10px; font:15px var(--font-ui)">
+        </div>
+        <div class="chips" id="alarmSrcChips" style="margin-top:8px">
+          <button class="chip" data-asrc="radio">ラジオ（最後の局）</button>
+          <button class="chip" data-asrc="disc">曲（プレイリスト）</button>
+        </div>
+        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにして、暗く保ちます。アプリを開いたまま、できれば充電しながら使ってください。</p>
       </section>
       <section data-tab="look">
         <h3>スペアナ</h3>
@@ -603,8 +635,9 @@ function ensureAudio(){
   tdL = new Float32Array(anL.fftSize); tdR = new Float32Array(anR.fftSize);
   applyVol(); applyLoud();
 }
+let sleepFade = 1;   // the sleep timer and alarm fade, on top of the volume
 const volGain = v => Math.pow(v/40, 2);
-function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1), AC.currentTime, .03); try{ plain.volume = Math.min(1, volGain(vol) * (att ? .1 : 1)); }catch(e){} }
+function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1) * sleepFade, AC.currentTime, .03); try{ plain.volume = Math.min(1, volGain(vol) * (att ? .1 : 1) * sleepFade); }catch(e){} }
 function applyLoud(){ if(!lowS) return; lowS.gain.value = loud ? 9 : 0; highS.gain.value = loud ? 6 : 0; }
 
 /* ---------------- playback ---------------- */
@@ -978,7 +1011,7 @@ function savePreset(i, st){
 audio.addEventListener('error', () => {
   if(mode !== 'radio' || radioPlain || !radioNow) return;
   radioPlain = true; audio.removeAttribute('src'); audio.load();
-  plain.src = radioNow.url; plain.volume = Math.min(1, volGain(vol)*(att ? .1 : 1));
+  plain.src = radioNow.url; plain.volume = Math.min(1, volGain(vol)*(att ? .1 : 1)*sleepFade);
   plain.play().catch(() => flash('NO SIGNAL', 1600));
 });
 plain.addEventListener('error', () => { if(mode === 'radio' && radioPlain) flash('NO SIGNAL', 1600); });
@@ -1319,7 +1352,7 @@ function dimGrid(cols, rows, x0, y0, cw, ch, solo){
   for(let i=0;i<cols;i++) for(let s=0;s<rows;s++) g.fillRect(x0 + i*cw + 1, y0 + s*ch + 1, cw - 2, ch - 2);
   g.globalAlpha = 1;
 }
-const litOn = (solo, col) => { g.globalAlpha = solo ? 1 : .9; g.shadowBlur = 5; g.shadowColor = col || C.lit; };
+const litOn = (solo, col) => { g.globalAlpha = solo ? 1 : .9; g.shadowBlur = ecoNow() ? 0 : 5; g.shadowColor = col || C.lit; };
 const litOff = () => { g.shadowBlur = 0; g.globalAlpha = 1; };
 
 // 1. BAR: classic bars with peak caps
@@ -1498,6 +1531,7 @@ const glowC = document.createElement('canvas'), glowX = glowC.getContext('2d');
 function drawLit(){
   const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
   if(glowC.width !== gw || glowC.height !== gh){ glowC.width = gw; glowC.height = gh; }
+  if(ecoNow()){ g.drawImage(vbLit, 0, 0, W, H); return; }   // power saving: no halo
   glowX.clearRect(0, 0, gw, gh); glowX.imageSmoothingEnabled = true; glowX.drawImage(vbLit, 0, 0, gw, gh);
   g.save(); g.imageSmoothingEnabled = true; g.globalAlpha = .85; g.drawImage(glowC, -1, -1, W + 2, H + 2); g.restore();
   g.drawImage(vbLit, 0, 0, W, H);
@@ -2143,6 +2177,94 @@ function setDColor(c, announce){
 }
 document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setDColor(b.dataset.clubc, true)));
 setDColor(dcolor, false);
+/* 省電力モード: 15 frames a second and no glow halo. おやすみモード (sleep timer): screen dimmed and power-saving,
+   the last minute fades the sound out, then it stops. 目覚まし (alarm): at the set time it starts the radio or the playlist
+   and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
+let eco = !!store.get('eco', false), sleepEnd = 0, slept = false, alarmOn = !!store.get('alarm', false), alarmRing = 0;
+let alarmTime = store.get('alarmTime', '07:00'), alarmSrc = store.get('alarmSrc', 'radio'), alarmFired = '';
+const ecoNow = () => eco || sleepEnd > 0 || slept || (alarmOn && !alarmRing);
+const shade = document.createElement('div');
+shade.style.cssText = 'position:fixed; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity 1.2s; z-index:900';
+document.body.appendChild(shade);
+function setShade(){
+  const o = slept ? .88 : sleepEnd ? .62 : (alarmOn && !alarmRing) ? .62 : 0;
+  shade.style.opacity = o; shade.style.pointerEvents = slept ? 'auto' : 'none';
+}
+shade.addEventListener('click', () => { slept = false; setShade(); });
+function setEco(v, announce){
+  eco = v; store.set('eco', v);
+  document.querySelectorAll('#ecoChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.eco === '1') === v));
+  if(announce) flash(v ? 'ECO  ON' : 'ECO  OFF', 900);
+}
+document.querySelectorAll('#ecoChips .chip').forEach(b => b.addEventListener('click', () => setEco(b.dataset.eco === '1', true)));
+setEco(eco, false);
+function sleepChipsOff(){ document.querySelectorAll('#sleepChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.sleep === '0')); $('#iSlp').classList.remove('on'); $('#sleepLeft').textContent = ''; }
+function setSleep(min, announce){
+  document.querySelectorAll('#sleepChips .chip').forEach(b => b.setAttribute('aria-pressed', +b.dataset.sleep === min));
+  sleepEnd = min ? Date.now() + min*60000 : 0; slept = false;
+  sleepFade = 1; applyVol();
+  $('#iSlp').classList.toggle('on', !!min); $('#sleepLeft').textContent = min ? '残り ' + min + '分' : '';
+  setShade(); keepAwake();
+  if(announce) flash(min ? 'SLEEP  ' + min + 'MIN' : 'SLEEP  OFF', 1200);
+}
+document.querySelectorAll('#sleepChips .chip').forEach(b => b.addEventListener('click', () => setSleep(+b.dataset.sleep, true)));
+sleepChipsOff();
+function alarmLeftText(){
+  if(!alarmOn){ $('#alarmLeft').textContent = ''; return; }
+  const [hh, mm] = alarmTime.split(':').map(Number), now = new Date(), t = new Date(now); t.setHours(hh, mm, 0, 0); if(t <= now) t.setDate(t.getDate() + 1);
+  const m = Math.round((t - now)/60000); $('#alarmLeft').textContent = 'あと ' + Math.floor(m/60) + '時間' + (m % 60) + '分';
+}
+function setAlarm(v, announce){
+  alarmOn = v; store.set('alarm', v); if(!v){ alarmRing = 0; sleepFade = sleepEnd ? sleepFade : 1; applyVol(); }
+  document.querySelectorAll('#alarmChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.alarm === '1') === v));
+  $('#iAlm').classList.toggle('on', v); alarmLeftText(); setShade(); keepAwake();
+  if(announce) flash(v ? 'ALARM  ' + alarmTime : 'ALARM  OFF', 1200);
+}
+function setAlarmSrc(s){ alarmSrc = s; store.set('alarmSrc', s); document.querySelectorAll('#alarmSrcChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.asrc === s)); }
+document.querySelectorAll('#alarmChips .chip').forEach(b => b.addEventListener('click', () => { ensureAudio(); setAlarm(b.dataset.alarm === '1', true); }));
+document.querySelectorAll('#alarmSrcChips .chip').forEach(b => b.addEventListener('click', () => setAlarmSrc(b.dataset.asrc)));
+$('#alarmTime').value = alarmTime;
+$('#alarmTime').addEventListener('change', e => { alarmTime = e.target.value || '07:00'; store.set('alarmTime', alarmTime); alarmFired = ''; alarmLeftText(); if(alarmOn) flash('ALARM  ' + alarmTime, 1200); });
+// keep the screen from switching off while the sleep timer or the alarm is on (where the phone allows it)
+let wakeLock = null;
+async function keepAwake(){
+  const want = (sleepEnd > 0 || alarmOn) && document.visibilityState === 'visible';
+  try{
+    if(want && !wakeLock && navigator.wakeLock){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); }
+    else if(!want && wakeLock){ const w = wakeLock; wakeLock = null; await w.release(); }
+  }catch(e){ wakeLock = null; }
+}
+document.addEventListener('visibilitychange', keepAwake);
+setAlarmSrc(alarmSrc === 'disc' ? 'disc' : 'radio'); setAlarm(alarmOn, false);
+function ringAlarm(){
+  alarmRing = Date.now(); slept = false; sleepEnd = 0; sleepChipsOff();
+  sleepFade = 0; applyVol(); setShade();
+  if(alarmSrc === 'disc' && tracks.length){ leaveRadio(); playIndex(Math.max(0, idx)); }
+  else tune(radioCh);
+  flash('GOOD MORNING', 4000);
+}
+setInterval(() => {
+  const now = Date.now();
+  if(sleepEnd){
+    const left = sleepEnd - now;
+    if(left <= 0){                                            // time is up: stop, put the volume back, keep the screen dark
+      audio.pause(); try{ plain.pause(); }catch(e){}
+      sleepEnd = 0; slept = true; sleepFade = 1; applyVol(); updateUI(); sleepChipsOff(); setShade(); keepAwake();
+    } else {
+      $('#sleepLeft').textContent = '残り ' + Math.ceil(left/60000) + '分';
+      const f = Math.min(1, left/60000); if(Math.abs(f - sleepFade) > .01){ sleepFade = f; applyVol(); }
+    }
+  }
+  if(alarmOn){
+    const d = new Date(), hm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), stamp = d.toDateString() + hm;
+    if(hm === alarmTime && alarmFired !== stamp){ alarmFired = stamp; ringAlarm(); }
+    if(d.getSeconds() === 0) alarmLeftText();
+  }
+  if(alarmRing){                                              // fading in over a minute
+    const f = Math.min(1, (now - alarmRing)/60000); sleepFade = f; applyVol();
+    if(f >= 1){ alarmRing = 0; setShade(); }
+  }
+}, 1000);
 
 /* CLUB: a neon 3D spectrum. The bars stand on a slanted grid that narrows into the distance; the grid lines glow magenta,
    lit segments blue, the peaks white and they hang a moment before falling. On a kick the whole frame flashes. */
@@ -2318,7 +2440,7 @@ function drawVFDDrive(dt){
 /* ---------------- loop ---------------- */
 let last = performance.now();
 function frame(now){
-  if(now - last < 1000/30 - 4){ requestAnimationFrame(frame); return; }   // 30 frames a second is plenty for the dot matrix (and keeps the phone cool)
+  if(now - last < 1000/(ecoNow() ? 15 : 30) - 4){ requestAnimationFrame(frame); return; }   // 30 frames a second is plenty for the dot matrix (and keeps the phone cool)
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
