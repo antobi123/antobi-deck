@@ -103,6 +103,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 :root[data-panel="blue"]{ --p1:#9cc1ee; --p2:#4f7fc6; --p3:#2a5197; --p4:#3d68b0; --p5:#14295a; --w1:#cfe0f7; --w2:#6690cf; --w3:#30579b; --w4:#132857;
   --ltext:#eef4ff; --lshadow:rgba(0,0,0,.45) }
 :root[data-panel="carbon"]{ --p1:#3a3b40; --p2:#1d1e22; --p3:#0e0f11; --p4:#1a1b1e; --p5:#050506; --w1:#55565c; --w2:#2a2b30; --w3:#16171a; --w4:#070708;
+  --b1:#55565d; --b2:#1c1d22; --b3:#3c3d44; --btext:#e8e9ee;
   --ring:#2c2d33; --r1:#1a1b1f; --r2:#5d5e65; --r3:#34353b; --r4:#141518; --rtext:#d8dae0; --ltext:#c4c6cd; --lshadow:rgba(0,0,0,.6) }
 :root[data-panel="carbon"] .plate{background:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 3px,transparent 3px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.45) 0 3px,transparent 3px 6px),linear-gradient(180deg,var(--p1) 0%,var(--p2) 20%,var(--p3) 48%,var(--p4) 76%,var(--p5) 100%)}
 :root[data-panel="pink"]{ --p1:#ffd3e6; --p2:#f39cc2; --p3:#d9679c; --p4:#e985b3; --p5:#9e3a6c; --w1:#ffe8f2; --w2:#f5a9cb; --w3:#d46797; --w4:#933862;
@@ -2680,7 +2681,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125162647';                                 // stamped by build.ps1
+const APP_VER = '20261125163116';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
