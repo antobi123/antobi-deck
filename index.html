@@ -1709,13 +1709,13 @@ function drawVFDTurntable(dt){
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  // a sunflower poster: a big seeded face ringed with petals on a tall stem with broad leaves, nodding in the breeze
-  const nod = br*.7 + Math.sin(ttT*1.1)*.25, hx = 100 + nod, hy = 8.5;
+  // a sunflower poster: a big seeded face ringed with petals on a tall stem with broad leaves (the picture itself stays still)
+  const nod = 0, hx = 100, hy = 8.5;
   for(let y=19;y>=hy+5;y--){ const t = (19 - y)/(19 - hy - 5); dot(100 + nod*t, y, G); }                     // stem
   [[-1, 94.5, 15.5], [1, 105.5, 13.5]].forEach(([s, lx, ly]) => {                                            // broad heart-shaped leaves
     for(let k=0;k<=5;k++){ const w = Math.sin(k/5*Math.PI)*1.8; for(let v=-w;v<=w;v+=.7) if(Math.abs(v) > w - .8 || k === 0) dot(lx - s*k + (s > 0 ? 5*s : 0) - (s < 0 ? 0 : 0), ly + v - k*.25, G); }
   });
-  for(let p=0;p<14;p++){ const a = p*Math.PI*2/14 + Math.sin(ttT*.5)*.04; for(let r=3.6;r<=6;r+=.6) dot(hx + Math.cos(a)*r, hy + Math.sin(a)*r*.82, A); }   // petals
+  for(let p=0;p<14;p++){ const a = p*Math.PI*2/14; for(let r=3.6;r<=6;r+=.6) dot(hx + Math.cos(a)*r, hy + Math.sin(a)*r*.82, A); }   // petals
   for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9) dot(hx + x, hy + y*.85, (x + y) % 2 === 0 ? G : K);   // the seeded face
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
