@@ -621,7 +621,7 @@ const DB = {
 /* ---------------- audio graph ---------------- */
 let AC, master, analyser, anL, anR, lowS, highS, mediaSrc, freq, tdL, tdR;
 function ensureAudio(){
-  if(AC){ if(AC.state === 'suspended') AC.resume(); return; }
+  if(AC){ if(AC.state !== 'running') AC.resume().catch(() => {}); return; }   // iPhone leaves it 'interrupted' after the background
   AC = new (window.AudioContext || window.webkitAudioContext)();
   lowS = AC.createBiquadFilter(); lowS.type = 'lowshelf'; lowS.frequency.value = 110;
   highS = AC.createBiquadFilter(); highS.type = 'highshelf'; highS.frequency.value = 9000;
@@ -1051,6 +1051,67 @@ setInterval(() => {                                          // the watchdog
   if(el.currentTime === wdTime){ if((wdStuck += 4) >= 12){ wdStuck = 0; radioReconnect(); } }
   else { wdStuck = 0; wdTime = el.currentTime; }
 }, 4000);
+/* iPhone: Safari pauses Web Audio when the app goes to the background, which silences everything routed through it.
+   So on iPhone only, going to the background hands the sound to the plain player (no Web Audio there: no LOUD, no
+   spectrum, and iPhone ignores the app's own volume for it), and coming back hands it back where it got to.
+   Other phones are not touched. */
+const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let bgHand = null, plainUnlocked = false;   // bgHand: null, 'file' or 'radio'
+function unlockPlain(){                       // iPhone lets a player start by itself later only if it played once from a tap
+  if(!IOS || plainUnlocked || plain.src) return;
+  plainUnlocked = true;
+  const n = 800, b = new Uint8Array(44 + n), v = new DataView(b.buffer), s = (o, t) => [...t].forEach((c, i) => b[o + i] = c.charCodeAt(0));
+  s(0, 'RIFF'); v.setUint32(4, 36 + n, true); s(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 8000, true); v.setUint32(28, 8000, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); s(36, 'data'); v.setUint32(40, n, true);
+  b.fill(128, 44);                            // a tenth of a second of silence
+  plain.src = URL.createObjectURL(new Blob([b], {type: 'audio/wav'}));
+  plain.play().then(() => { plain.pause(); if(!bgHand && mode !== 'radio') plain.removeAttribute('src'); }).catch(() => { plainUnlocked = false; });
+}
+document.addEventListener('pointerdown', unlockPlain, { capture: true });
+function handToPlain(){
+  if(!IOS || bgHand) return;
+  if(mode === 'file' && !audio.paused && tracks[idx]){
+    const t = audio.currentTime; bgHand = 'file';
+    plain.src = tracks[idx].url; plain.volume = Math.min(1, volGain(vol)*(att ? .1 : 1)*sleepFade);
+    plain.addEventListener('loadedmetadata', () => { try{ plain.currentTime = t; }catch(e){} }, { once: true });
+    plain.play().catch(() => {});
+    audio.pause();
+  } else if(mode === 'radio' && !radioPlain && !audio.paused && radioNow){
+    bgHand = 'radio'; audio.pause(); radioPlain = true;
+    plain.src = radioNow.url; plain.play().catch(() => {});
+  }
+}
+function handBack(){
+  if(!bgHand) return;
+  const was = bgHand, playing = !plain.paused, t = plain.currentTime;
+  bgHand = null; plain.pause(); plain.removeAttribute('src');
+  ensureAudio();
+  if(was === 'file' && mode === 'file' && tracks[idx]){
+    if(audio.src !== tracks[idx].url){                       // the playlist moved on while away
+      audio.src = tracks[idx].url;
+      audio.addEventListener('loadedmetadata', () => { try{ audio.currentTime = t; }catch(e){} }, { once: true });
+    } else { try{ audio.currentTime = t; }catch(e){} }
+    if(playing) audio.play().catch(() => {});
+    renderList(); updateUI();
+  } else if(was === 'radio' && mode === 'radio'){
+    radioPlain = false;
+    if(playing && radioNow){ audio.src = radioNow.url; audio.play().catch(() => {}); }
+    updateUI();
+  }
+}
+function bgStep(dir){                                        // next / previous song while handed over
+  if(repeat === 'one' && dir > 0 && !bgStep.manual){ plain.currentTime = 0; plain.play().catch(() => {}); return; }
+  let n;
+  if(shuffle && tracks.length > 1){ do{ n = Math.floor(Math.random()*tracks.length); } while(n === idx); }
+  else n = idx + dir;
+  if(n >= tracks.length){ if(repeat === 'all' || bgStep.manual) n = 0; else return; }
+  if(n < 0) n = tracks.length - 1;
+  idx = n; plain.src = tracks[n].url; plain.play().catch(() => {});
+  $('#trk').textContent = '-' + String(n + 1).padStart(2, '0'); setTitle(trackLabel(tracks[n])); mediaMeta();
+}
+plain.addEventListener('ended', () => { if(bgHand === 'file'){ bgStep.manual = false; bgStep(1); } });
+document.addEventListener('visibilitychange', () => { if(document.hidden) handToPlain(); else handBack(); });
+window.addEventListener('pagehide', handToPlain);
 
 // hold 1-6 while listening to store the current station on that button, like a car radio
 ['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => {
@@ -1297,10 +1358,10 @@ function mediaMeta(){
   try{
     const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO' } : tracks[idx];
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
-    navigator.mediaSession.setActionHandler('play', () => { if(mode === 'radio'){ const el = radioEl(); if(el.paused){ if(!el.src) el.src = radioNow.url; el.play().catch(() => radioReconnect()); } } else audio.play(); });
+    navigator.mediaSession.setActionHandler('play', () => { if(mode === 'radio'){ const el = radioEl(); if(el.paused){ if(!el.src) el.src = radioNow.url; el.play().catch(() => radioReconnect()); } } else if(bgHand === 'file') plain.play().catch(() => {}); else audio.play(); });
     navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); plain.pause(); });
-    navigator.mediaSession.setActionHandler('nexttrack', () => step(1));
-    navigator.mediaSession.setActionHandler('previoustrack', () => step(-1));
+    navigator.mediaSession.setActionHandler('nexttrack', () => { if(bgHand === 'file'){ bgStep.manual = true; bgStep(1); } else step(1); });
+    navigator.mediaSession.setActionHandler('previoustrack', () => { if(bgHand === 'file'){ bgStep.manual = true; bgStep(-1); } else step(-1); });
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
 }
 let lock = null;
