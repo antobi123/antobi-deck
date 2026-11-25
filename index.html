@@ -1023,6 +1023,34 @@ plain.addEventListener('error', () => { if(mode === 'radio' && radioPlain) flash
   el.addEventListener('playing', () => { if(mode === 'radio' && el === radioEl()){ flash($('#trk').textContent + '  ' + radioNow.short, 900); updateUI(); wake(true); } });
 });
 plain.addEventListener('pause', () => { updateUI(); });
+/* keep the sound going in the background: when the radio stream drops (the phone switching Wi-Fi / mobile data,
+   a server hiccup) it reconnects by itself, waiting a little longer each try; a stream that is "playing" but has
+   stopped moving for 12 s counts as dropped too. A music file that cannot be read is skipped instead of stopping. */
+let rcTry = 0, rcTimer = 0, wdTime = -1, wdStuck = 0, fileErr = 0;
+function radioReconnect(){
+  if(mode !== 'radio' || !radioNow || rcTimer || rcTry >= 10) return;   // after 10 tries (a few minutes) it gives up
+  const wait = Math.min(20000, 1500*Math.pow(1.6, rcTry++));
+  rcTimer = setTimeout(() => {
+    rcTimer = 0; if(mode !== 'radio' || !radioNow) return;
+    const el = radioEl(); el.src = radioNow.url; el.play().catch(() => radioReconnect());
+  }, wait);
+}
+[audio, plain].forEach(el => {
+  el.addEventListener('ended', () => { if(mode === 'radio' && el === radioEl()) radioReconnect(); });   // a live stream should never end
+  el.addEventListener('playing', () => { if(mode === 'radio' && el === radioEl()){ rcTry = 0; wdStuck = 0; } if(mode === 'file' && el === audio) fileErr = 0; });
+});
+plain.addEventListener('error', () => { if(mode === 'radio' && radioPlain) radioReconnect(); });
+audio.addEventListener('error', () => {                       // an unreadable file: go on to the next one
+  if(mode !== 'file' || tracks.length < 2 || fileErr >= tracks.length) return;
+  fileErr++; setTimeout(() => { if(mode === 'file') step(1, true); }, 1200);
+});
+setInterval(() => {                                          // the watchdog
+  if(mode !== 'radio'){ wdStuck = 0; return; }
+  const el = radioEl();
+  if(el.paused || rcTimer){ wdStuck = 0; wdTime = -1; return; }
+  if(el.currentTime === wdTime){ if((wdStuck += 4) >= 12){ wdStuck = 0; radioReconnect(); } }
+  else { wdStuck = 0; wdTime = el.currentTime; }
+}, 4000);
 
 // hold 1-6 while listening to store the current station on that button, like a car radio
 ['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => {
@@ -1269,8 +1297,8 @@ function mediaMeta(){
   try{
     const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO' } : tracks[idx];
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('play', () => { if(mode === 'radio'){ const el = radioEl(); if(el.paused){ if(!el.src) el.src = radioNow.url; el.play().catch(() => radioReconnect()); } } else audio.play(); });
+    navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); plain.pause(); });
     navigator.mediaSession.setActionHandler('nexttrack', () => step(1));
     navigator.mediaSession.setActionHandler('previoustrack', () => step(-1));
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
