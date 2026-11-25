@@ -99,6 +99,11 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 :root[data-panel="white"]{ --p1:#ffffff; --p2:#f1f1f4; --p3:#dedfe4; --p4:#ececf0; --p5:#b9bbc2; --w1:#ffffff; --w2:#f0f0f3; --w3:#d4d5db; --w4:#a9abb2;
   --b1:#ffffff; --b2:#d9dadf; --b3:#f4f4f6; --btext:#1a1b20; --ring:#f2f2f5; --r1:#b9bbc2; --r2:#ffffff; --r3:#e4e5ea; --r4:#a8aab1; --rtext:#26272c;
   --ltext:#2a2b31; --lshadow:rgba(255,255,255,.8) }
+:root[data-panel="blue"]{ --p1:#9cc1ee; --p2:#4f7fc6; --p3:#2a5197; --p4:#3d68b0; --p5:#14295a; --w1:#cfe0f7; --w2:#6690cf; --w3:#30579b; --w4:#132857;
+  --ltext:#eef4ff; --lshadow:rgba(0,0,0,.45) }
+:root[data-panel="carbon"]{ --p1:#3a3b40; --p2:#1d1e22; --p3:#0e0f11; --p4:#1a1b1e; --p5:#050506; --w1:#55565c; --w2:#2a2b30; --w3:#16171a; --w4:#070708;
+  --ring:#2c2d33; --r1:#1a1b1f; --r2:#5d5e65; --r3:#34353b; --r4:#141518; --rtext:#d8dae0; --ltext:#c4c6cd; --lshadow:rgba(0,0,0,.6) }
+:root[data-panel="carbon"] .plate{background:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 3px,transparent 3px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.45) 0 3px,transparent 3px 6px),linear-gradient(180deg,var(--p1) 0%,var(--p2) 20%,var(--p3) 48%,var(--p4) 76%,var(--p5) 100%)}
 :root[data-panel="red"]{ --p1:#e0787c; --p2:#b8333a; --p3:#8c1a21; --p4:#a8282f; --p5:#5a0d12; --w1:#f2a3a6; --w2:#c43e45; --w3:#8a1a20; --w4:#560b10;
   --ltext:#fbe9ea; --lshadow:rgba(0,0,0,.45) }
 /* ---------- body ---------- */
@@ -229,6 +234,8 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.sp-meter{background:linear-gradient(90deg,transparent 78%,#021311 78%),linear-gradient(180deg,#021311 15%,#5ff6e6 15% 42%,#021311 42% 58%,#5ff6e6 58% 85%,#021311 85%)}
 .sw.sp-scope{background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 22%27%3E%3Cpath d=%27M0 11 Q12 0 25 11 T50 11 T75 11 T100 11%27 fill=%27none%27 stroke=%27%235ff6e6%27 stroke-width=%272.5%27/%3E%3C/svg%3E") center/100% 100% no-repeat,#021311}
 .sw.sp-fall{background:repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 7px),linear-gradient(180deg,#5ff6e6,rgba(95,246,230,.15) 80%,#021311)}
+.sw.sp-ring{background:radial-gradient(ellipse at 50% 50%,#021311 0 22%,#ffa24a 22% 27%,transparent 27% 60%,#021311 60%),repeating-conic-gradient(#5ff6e6 0 9deg,#021311 9deg 22deg)}
+.sw.sp-hill{background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 22%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 22V15L14 8L28 12L42 4L58 10L72 6L86 13L100 11V22Z%27 fill=%27%235ff6e6%27 fill-opacity=%27.45%27 stroke=%27%23ffa24a%27 stroke-width=%271.6%27/%3E%3C/svg%3E") center/100% 100% no-repeat,#021311}
 .sw{width:100%; height:22px; border-radius:4px; box-shadow:inset 0 1px 4px #000}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
@@ -438,6 +445,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-panel="gold"><span class="sw" style="background:linear-gradient(180deg,#f3e7c8,#b79d68 55%,#8a7346)"></span>ゴールド</button>
           <button class="chip" data-panel="white"><span class="sw" style="background:linear-gradient(180deg,#ffffff,#dedfe4 55%,#b9bbc2)"></span>パールホワイト</button>
           <button class="chip" data-panel="red"><span class="sw" style="background:linear-gradient(180deg,#e0787c,#8c1a21 55%,#5a0d12)"></span>メタリックレッド</button>
+          <button class="chip" data-panel="blue"><span class="sw" style="background:linear-gradient(180deg,#9cc1ee,#2a5197 55%,#14295a)"></span>メタリックブルー</button>
+          <button class="chip" data-panel="carbon"><span class="sw" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.12) 0 2px,transparent 2px 4px),linear-gradient(180deg,#3a3b40,#0e0f11)"></span>カーボン</button>
         </div>
       </section>
       <section data-tab="look">
@@ -449,6 +458,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-spec="meter"><span class="sw sp-meter"></span>L/R METER<small>レベルメーター</small></button>
           <button class="chip" data-spec="scope"><span class="sw sp-scope"></span>SCOPE<small>オシロスコープ</small></button>
           <button class="chip" data-spec="fall"><span class="sw sp-fall"></span>WATERFALL<small>滝</small></button>
+          <button class="chip" data-spec="ring"><span class="sw sp-ring"></span>RING<small>リング</small></button>
+          <button class="chip" data-spec="hill"><span class="sw sp-hill"></span>MOUNTAIN<small>山なみ</small></button>
         </div>
       </section>
       <section data-tab="look">
@@ -644,8 +655,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）</dd>
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
-            <dt>パネルの色</dt><dd>本体の色。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド</dd>
-            <dt>スペアナ</dt><dd>6種類から選べます（DISC 中は 6 ボタンでも切り替え）</dd>
+            <dt>パネルの色</dt><dd>本体の色。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・カーボン</dd>
+            <dt>スペアナ</dt><dd>8種類から選べます（DISC 中は 6 ボタンでも切り替え）</dd>
             <dt>ILLUMI</dt><dd>キー照明の色（8色＋RANDOM）。⚙「表示」からも選べます</dd>
           </dl>
         </div>
@@ -1570,8 +1581,8 @@ function rr(x, y, w, h, r){ g.beginPath(); if(g.roundRect) g.roundRect(x, y, w, 
 
 /* ---------------- skins ---------------- */
 /* ---------------- spectrum styles: all drawn as VFD dot-matrix cells ---------------- */
-const SPECS = ['bar','center','peak','meter','scope','fall'];
-const SPEC_NAME = {bar:'BAR', center:'CENTER', peak:'PEAK', meter:'L/R METER', scope:'SCOPE', fall:'WATERFALL'};
+const SPECS = ['bar','center','peak','meter','scope','fall','ring','hill'];
+const SPEC_NAME = {bar:'BAR', center:'CENTER', peak:'PEAK', meter:'L/R METER', scope:'SCOPE', fall:'WATERFALL', ring:'RING', hill:'MOUNTAIN'};
 let spec = store.get('spec','bar'); if(!SPECS.includes(spec)) spec = 'bar';
 function setSpec(s, announce){
   spec = s; store.set('spec', s);
@@ -1707,9 +1718,49 @@ function specFall(solo){
   });
   litOff(); freqLabels();
 }
+// 7. RING: bars radiating out from a ring in the middle (lows at the top, mirrored left and right); the ring swells on the bass
+function specRing(solo){
+  const n = 24, st = bands(n), cols = 92, rows = 24;
+  const cw = (W - SPX*2)/cols, ch = (H - SPT - SPB)/rows;
+  dimGrid(cols, rows, SPX, SPT, cw, ch, solo);
+  const cx = SPX + (W - SPX*2)/2, cy = SPT + (H - SPT - SPB)/2, hh = (H - SPT - SPB)/2;
+  const bass = (st.v[0] + st.v[1] + st.v[2])/3, R0 = hh*.34 + bass*hh*.08, room = hh*.98 - R0;
+  litOn(solo);
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    const dx = (SPX + (c + .5)*cw - cx)/1.7, dy = SPY0(r) - cy, d = Math.hypot(dx, dy);   // a wide ring to fit the screen
+    if(d < R0 - ch || d > R0 + room + ch) continue;
+    const a = Math.abs(Math.atan2(dx, -dy))/Math.PI, k = Math.min(n - 1, Math.floor(a*n));   // 0 at the top … 1 at the bottom
+    const len = st.v[k]*room, pk = st.p[k]*room, x = SPX + c*cw + 1, y = SPT + r*ch + 1;
+    let col = null;
+    if(Math.abs(d - R0) < ch*.5) col = C.lit2;                                     // the ring
+    else if(d > R0 && d < R0 + len) col = d > R0 + room*.72 ? C.lit2 : C.lit;      // a bar
+    else if(pk > len + ch && Math.abs(d - R0 - pk) < ch*.5) col = solo ? C.lit2 : '#e8fffb';   // its peak
+    if(col){ g.fillStyle = col; g.fillRect(x, y, cw - 2, ch - 2); }
+  }
+  litOff();
+  function SPY0(r){ return SPT + (r + .5)*ch; }
+}
+// 8. MOUNTAIN: the spectrum as a smooth ridge line over a softly lit slope, the peaks drifting above it
+function specHill(solo){
+  const cols = 66, rows = 16, st = bands(22), N = st.v.length;
+  const cw = (W - SPX*2)/cols, ch = (H - SPT - SPB)/rows;
+  dimGrid(cols, rows, SPX, SPT, cw, ch, solo);
+  const curve = (arr, c) => { const f = c/(cols - 1)*(N - 1), i = Math.floor(f), t = f - i, a = arr[i], b = arr[Math.min(N - 1, i + 1)]; return a + (b - a)*t*t*(3 - 2*t); };
+  litOn(solo);
+  for(let c=0;c<cols;c++){
+    const h = Math.round(curve(st.v, c)*(rows - 1)), pk = Math.round(curve(st.p, c)*(rows - 1)), x = SPX + c*cw + 1;
+    for(let s=0;s<=h;s++){
+      const top = s === h;
+      g.fillStyle = top ? C.lit2 : C.lit; g.globalAlpha = (solo ? 1 : .9)*(top ? 1 : .18 + .6*s/Math.max(1, h));
+      g.fillRect(x, H - SPB - (s + 1)*ch + 1, cw - 2, ch - 2);
+    }
+    if(pk > h + 1){ g.fillStyle = solo ? C.lit2 : '#e8fffb'; g.globalAlpha = (solo ? 1 : .9)*.55; g.fillRect(x, H - SPB - (pk + 1)*ch + 1, cw - 2, ch - 2); }
+  }
+  litOff(); freqLabels();
+}
 function drawSpec(solo){
   if(spec === 'center') specCenter(solo); else if(spec === 'peak') specPeak(solo); else if(spec === 'meter') specMeter(solo);
-  else if(spec === 'scope') specScope(solo); else if(spec === 'fall') specFall(solo); else specBar(solo);
+  else if(spec === 'scope') specScope(solo); else if(spec === 'fall') specFall(solo); else if(spec === 'ring') specRing(solo); else if(spec === 'hill') specHill(solo); else specBar(solo);
 }
 function drawVFD(){ g.fillStyle = C.screen; g.fillRect(0, 0, W, H); drawSpec(true); }
 setSpec(spec, false);
@@ -2434,13 +2485,13 @@ function setDColor(c, announce){
 document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setDColor(b.dataset.clubc, true)));
 setDColor(dcolor, false);
 /* panel colour: the deck's body (silver by default) */
-const PANELS = ['silver', 'black', 'gun', 'gold', 'white', 'red'];
+const PANELS = ['silver', 'black', 'gun', 'gold', 'white', 'red', 'blue', 'carbon'];
 let panel = store.get('panel', 'silver'); if(!PANELS.includes(panel)) panel = 'silver';
 function setPanel(p, announce){
   panel = p; store.set('panel', p);
   if(p === 'silver') delete root.dataset.panel; else root.dataset.panel = p;
   document.querySelectorAll('#panelChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.panel === p));
-  if(announce) flash('PANEL  ' + ({silver: 'SILVER', black: 'BLACK', gun: 'GUNMETAL', gold: 'GOLD', white: 'PEARL WHITE', red: 'RED'})[p], 900);
+  if(announce) flash('PANEL  ' + ({silver: 'SILVER', black: 'BLACK', gun: 'GUNMETAL', gold: 'GOLD', white: 'PEARL WHITE', red: 'RED', blue: 'BLUE', carbon: 'CARBON'})[p], 900);
 }
 document.querySelectorAll('#panelChips .chip').forEach(b => b.addEventListener('click', () => setPanel(b.dataset.panel, true)));
 setPanel(panel, false);
@@ -2556,7 +2607,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125161409';                                 // stamped by build.ps1
+const APP_VER = '20261125161706';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
