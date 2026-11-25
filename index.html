@@ -347,24 +347,24 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <section data-tab="look">
         <h3>ディスプレイ <button class="mini" id="orderReset" hidden>元の順</button><button class="mini" id="orderBtn" aria-pressed="false">並び替え</button></h3>
         <div class="chips" id="skinChips">
-          <button class="chip" data-skin="vfd"><span class="sw vfd"></span>VFD<small>蛍光管</small></button>
-          <button class="chip" data-skin="vfdb"><span class="sw vfdb"></span>VFD BEACH<small>蛍光管サンセット</small></button>
-          <button class="chip" data-skin="vfdrec"><span class="sw vfdrec"></span>VFD TURNTABLE<small>窓辺のレコード</small></button>
-          <button class="chip" data-skin="vfddx"><span class="sw vfddx"></span>VFD<small>DX Record</small></button>
-          <button class="chip" data-skin="vfdasahi"><span class="sw vfdasahi"></span>VFD<small>朝日レコード</small></button>
-          <button class="chip" data-skin="vfdfrisco"><span class="sw logo"></span>VFD<small>喫茶フリスコ</small></button>
-          <button class="chip" data-skin="vfdpen"><span class="sw logo"></span>VFD<small>円盤Peninsula</small></button>
-          <button class="chip" data-skin="vfdmellow"><span class="sw logo"></span>VFD<small>MELLOW RECORDS</small></button>
-          <button class="chip" data-skin="vfdsea"><span class="sw logo"></span>VFD<small>Sea record</small></button>
-          <button class="chip" data-skin="vfdbeat"><span class="sw logo"></span>VFD<small>BEATBOOM!</small></button>
-          <button class="chip" data-skin="vfdhmv"><span class="sw logo"></span>VFD<small>HMV</small></button>
-          <button class="chip" data-skin="vfdnext"><span class="sw logo"></span>VFD<small>next.records</small></button>
-          <button class="chip" data-skin="vfdface"><span class="sw logo"></span>VFD<small>FACE Records</small></button>
-          <button class="chip" data-skin="vfdunion"><span class="sw logo"></span>VFD<small>disk union</small></button>
-          <button class="chip" data-skin="vfdyuji"><span class="sw logo"></span>VFD<small>YUJI CAFE</small></button>
-          <button class="chip" data-skin="vfdnote"><span class="sw logo"></span>VFD<small>Note</small></button>
-          <button class="chip" data-skin="vfdtower"><span class="sw logo"></span>VFD<small>TOWER RECORDS</small></button>
-          <button class="chip" data-skin="vfdshuffle"><span class="sw shuffle"></span>VFD<small>SHUFFLE ランダム</small></button>
+          <button class="chip" data-skin="vfd"><span class="sw vfd"></span>SPECTRUM<small>蛍光管スペアナ</small></button>
+          <button class="chip" data-skin="vfdb"><span class="sw vfdb"></span>BEACH<small>蛍光管サンセット</small></button>
+          <button class="chip" data-skin="vfdrec"><span class="sw vfdrec"></span>TURNTABLE<small>窓辺のレコード</small></button>
+          <button class="chip" data-skin="vfddx"><span class="sw vfddx"></span>DX Record</button>
+          <button class="chip" data-skin="vfdasahi"><span class="sw vfdasahi"></span>朝日レコード</button>
+          <button class="chip" data-skin="vfdfrisco"><span class="sw logo"></span>喫茶フリスコ</button>
+          <button class="chip" data-skin="vfdpen"><span class="sw logo"></span>円盤Peninsula</button>
+          <button class="chip" data-skin="vfdmellow"><span class="sw logo"></span>MELLOW RECORDS</button>
+          <button class="chip" data-skin="vfdsea"><span class="sw logo"></span>Sea record</button>
+          <button class="chip" data-skin="vfdbeat"><span class="sw logo"></span>BEATBOOM!</button>
+          <button class="chip" data-skin="vfdhmv"><span class="sw logo"></span>HMV</button>
+          <button class="chip" data-skin="vfdnext"><span class="sw logo"></span>next.records</button>
+          <button class="chip" data-skin="vfdface"><span class="sw logo"></span>FACE Records</button>
+          <button class="chip" data-skin="vfdunion"><span class="sw logo"></span>disk union</button>
+          <button class="chip" data-skin="vfdyuji"><span class="sw logo"></span>YUJI CAFE</button>
+          <button class="chip" data-skin="vfdnote"><span class="sw logo"></span>Note</button>
+          <button class="chip" data-skin="vfdtower"><span class="sw logo"></span>TOWER RECORDS</button>
+          <button class="chip" data-skin="vfdshuffle"><span class="sw shuffle"></span>SHUFFLE<small>ランダム</small></button>
         </div>
       </section>
       <section data-tab="look">
@@ -391,6 +391,15 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="white"><span class="dot" style="background:#eef2ff;box-shadow:0 0 10px #eef2ff"></span>WHITE</button>
           <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
         </div>
+      </section>
+      <section data-tab="look">
+        <h3>天気（ビーチ・ターンテーブルの窓）</h3>
+        <div class="chips" id="wxChips">
+          <button class="chip" data-wx="auto"><span class="sw sp-fall"></span>自動<small>今いる場所の天気</small></button>
+          <button class="chip" data-wx="clear"><span class="sw vfdb"></span>晴れ<small>いつも晴れ</small></button>
+          <button class="chip" data-wx="rain"><span class="sw sp-fall"></span>雨<small>いつも雨</small></button>
+        </div>
+        <p class="rnote">「自動」は最初に位置情報の許可を聞かれます。だいたいの場所（約1km単位）だけを天気サービス（Open-Meteo）に送って、30分ごとに今の天気を確認します。</p>
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
@@ -479,7 +488,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ILLUMI</dt><dd>キー照明の色（8色＋RANDOM）</dd>
             <dt>並び替え</dt><dd>⚙「表示」→ ディスプレイ右上の「並び替え」。一番上の柄でアプリが起動します</dd>
             <dt>スペアナ</dt><dd>⚙「表示」で6種類から選べます</dd>
-            <dt>VFD BEACH</dt><dd>時刻に合わせて朝日・昼・夕日・月夜に変わります</dd>
+            <dt>BEACH</dt><dd>時刻に合わせて朝日・昼・夕日・月夜に変わります</dd>
             <dt>SHUFFLE</dt><dd>ロゴの画面をランダムに切り替え続けます</dd>
           </dl>
         </div>
@@ -512,7 +521,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdrec:'VFD TURNTABLE', vfdshuffle:'VFD SHUFFLE', vfd:'VFD', vfdb:'VFD BEACH', vfddx:'VFD DX Record', vfdasahi:'VFD 朝日レコード', vfdfrisco:'VFD 喫茶フリスコ', vfdpen:'VFD 円盤Peninsula', vfdmellow:'VFD MELLOW RECORDS', vfdsea:'VFD Sea record', vfdbeat:'VFD BEATBOOM!', vfdhmv:'VFD HMV', vfdnext:'VFD next.records', vfdface:'VFD FACE Records', vfdunion:'VFD disk union', vfdyuji:'VFD YUJI CAFE', vfdnote:'VFD Note', vfdtower:'VFD TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfdrec','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
@@ -992,7 +1001,7 @@ async function metaVia(kind, u){
       return s ? (s.artist && s.title ? `${s.artist} - ${s.title}` : (s.text || '')) : '';
     }
     if(kind === 'icy') return await icyTitle(u);
-  }catch(e){}
+  }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   return null;
 }
 async function nowPlaying(st){
@@ -1193,7 +1202,7 @@ function mediaMeta(){
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
     navigator.mediaSession.setActionHandler('nexttrack', () => step(1));
     navigator.mediaSession.setActionHandler('previoustrack', () => step(-1));
-  }catch(e){}
+  }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
 }
 let lock = null;
 async function wake(want){
@@ -1397,6 +1406,52 @@ function drawSpec(solo){
 function drawVFD(){ g.fillStyle = C.screen; g.fillRect(0, 0, W, H); drawSpec(true); }
 setSpec(spec, false);
 
+/* ---------------- weather for the window and beach scenes ----------------
+   auto: the current weather where you are (asks for location once, then Open-Meteo every 30 min); or always clear / always rain */
+const WEATHERS = ['auto', 'clear', 'rain'], WEATHER_NAME = {auto: 'AUTO', clear: 'CLEAR', rain: 'RAIN'};
+let weatherMode = store.get('weather', 'auto'); if(!WEATHERS.includes(weatherMode)) weatherMode = 'auto';
+let wxRain = 0, wxStorm = false, wxAt = 0, wxBusy = false;
+const wxFake = new URLSearchParams(location.search).get('weather');   // ?weather=rain / storm / clear to preview
+function isRaining(){ if(wxFake) return wxFake !== 'clear'; if(weatherMode === 'rain') return true; if(weatherMode === 'clear') return false; return wxRain > 0; }
+function rainAmount(){ return wxFake || weatherMode === 'rain' ? (wxFake === 'storm' ? 1 : .7) : Math.max(.4, wxRain); }
+function isStorm(){ return wxFake === 'storm' || (weatherMode === 'auto' && wxStorm); }
+function wxUpdate(){
+  if(wxFake || weatherMode !== 'auto' || wxBusy || Date.now() - wxAt < 30*60e3 || !navigator.geolocation) return;
+  wxBusy = true; wxAt = Date.now();
+  navigator.geolocation.getCurrentPosition(async pos => {
+    try{
+      const la = pos.coords.latitude.toFixed(2), lo = pos.coords.longitude.toFixed(2);   // ~1 km is plenty for weather
+      const j = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=precipitation,weather_code`)).json();
+      const c = j.current || {}, code = c.weather_code || 0, pr = c.precipitation || 0;
+      const wet = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95 || pr > 0;
+      wxRain = wet ? Math.min(1, .45 + pr*.25) : 0; wxStorm = code >= 95;
+    }catch(e){}
+    wxBusy = false;
+  }, () => { wxBusy = false; }, { maximumAge: 30*60e3, timeout: 15000 });
+}
+function setWeather(m, announce){
+  weatherMode = m; store.set('weather', m); wxAt = 0;
+  document.querySelectorAll('#wxChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.wx === m));
+  if(announce) flash('WEATHER  ' + WEATHER_NAME[m], 900);
+  wxUpdate();
+}
+document.querySelectorAll('#wxChips .chip').forEach(b => b.addEventListener('click', () => setWeather(b.dataset.wx, true)));
+// shared rain helpers (dot-matrix): falling streaks and a band of heavy clouds
+const rainDrops = Array.from({length: 70}, (_, i) => [(i*53 + 7) % 132, (i*29 + 3) % 44, .75 + (i % 5)*.12]);
+function drawRain(dot, x0, x1, y0, y1, amount, t, c){
+  const n = Math.round(rainDrops.length*amount), w = x1 - x0, hgt = y1 - y0;
+  for(let i=0;i<n;i++){
+    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*28) % hgt, x = x0 + (((rx - (y - y0)*.35) % w) + w) % w;
+    dot(x, y, c); if(y - 1 >= y0) dot(x + .35, y - 1, c);
+  }
+}
+function drawRainClouds(dot, x0, x1, y0, rows, t, c){
+  for(let y=y0;y<y0+rows;y++) for(let x=x0;x<x1;x++){
+    const n = Math.sin((x + t*1.2)*.21 + y*.9) + Math.sin((x - t*.7)*.09 + y*1.7);
+    if(n > .2 - (y - y0)*.25 && (x + y) % 2 === 0) dot(x, y, c);
+  }
+}
+
 /* VFD BEACH: a sunset beach with palms drawn on the fluorescent dot matrix (cyan + amber only);
    the sun's reflection on the sea is the spectrum */
 const VB_C = 132, VB_R = 44;
@@ -1451,13 +1506,15 @@ function drawVFDBeach(dt){
   const day = h >= rise && h < set;
   const p = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*p);
   const sx = Math.round(46 + p*52), sy = hz - 1 - el*(hz - 9), low = day && el < .32;   // path stays in the open sky between the palms
-  const starsOn = day ? Math.max(0, 1 - el*3.5) : 1;
+  wxUpdate(); const rain = isRaining(), starsOn = rain ? 0 : day ? Math.max(0, 1 - el*3.5) : 1;
   vbg.fillStyle = '#000'; vbg.fillRect(0, 0, VB_C, VB_R);
   vbg.fillStyle = '#0f0';
   vbStars.slice(0, Math.round(vbStars.length*starsOn)).forEach(([x, y, q]) => { if(Math.sin(vbT*1.3 + q) > .2) vbg.fillRect(x, y, 1, 1); });
   if(!day) vbStarsX.forEach(([x, y, q]) => { if(Math.sin(vbT*.9 + q) > .45) vbg.fillRect(x, y, 1, 1); });
   vbg.save(); vbg.beginPath(); vbg.rect(0, 0, VB_C, hz); vbg.clip();
-  if(low){                                         // big striped sun near the horizon (sunrise / sunset)
+  const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); }, G = '#0f0', A = '#f00';
+  if(rain){ drawRainClouds(dot, 0, VB_C, 0, 9, vbT, G); }        // a rainy day: heavy clouds, no sun or moon
+  else if(low){                                         // big striped sun near the horizon (sunrise / sunset)
     const r = 12.5 + vbPulse*1.5;
     vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, sy, r, 0, Math.PI*2); vbg.fill();
     vbg.fillStyle = '#000';
@@ -1481,7 +1538,7 @@ function drawVFDBeach(dt){
   }
   vbg.restore();
   // gulls fly by day
-  if(day){
+  if(day && !rain){
     vbg.fillStyle = '#f00';
     [[0, 6, 0], [9, 9, 1.4]].forEach(([o, y0, q]) => {
       const x = Math.round(((vbT*2.2 + o + 40) % (VB_C + 10)) - 5), y = y0 + Math.round(Math.sin(vbT*.8 + q)), up = Math.sin(vbT*5 + q) > 0;
@@ -1497,7 +1554,7 @@ function drawVFDBeach(dt){
     for(let x=0;x<VB_C;x++) if(Math.sin(x*(.55 - k*.07) + vbT*(1.2 + k*.35) + k*2) > .45) vbg.fillRect(x, y, 1, 1);
   });
   // sun / moon reflection = spectrum (slimmer under a high sun, slimmest under the moon)
-  const rw = low ? 1 : day ? .6 : .45;
+  const rw = rain ? .4 : low ? 1 : day ? .6 : .45;
   vbg.fillStyle = '#f00';
   for(let j=0;j<VB_R - hz - 1;j++){
     const v = st.v[Math.max(0, 15 - j)], w = Math.max(1, Math.round((2 + j*.5)*(.35 + v*1.4)*rw)), jx = Math.round(Math.sin(vbT*2.5 + j*1.9)*(1 + j*.08));
@@ -1515,6 +1572,7 @@ function drawVFDBeach(dt){
   vbPalm(12, VB_R + 2, 34, .3, 0, 1);
   vbPalm(36, VB_R + 2, 22, .05, 1.7, .75);
   vbPalm(122, VB_R + 2, 30, -.28, 3.1, .9);
+  if(rain){ drawRain(dot, 0, VB_C, 0, 40, rainAmount(), vbT, G); if(isStorm() && (vbT % 7) < .14){ let x = 40 + Math.floor(vbT/7)*17 % 50, y = 2; while(y < 22){ dot(x, y, A); x += (Math.sin(y*3 + vbT) > 0 ? 1 : -1); y++; } } }   // rain sweeping in, lightning in a storm
   // ---- light the tubes ----
   const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
   vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
@@ -1679,9 +1737,10 @@ function drawVFDTurntable(dt){
   const day = h >= rise && h < set;
   const p = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*p);
   const low = day && el < .3, bx = 14 + p*50, by = 27 - el*21;
-  const starsOn = day ? Math.max(0, 1 - el*3.5) : 1;
+  wxUpdate(); const rain = isRaining(), starsOn = rain ? 0 : day ? Math.max(0, 1 - el*3.5) : 1;
   [[16,7],[27,5],[45,9],[33,12],[52,6],[22,11],[62,10]].forEach(([x, y], i) => { if(i < Math.round(7*starsOn) && Math.sin(ttT*1.2 + i*1.9) > .1) wdot(x, y, G); });
-  if(low){                                                         // sunrise / sunset: big striped sun low over the town
+  if(rain){ drawRainClouds(wdot, wx0 + 1, wx1, wy0 + 1, 8, ttT, G); }   // a rainy day: heavy clouds, no sun or moon
+  else if(low){                                                         // sunrise / sunset: big striped sun low over the town
     for(let y=-6;y<=6;y++) for(let x=-6;x<=6;x++) if(x*x + y*y <= 36 && ((Math.round(by + y) + Math.floor(ttT*1.4)) % 3 !== 0 || y < -2)) wdot(bx + x, by + y, A);
   } else if(day){                                                  // daytime: small sun with twinkling rays, clouds drifting by
     for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5) wdot(bx + x, by + y, A);
@@ -1690,15 +1749,22 @@ function drawVFDTurntable(dt){
   } else {                                                         // night: the crescent moon
     for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) wdot(bx + x, by + y, A);
   }
-  const litOver = low ? .78 : day ? .94 : .6;                      // fewer windows lit by day, most at night
+  const litOver = rain ? .66 : low ? .78 : day ? .94 : .6;                      // fewer windows lit by day, most at night
   [[9,24,6],[16,21,7],[24,25,5],[30,20,6],[37,23,8],[46,19,6],[53,24,7],[61,22,8]].forEach(([x, top, w], j) => {
     vbg.fillStyle = K; vbg.fillRect(x, top, w, wy1 - top);         // buildings hide the sun behind them
     for(let y=top;y<=wy1;y++){ dot(x, y, G); dot(x + w - 1, y, G); }
     for(let i=0;i<w;i++) dot(x + i, top, G);
     for(let y=top+2;y<wy1;y+=2) for(let i=2;i<w-1;i+=2){ const s = Math.sin((x + i)*12.9 + y*7.3 + Math.floor(ttT*.25 + j)*3.1)*43758.5; if(s - Math.floor(s) > litOver) dot(x + i, y, A); }
   });
+  if(rain){                                                        // rain on the town, a drop or two running down the glass, lightning in a storm
+    drawRain(wdot, wx0 + 1, wx1, wy0 + 1, wy1, rainAmount(), ttT, G);
+    if(isStorm() && (ttT % 7) < .14){ let x = 30 + Math.floor(ttT/7)*13 % 30, y = 5; while(y < 20){ wdot(x, y, A); x += (Math.sin(y*3 + ttT) > 0 ? 1 : -1); y++; } }
+  }
   for(let x=wx0;x<=wx1;x++){ dot(x, wy0, G); dot(x, wy1, G); dot(x, 16, G); }   // frame and mullions
   for(let y=wy0;y<=wy1;y++){ dot(wx0, y, G); dot(wx1, y, G); dot(39, y, G); }
+  if(rain) [[14, 0], [33, 2.1], [50, 4.3], [63, 1.2]].forEach(([gx, ph]) => {        // drops sliding down the window glass
+    const y = wy0 + 2 + ((ttT*1.6 + ph*6) % (wy1 - wy0 - 3)); dot(gx, y, G); if(Math.sin(ttT*3 + ph) > 0) dot(gx, y - 2, G);
+  });
   // the sill / table top
   for(let x=0;x<VB_C;x++) dot(x, 33, G);
   for(let x=0;x<VB_C;x+=3) dot(x, 35, G);
@@ -1783,7 +1849,7 @@ function frame(now){
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
-  }catch(e){}
+  }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'radio'){ cur = radioEl().currentTime; }
@@ -1798,7 +1864,7 @@ function frame(now){
 
 /* ---------------- boot ---------------- */
 setSkin(ORDER[0], false); setIllum(illum, false); setVol(vol, false); installState(); renderList();
-renderMarq(titleText); fit();
+renderMarq(titleText); fit(); setWeather(weatherMode, false);
 loadLibrary();
 if(document.fonts) document.fonts.ready.then(() => { if(!flashT) renderMarq(titleText); });
 requestAnimationFrame(frame);
