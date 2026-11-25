@@ -346,6 +346,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 .mi .ops button{flex:1; padding:7px 4px; border-radius:7px; border:1px solid var(--line); background:#15171d; color:var(--fg); font:700 11px var(--font-ui)}
 .mi .ops button[aria-pressed="true"]{border-color:var(--illum); box-shadow:0 0 8px var(--illumglow)}
 .mi .ops button.arm{background:#a3262b; border-color:#ff6b6b; color:#fff}
+#plist button.fav{flex:none; width:auto; display:block; padding:7px 9px; border:1px solid var(--line); border-radius:8px; background:#0c0d11; color:var(--muted); font:700 15px/1 var(--font-ui)}
+#plist button.fav.on{color:#ffd23a; border-color:#ffd23a; text-shadow:0 0 8px rgba(255,210,58,.6)}
 </style>
 
 <div class="stage" id="stage">
@@ -363,7 +365,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="inds">
           <span class="ind" id="iSt">ST</span><span class="ind" id="iLoud">LOUD</span><span class="ind" id="iAtt">ATT</span>
-          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span><span class="ind" id="iSlp">SLP</span><span class="ind" id="iAlm">ALM</span><span id="dateLine"></span>
+          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iFav">FAV</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span><span class="ind" id="iSlp">SLP</span><span class="ind" id="iAlm">ALM</span><span id="dateLine"></span>
         </div>
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
@@ -644,6 +646,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
+        <div class="chips" id="favChips" style="margin-bottom:10px"><button class="chip" data-fav="all">すべての曲</button><button class="chip" data-fav="fav">★ お気に入りだけ</button></div>
         <div class="row">
           <label class="pbtn pri" for="file" style="cursor:pointer">曲を追加</label>
           <button class="pbtn warn" id="clearBtn">全部消す</button>
@@ -700,7 +703,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・夜のディマー・オープニング演出・スペアナ・キー照明・ROOM のキャラクター</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
-            <dt>曲</dt><dd>入れた曲の一覧（追加・1曲ずつ外す・全部消す）</dd>
+            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音</dd>
             <dt>時計</dt><dd>24時間／12時間</dd>
@@ -718,6 +721,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>一番下のバー</dt><dd>曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
             <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）</dd>
+            <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
+            <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入りだけ」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。ON の間は画面の FAV が光ります</dd>
             <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
             <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
           </dl>
@@ -755,7 +760,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>画面の見かた</h3>
           <dl class="help">
             <dt>右上</dt><dd>今の時刻。その下に日付・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
-            <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
+            <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
           <dl class="help">
@@ -1126,11 +1131,8 @@ function step(dir, auto){
   if(mode === 'radio'){ tuneNext(dir); return; }
   if(mode !== 'file' || !tracks.length){ flash(tracks.length ? 'PRESS SRC' : 'NO DISC', 900); return; }
   if(!auto && dir < 0 && audio.currentTime > 3){ audio.currentTime = 0; return; }
-  let n;
-  if(shuffle && tracks.length > 1){ do{ n = Math.floor(Math.random()*tracks.length); } while(n === idx); }
-  else n = idx + dir;
-  if(n >= tracks.length){ if(repeat === 'all' || !auto) n = 0; else { audio.pause(); scan = false; updateUI(); return; } }
-  if(n < 0) n = tracks.length - 1;
+  const n = pickNext(dir, auto);                          // honours shuffle, repeat and ★ only
+  if(n === -1){ audio.pause(); scan = false; updateUI(); return; }
   playIndex(n);
 }
 audio.addEventListener('ended', () => { if(sleepAtEndHit()) return; if(repeat === 'one' && !scan){ audio.currentTime = 0; audio.play(); } else step(1, true); });
@@ -1178,9 +1180,11 @@ function renderList(){
     const tb = document.createElement('b'); tb.textContent = t.title || t.name; nm.append(tb);
     if(t.artist || t.album){ const sm = document.createElement('small'); sm.textContent = [t.artist, t.album].filter(Boolean).join(' · '); nm.append(sm); }
     b.append(n, cv, nm); b.addEventListener('click', () => { playIndex(i); closeSheet(); });
+    const fv = document.createElement('button'); fv.className = 'fav' + (favs.has(t.key) ? ' on' : ''); fv.textContent = favs.has(t.key) ? '★' : '☆'; fv.setAttribute('aria-label', 'お気に入り');
+    fv.addEventListener('click', e => { e.stopPropagation(); toggleFav(i); });
     const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕'; del.setAttribute('aria-label', 'この曲を外す');
     del.addEventListener('click', e => { e.stopPropagation(); if(!del.classList.contains('arm')){ del.classList.add('arm'); del.textContent = '外す？'; setTimeout(() => { del.classList.remove('arm'); del.textContent = '✕'; }, 3000); return; } removeTrack(i); });
-    li.append(b, del); ul.append(li);
+    li.append(b, fv, del); if(!(favOnly && favPool().length && !favs.has(t.key))) ul.append(li);   // ★ only: the list shows just the ★ songs
   });
   updateUI();
 }
@@ -1393,11 +1397,7 @@ function handBack(){
 }
 function bgStep(dir){                                        // next / previous song while handed over
   if(repeat === 'one' && dir > 0 && !bgStep.manual){ plain.currentTime = 0; plain.play().catch(() => {}); return; }
-  let n;
-  if(shuffle && tracks.length > 1){ do{ n = Math.floor(Math.random()*tracks.length); } while(n === idx); }
-  else n = idx + dir;
-  if(n >= tracks.length){ if(repeat === 'all' || bgStep.manual) n = 0; else return; }
-  if(n < 0) n = tracks.length - 1;
+  const n = pickNext(dir, !bgStep.manual); if(n === -1) return;
   idx = n; plain.src = tracks[n].url; plain.play().catch(() => {});
   $('#trk').textContent = '-' + String(n + 1).padStart(2, '0'); setTitle(trackLabel(tracks[n])); mediaMeta();
 }
@@ -2727,7 +2727,7 @@ setXfade(xfade, false);
 audio.addEventListener('timeupdate', () => {
   if(!xfade || xfBusy || mode !== 'file' || audio.paused || scan || !AC || bgHand || sleepAtEnd || repeat === 'one' || tracks.length < 2) return;
   const d = audio.duration; if(!d || !isFinite(d) || d < xfade*3 || d - audio.currentTime > xfade) return;
-  if(!shuffle && idx >= tracks.length - 1 && repeat !== 'all') return;   // the last song simply ends
+  if(pickNext(1, true) === -1) return;   // the last song simply ends
   startXfade();
 });
 function startXfade(){
@@ -2807,7 +2807,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125172002';                                 // stamped by build.ps1
+const APP_VER = '20261125172250';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2820,6 +2820,44 @@ function checkUpdate(){
 }
 document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });
 setInterval(checkUpdate, 30*60e3); setTimeout(checkUpdate, 8000);
+/* ---------------- お気に入り (★): mark songs, play only the ★ ones, LIST held down marks the playing song ---------------- */
+var favs = new Set(store.get('favs', []) || []), favOnly = !!store.get('favOnly', false);
+const favPool = () => tracks.map((t, i) => favs.has(t.key) ? i : -1).filter(i => i >= 0);
+function toggleFav(i){
+  const t = tracks[i]; if(!t) return;
+  if(favs.has(t.key)) favs.delete(t.key); else favs.add(t.key);
+  store.set('favs', [...favs]); renderList(); favInd();
+  flash(favs.has(t.key) ? '★  FAVORITE' : '☆  REMOVED', 1000);
+}
+function setFavOnly(v, announce){
+  favOnly = v; store.set('favOnly', v);
+  document.querySelectorAll('#favChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.fav === 'fav') === v));
+  renderList(); favInd();
+  if(announce) flash(v ? (favPool().length ? '★ FAVORITES ONLY' : 'NO FAVORITE YET') : 'ALL SONGS', 1200);
+}
+function favInd(){ const el = $('#iFav'); if(el) el.classList.toggle('on', favOnly && favPool().length > 0); }
+// the next song to play: in order or shuffled, only ★ songs when that is on; -1 = the end of the list (repeat off)
+function pickNext(dir, auto){
+  const fp = favOnly ? favPool() : [], pool = fp.length ? fp : tracks.map((_, i) => i), N = tracks.length;
+  if(!N) return -1;
+  if(shuffle && pool.length > 1){ let n; do{ n = pool[Math.floor(Math.random()*pool.length)]; } while(n === idx); return n; }
+  for(let k=1;k<=N;k++){
+    const raw = idx + dir*k, n = ((raw % N) + N) % N;
+    if(!pool.includes(n)) continue;
+    if(raw >= N && dir > 0 && auto && repeat !== 'all') return -1;
+    return n;
+  }
+  return pool[0];
+}
+document.querySelectorAll('#favChips .chip').forEach(b => b.addEventListener('click', () => setFavOnly(b.dataset.fav === 'fav', true)));
+// hold LIST to ★ the song that is playing (a short press still opens the list)
+(() => {
+  const lb = $('#listBtn'); let hold = 0, long = false;
+  lb.addEventListener('pointerdown', () => { long = false; clearTimeout(hold); hold = setTimeout(() => { long = true; if(mode === 'file' && tracks[idx]) toggleFav(idx); else flash('DISC ONLY', 900); }, 650); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => lb.addEventListener(ev, () => clearTimeout(hold)));
+  lb.addEventListener('click', e => { if(long){ e.stopImmediatePropagation(); e.preventDefault(); long = false; } }, true);
+})();
+setFavOnly(favOnly, false);
 /* ---------------- 曲: remove a single song (two taps on its ✕) ---------------- */
 async function removeTrack(i){
   const t = tracks[i]; if(!t) return;
