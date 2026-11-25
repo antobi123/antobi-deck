@@ -683,7 +683,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>お店のロゴ</dt><dd>レコード屋さんなどのロゴが光ります</dd>
-            <dt>SHUFFLE</dt><dd>ロゴの画面をランダムに切り替え続けます</dd>
+            <dt>SHUFFLE</dt><dd>お店のロゴ14種類から、16秒ごとにランダムで切り替わります（同じロゴは続きません）</dd>
           </dl>
         </div>
         <div class="hpage" data-h="sound" hidden>
@@ -2680,7 +2680,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125162414';                                 // stamped by build.ps1
+const APP_VER = '20261125162647';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
