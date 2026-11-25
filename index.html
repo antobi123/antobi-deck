@@ -83,20 +83,38 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .deck{position:absolute; left:50%; top:50%; width:960px; height:500px; transform:translate(-50%,-50%) scale(var(--s,1)); transform-origin:center}
 .deck > *{position:absolute}
 
+/* panel colour (⚙ 表示 → パネルの色): the faceplate, side wings, badge, volume/seek rockers and printed labels */
+:root{ --p1:#dedfe3; --p2:#b8bac0; --p3:#9b9da4; --p4:#b4b6bc; --p5:#7a7c83; --w1:#fafafb; --w2:#c9cbd0; --w3:#9a9ca3; --w4:#6e7077;
+  --b1:#fbfbfc; --b2:#a9abb1; --b3:#e3e4e7; --btext:#1a1b20; --ring:#dcdde1; --r1:#6a6c73; --r2:#f6f6f8; --r3:#babcc2; --r4:#66686f; --rtext:#26272c;
+  --ltext:#1e1f24; --lshadow:rgba(255,255,255,.55) }
+:root[data-panel="black"]{ --p1:#4a4b51; --p2:#2a2b30; --p3:#18191c; --p4:#26272b; --p5:#0b0b0d; --w1:#6a6b72; --w2:#36373d; --w3:#1d1e22; --w4:#0c0c0e;
+  --b1:#5a5b62; --b2:#22232a; --b3:#44454c; --btext:#e8e9ee; --ring:#3a3b42; --r1:#1a1b1f; --r2:#5d5e65; --r3:#34353b; --r4:#141518; --rtext:#d8dae0;
+  --ltext:#c4c6cd; --lshadow:rgba(0,0,0,.6) }
+:root[data-panel="gun"]{ --p1:#a3a8b2; --p2:#7c818b; --p3:#5d626c; --p4:#727782; --p5:#3c4048; --w1:#c9ced8; --w2:#8d929c; --w3:#626771; --w4:#3d4149;
+  --b1:#d8dce4; --b2:#7e838d; --b3:#b5bac3; --btext:#15171c; --ring:#8d929b; --r1:#4a4e57; --r2:#c0c5ce; --r3:#868b95; --r4:#40444c; --rtext:#15171c;
+  --ltext:#101216; --lshadow:rgba(255,255,255,.35) }
+:root[data-panel="gold"]{ --p1:#f3e7c8; --p2:#d8c393; --p3:#b79d68; --p4:#cdb682; --p5:#8a7346; --w1:#fff7e2; --w2:#e2cd9c; --w3:#b89c64; --w4:#82693c;
+  --b1:#fff8e6; --b2:#c8ad74; --b3:#efe0b8; --btext:#2a2010; --ring:#eadcb6; --r1:#8a7346; --r2:#fbf1d6; --r3:#d2bb86; --r4:#806a3f; --rtext:#2a2214;
+  --ltext:#2a2214; --lshadow:rgba(255,255,255,.5) }
+:root[data-panel="white"]{ --p1:#ffffff; --p2:#f1f1f4; --p3:#dedfe4; --p4:#ececf0; --p5:#b9bbc2; --w1:#ffffff; --w2:#f0f0f3; --w3:#d4d5db; --w4:#a9abb2;
+  --b1:#ffffff; --b2:#d9dadf; --b3:#f4f4f6; --btext:#1a1b20; --ring:#f2f2f5; --r1:#b9bbc2; --r2:#ffffff; --r3:#e4e5ea; --r4:#a8aab1; --rtext:#26272c;
+  --ltext:#2a2b31; --lshadow:rgba(255,255,255,.8) }
+:root[data-panel="red"]{ --p1:#e0787c; --p2:#b8333a; --p3:#8c1a21; --p4:#a8282f; --p5:#5a0d12; --w1:#f2a3a6; --w2:#c43e45; --w3:#8a1a20; --w4:#560b10;
+  --ltext:#fbe9ea; --lshadow:rgba(0,0,0,.45) }
 /* ---------- body ---------- */
 .plate{inset:0; border-radius:30px 30px 36px 36px;
   background:
     repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg,#dedfe3 0%,#b8bac0 20%,#9b9da4 48%,#b4b6bc 76%,#7a7c83 100%);
+    linear-gradient(180deg,var(--p1) 0%,var(--p2) 20%,var(--p3) 48%,var(--p4) 76%,var(--p5) 100%);
   box-shadow: inset 0 2px 0 rgba(255,255,255,.75), inset 0 -3px 0 rgba(0,0,0,.35), 0 0 0 3px #26272c, 0 0 0 4px #4a4b52, 0 34px 70px rgba(0,0,0,.75);}
 .glass{left:96px; top:64px; width:768px; height:348px; border-radius:24px;
   background:linear-gradient(180deg,#0c0c13,#020204);
-  box-shadow: 0 0 0 3px #3b3c43, 0 0 0 6px #dcdde1, 0 0 0 7px #6a6c73, inset 0 0 36px rgba(0,0,0,.95);}
+  box-shadow: 0 0 0 3px #3b3c43, 0 0 0 6px var(--ring), 0 0 0 7px #6a6c73, inset 0 0 36px rgba(0,0,0,.95);}
 .wing{top:56px; width:150px; height:364px; border-radius:50%;
-  background: radial-gradient(ellipse at 38% 30%, #fafafb 0%, #c9cbd0 30%, #9a9ca3 62%, #6e7077 100%);
+  background: radial-gradient(ellipse at 38% 30%, var(--w1) 0%, var(--w2) 30%, var(--w3) 62%, var(--w4) 100%);
   box-shadow: 0 0 0 2px #4a4c53, 0 8px 16px rgba(0,0,0,.5), inset 0 -10px 20px rgba(0,0,0,.25);}
 .wing.l{left:-36px} .wing.r{right:-36px}
-.wing.r{background: radial-gradient(ellipse at 62% 30%, #fafafb 0%, #c9cbd0 30%, #9a9ca3 62%, #6e7077 100%)}
+.wing.r{background: radial-gradient(ellipse at 62% 30%, var(--w1) 0%, var(--w2) 30%, var(--w3) 62%, var(--w4) 100%)}
 
 /* display */
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
@@ -125,15 +143,15 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 #seek::-moz-range-thumb{width:10px; height:12px; border:0; border-radius:0; background:var(--lit)}
 
 /* printed labels on the metal */
-.lbl{font:700 9px/1 var(--font-print); letter-spacing:.08em; color:#1e1f24; text-shadow:0 1px 0 rgba(255,255,255,.55); white-space:nowrap}
+.lbl{font:700 9px/1 var(--font-print); letter-spacing:.08em; color:var(--ltext); text-shadow:0 1px 0 var(--lshadow); white-space:nowrap}
 .lbl.c{transform:translateX(-50%); text-align:center; text-indent:.08em}   /* centered over keys 1-6 (indent balances the letter-spacing) */
-.model{left:156px; top:46px; font:italic 700 14px/1 Georgia,'Times New Roman',serif; color:#17181c; letter-spacing:.02em; text-shadow:0 1px 0 rgba(255,255,255,.5)}
-.dsp{right:156px; top:47px; font:700 8px/1 var(--font-print); letter-spacing:.12em; color:#1e1f24; display:flex; align-items:center; gap:6px}
+.model{left:156px; top:46px; font:italic 700 14px/1 Georgia,'Times New Roman',serif; color:var(--ltext); letter-spacing:.02em; text-shadow:0 1px 0 var(--lshadow)}
+.dsp{right:156px; top:47px; font:700 8px/1 var(--font-print); letter-spacing:.12em; color:var(--ltext); display:flex; align-items:center; gap:6px}
 .dsp b{font:italic 800 14px/1 var(--font-logo); color:#2a5fb8; letter-spacing:0}
 .badge{left:414px; top:12px; width:132px; height:36px; border-radius:18px / 18px;
-  background:linear-gradient(180deg,#fbfbfc,#a9abb1 50%,#e3e4e7 100%);
+  background:linear-gradient(180deg,var(--b1),var(--b2) 50%,var(--b3) 100%);
   box-shadow:0 0 0 2px #55575e, inset 0 1px 0 #fff, 0 2px 4px rgba(0,0,0,.4);
-  display:grid; place-items:center; font:800 12px/1 var(--font-logo); letter-spacing:.16em; color:#1a1b20; text-shadow:0 1px 0 rgba(255,255,255,.7)}
+  display:grid; place-items:center; font:800 12px/1 var(--font-logo); letter-spacing:.16em; color:var(--btext); text-shadow:0 1px 0 var(--lshadow)}
 
 /* lit open/close bars */
 .bar{top:14px; width:252px; height:30px; border:0; border-radius:18px 18px 9px 9px; color:var(--illum);
@@ -156,10 +174,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .k.src{border-radius:16px; box-shadow:0 0 0 1px #000, inset 0 0 0 1px var(--illum), inset 0 1px 0 rgba(255,255,255,.28), 0 0 16px var(--illumglow), 0 3px 0 rgba(0,0,0,.55)}
 
 .rk{width:60px; height:152px; border-radius:30px; overflow:hidden; display:flex; flex-direction:column;
-  background:linear-gradient(90deg,#6a6c73 0%,#f6f6f8 36%,#babcc2 62%,#66686f 100%);
+  background:linear-gradient(90deg,var(--r1) 0%,var(--r2) 36%,var(--r3) 62%,var(--r4) 100%);
   box-shadow:0 0 0 2px #3a3b41, 0 5px 10px rgba(0,0,0,.5), inset 0 2px 2px rgba(255,255,255,.85), inset 0 -3px 4px rgba(0,0,0,.3)}
 .rk::after{content:""; position:absolute; left:14px; right:14px; top:50%; height:1px; background:rgba(0,0,0,.35); box-shadow:0 1px 0 rgba(255,255,255,.5)}
-.rk button{flex:1; border:0; background:transparent; color:#26272c; font:700 18px/1 var(--font-print)}
+.rk button{flex:1; border:0; background:transparent; color:var(--rtext); font:700 18px/1 var(--font-print)}
 .rk button:active{background:rgba(0,0,0,.14)}
 
 .strip{height:5px; border-radius:3px; background:var(--illum); box-shadow:0 0 10px var(--illum), 0 0 22px var(--illumglow); opacity:.9}
@@ -396,6 +414,17 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-clubc="blue"><span class="sw" style="background:linear-gradient(0deg,#9fe8ff 0 40%,#3f7bff 40% 46%,#020a24 46%)"></span>ブルー</button>
           <button class="chip" data-clubc="red"><span class="sw" style="background:linear-gradient(0deg,#ffd24f 0 40%,#ff3a3a 40% 46%,#1a0204 46%)"></span>レッド</button>
           <button class="chip" data-clubc="green"><span class="sw" style="background:linear-gradient(0deg,#c8ff7a 0 40%,#20d98a 40% 46%,#01140c 46%)"></span>グリーン</button>
+        </div>
+      </section>
+      <section data-tab="look">
+        <h3>パネルの色</h3>
+        <div class="chips" id="panelChips">
+          <button class="chip" data-panel="silver"><span class="sw" style="background:linear-gradient(180deg,#dedfe3,#9b9da4 55%,#7a7c83)"></span>シルバー</button>
+          <button class="chip" data-panel="black"><span class="sw" style="background:linear-gradient(180deg,#4a4b51,#18191c 55%,#0b0b0d)"></span>ブラック</button>
+          <button class="chip" data-panel="gun"><span class="sw" style="background:linear-gradient(180deg,#a3a8b2,#5d626c 55%,#3c4048)"></span>ガンメタ</button>
+          <button class="chip" data-panel="gold"><span class="sw" style="background:linear-gradient(180deg,#f3e7c8,#b79d68 55%,#8a7346)"></span>ゴールド</button>
+          <button class="chip" data-panel="white"><span class="sw" style="background:linear-gradient(180deg,#ffffff,#dedfe4 55%,#b9bbc2)"></span>パールホワイト</button>
+          <button class="chip" data-panel="red"><span class="sw" style="background:linear-gradient(180deg,#e0787c,#8c1a21 55%,#5a0d12)"></span>メタリックレッド</button>
         </div>
       </section>
       <section data-tab="look">
@@ -2283,6 +2312,17 @@ function setDColor(c, announce){
 }
 document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setDColor(b.dataset.clubc, true)));
 setDColor(dcolor, false);
+/* panel colour: the deck's body (silver by default) */
+const PANELS = ['silver', 'black', 'gun', 'gold', 'white', 'red'];
+let panel = store.get('panel', 'silver'); if(!PANELS.includes(panel)) panel = 'silver';
+function setPanel(p, announce){
+  panel = p; store.set('panel', p);
+  if(p === 'silver') delete root.dataset.panel; else root.dataset.panel = p;
+  document.querySelectorAll('#panelChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.panel === p));
+  if(announce) flash('PANEL  ' + ({silver: 'SILVER', black: 'BLACK', gun: 'GUNMETAL', gold: 'GOLD', white: 'PEARL WHITE', red: 'RED'})[p], 900);
+}
+document.querySelectorAll('#panelChips .chip').forEach(b => b.addEventListener('click', () => setPanel(b.dataset.panel, true)));
+setPanel(panel, false);
 /* 省電力モード: 15 frames a second and no glow halo. おやすみモード (sleep timer): screen dimmed and power-saving,
    the last minute fades the sound out, then it stops. 目覚まし (alarm): at the set time it starts the radio or the playlist
    and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
