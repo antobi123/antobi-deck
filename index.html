@@ -1439,10 +1439,10 @@ document.querySelectorAll('#wxChips .chip').forEach(b => b.addEventListener('cli
 // shared rain helpers (dot-matrix): falling streaks and a band of heavy clouds
 const rainDrops = Array.from({length: 70}, (_, i) => [(i*53 + 7) % 132, (i*29 + 3) % 44, .75 + (i % 5)*.12]);
 function drawRain(dot, x0, x1, y0, y1, amount, t, c){
-  const n = Math.round(rainDrops.length*amount*.45), w = x1 - x0, hgt = y1 - y0;   // a soft drizzle: few, slow, nearly straight drops
+  const n = Math.round(rainDrops.length*amount), w = x1 - x0, hgt = y1 - y0;
   for(let i=0;i<n;i++){
-    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*15) % hgt, x = x0 + (((rx - (y - y0)*.1) % w) + w) % w;
-    if(Math.sin(t*2.3 + i*1.7) > -.6) dot(x, y, c);
+    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*28) % hgt, x = x0 + (((rx - (y - y0)*.35) % w) + w) % w;
+    dot(x, y, c); if(y - 1 >= y0) dot(x + .35, y - 1, c);
   }
 }
 function drawRainClouds(dot, x0, x1, y0, rows, t, c){
@@ -1760,7 +1760,7 @@ function drawVFDTurntable(dt){
   for(let x=wx0;x<=wx1;x++){ dot(x, wy0, G); dot(x, wy1, G); dot(x, 16, G); }   // frame and mullions
   for(let y=wy0;y<=wy1;y++){ dot(wx0, y, G); dot(wx1, y, G); dot(39, y, G); }
   if(rain) [[14, 0], [33, 2.1], [50, 4.3], [63, 1.2]].forEach(([gx, ph]) => {        // drops sliding down the window glass
-    const y = wy0 + 2 + ((ttT*.7 + ph*6) % (wy1 - wy0 - 3)); dot(gx, y, G); if(Math.sin(ttT*3 + ph) > 0) dot(gx, y - 2, G);
+    const y = wy0 + 2 + ((ttT*1.6 + ph*6) % (wy1 - wy0 - 3)); dot(gx, y, G); if(Math.sin(ttT*3 + ph) > 0) dot(gx, y - 2, G);
   });
   // the sill / table top
   for(let x=0;x<VB_C;x++) dot(x, 33, G);
