@@ -728,7 +728,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
             <dt>一番下のバー</dt><dd>曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
-            <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）</dd>
+            <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに</dd>
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
             <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入りだけ」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。ON の間は画面の FAV が光ります</dd>
             <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
@@ -2818,7 +2818,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125173822';                                 // stamped by build.ps1
+const APP_VER = '20261125173847';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
