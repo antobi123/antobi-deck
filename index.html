@@ -95,10 +95,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
   --b1:#d8dce4; --b2:#7e838d; --b3:#b5bac3; --btext:#15171c; --ring:#8d929b; --r1:#4a4e57; --r2:#c0c5ce; --r3:#868b95; --r4:#40444c; --rtext:#15171c;
   --ltext:#101216; --lshadow:rgba(255,255,255,.35) }
 :root[data-panel="gold"]{ --p1:#f3e7c8; --p2:#d8c393; --p3:#b79d68; --p4:#cdb682; --p5:#8a7346; --w1:#fff7e2; --w2:#e2cd9c; --w3:#b89c64; --w4:#82693c;
-  --b1:#fff8e6; --b2:#c8ad74; --b3:#efe0b8; --btext:#2a2010; --ring:#eadcb6; --r1:#8a7346; --r2:#fbf1d6; --r3:#d2bb86; --r4:#806a3f; --rtext:#2a2214;
+  --b1:#fff3d1; --b2:#c9a24f; --b3:#f1dca6; --btext:#2a2010; --ring:#ecd59c; --r1:#7c6235; --r2:#fff1c9; --r3:#d9b462; --r4:#6f5629; --rtext:#2a2214;
   --ltext:#2a2214; --lshadow:rgba(255,255,255,.5) }
 :root[data-panel="white"]{ --p1:#ffffff; --p2:#f1f1f4; --p3:#dedfe4; --p4:#ececf0; --p5:#b9bbc2; --w1:#ffffff; --w2:#f0f0f3; --w3:#d4d5db; --w4:#a9abb2;
-  --b1:#ffffff; --b2:#d9dadf; --b3:#f4f4f6; --btext:#1a1b20; --ring:#f2f2f5; --r1:#b9bbc2; --r2:#ffffff; --r3:#e4e5ea; --r4:#a8aab1; --rtext:#26272c;
+  --b1:#ffffff; --b2:#ececf1; --b3:#ffffff; --btext:#2a2b31; --ring:#ffffff; --r1:#d3d4da; --r2:#ffffff; --r3:#f3f3f6; --r4:#c9cad0; --rtext:#3a3b42;
   --ltext:#2a2b31; --lshadow:rgba(255,255,255,.8) }
 :root[data-panel="blue"]{ --p1:#9cc1ee; --p2:#4f7fc6; --p3:#2a5197; --p4:#3d68b0; --p5:#14295a; --w1:#cfe0f7; --w2:#6690cf; --w3:#30579b; --w4:#132857;
   --b1:#d6e5f9; --b2:#3d68b0; --b3:#9cc1ee; --btext:#f2f7ff; --ring:#cfe0f7; --r1:#14295a; --r2:#d6e5f9; --r3:#6690cf; --r4:#132857; --rtext:#0d1f45;
@@ -2685,7 +2685,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125163446';                                 // stamped by build.ps1
+const APP_VER = '20261125163651';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
