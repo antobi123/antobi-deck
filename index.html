@@ -613,7 +613,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-beep="vib">振動</button>
           <button class="chip" data-beep="both">ピッ＋振動</button>
         </div>
-        <p class="rnote">デッキのボタンを押したときに、カーステのような「ピッ」という音や短い振動を返します（振動は Android のみ）。</p>
+        <p class="rnote">デッキのボタンを押したときに、カーステのような「ピッ」という音や短い振動を返します。はじめは「ピッ」（振動は Android のみ）。</p>
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
@@ -688,7 +688,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
             <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。曲名を公開している局は ♪ 曲名 が流れる</dd>
-            <dt>空きのボタン</dt><dd>FM2・FM3 ははじめ空き（----）。聴いている局を 1〜6 の<b>長押し</b>で登録するか、⚙「ラジオ」で FM2・FM3 を選んでから検索して登録</dd>
+            <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
             <dt>聴いた曲の履歴</dt><dd>流れた曲名は ⚙「ラジオ」タブの「聴いた曲の履歴」に100曲まで残ります。「コピー」で曲名をコピー、「検索」で YouTube を開けます</dd>
           </dl>
@@ -751,7 +751,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
             <dt>音量をそろえる</dt><dd>ON にすると、曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。初めての曲は20秒ほどで調整</dd>
-            <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ・振動・ピッ＋振動</dd>
+            <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
         </div>
@@ -1428,13 +1428,13 @@ function renderPresets(){
   const ol = $('#presetList'); ol.innerHTML = '';
   STATIONS.forEach((s, i) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span class="rpn">${i + 1}</span><span class="rpt"><b></b><small></small></span><button data-a="play" aria-label="聴く">▶</button><button data-a="name">名前</button><button data-a="reset">${band === 0 ? '初期' : '消す'}</button>`;
+    li.innerHTML = `<span class="rpn">${i + 1}</span><span class="rpt"><b></b><small></small></span><button data-a="play" aria-label="聴く">▶</button><button data-a="name">名前</button><button data-a="reset">初期</button>`;
     li.querySelector('b').textContent = s.short; li.querySelector('small').textContent = s.name + (s.genre ? ' · ' + s.genre : '');
     li.addEventListener('click', e => {
       const a = e.target.dataset && e.target.dataset.a; if(!a) return;
       if(a === 'play'){ if(s.url) tune(i); else flash(chLabel(i) + '  EMPTY', 900); }
       else if(a === 'name'){ const v = prompt('ボタンに出す名前（6文字まで）', s.short); if(v && v.trim()){ savePreset(i, {...s, short: v.trim().toUpperCase()}); } }
-      else if(a === 'reset'){ savePreset(i, band === 0 ? DEFAULT_STATIONS[i] : EMPTY_ST); flash(chLabel(i) + (band === 0 ? '  RESET' : '  CLEAR'), 900); }
+      else if(a === 'reset'){ savePreset(i, bandDefaults(band)[i]); flash(chLabel(i) + '  RESET', 900); }
     });
     ol.append(li);
   });
@@ -2748,7 +2748,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125164915';                                 // stamped by build.ps1
+const APP_VER = '20261125165440';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2787,13 +2787,31 @@ $('#alarmSnooze').addEventListener('click', () => { snoozeAt = Date.now() + 5*60
 setInterval(() => { if(snoozeAt && Date.now() >= snoozeAt){ snoozeAt = 0; ringAlarm(); } }, 1000);
 
 /* ---------------- ラジオ: bands FM1 / FM2 / FM3, six presets each ---------------- */
+// FM2: Japanese & easy listening, FM3: from around the world; each checked to play with the spectrum
+const FM2_STATIONS = [
+  { short: 'JPOP',  name: 'J-POP SAKURA',     genre: 'J-POP',          url: 'https://quincy.torontocast.com:2070/stream.mp3' },
+  { short: 'CITY',  name: 'CITY POPPERS',     genre: 'CITY POP',       url: 'https://stream.zeno.fm/ricmeoweux2uv' },
+  { short: 'ANIME', name: 'ANIME PARA TI',    genre: 'ANIME',          url: 'https://stream.zeno.fm/qpn8mkt8c4duv' },
+  { short: 'JAZZ',  name: 'CLASSIC VINYL HD', genre: 'JAZZ・STANDARDS', url: 'https://icecast.walmradio.com:8443/classic' },
+  { short: 'CLASS', name: 'CLASSIC FM',       genre: 'CLASSICAL',      url: 'https://ice-sov.musicradio.com/ClassicFMHD?hdauth=:2000000000:a290d4b39a16153061d4c743008b9fe8d424a7e5ec6469d40acf51fdcd336e80' },
+  { short: 'CHILL', name: 'SMOOTH CHILL',     genre: 'CHILL',          url: 'https://media-ssl.musicradio.com/ChillMP3' }
+];
+const FM3_STATIONS = [
+  { short: 'ROCK',  name: 'RDMIX CLASSIC ROCK', genre: 'ROCK 70s-90s',  url: 'https://cast1.torontocast.com:4610/stream' },
+  { short: '80S',   name: 'HEART 80s',          genre: '80s POP',       url: 'https://media-ssl.musicradio.com/Heart80sMP3' },
+  { short: 'DANCE', name: 'DANCE WAVE!',        genre: 'DANCE・HOUSE',   url: 'https://dancewave.online/dance.mp3' },
+  { short: 'INDIE', name: 'KEXP',               genre: 'INDIE・ALTERNATIVE', url: 'https://kexp.streamguys1.com/kexp160.aac' },
+  { short: 'LATIN', name: 'LA 100',             genre: 'LATIN POP',     url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/FM999_56.mp3' },
+  { short: 'NOVA',  name: 'RADIO NOVA',         genre: 'WORLD・GROOVE',  url: 'https://novazz.ice.infomaniak.ch/novazz-128.mp3' }
+];
+const bandDefaults = b => b === 0 ? DEFAULT_STATIONS : b === 1 ? FM2_STATIONS : FM3_STATIONS;
 const EMPTY_ST = { short: '----', name: '(空き)', genre: '', url: '' };
 var band = +store.get('band', 0) || 0; if(band < 0 || band > 2) band = 0;
 const bandKey = b => b === 0 ? 'presets' : 'presets' + (b + 1);
 function bandStations(b){
   if(b === 0) return DEFAULT_STATIONS.map((d, i) => { const s = (store.get('presets', []) || [])[i]; return s && s.url ? s : {...d}; });
   const saved = store.get(bandKey(b), []) || [];
-  return [0, 1, 2, 3, 4, 5].map(i => saved[i] && saved[i].url ? saved[i] : {...EMPTY_ST});
+  return bandDefaults(b).map((d, i) => saved[i] && saved[i].url ? saved[i] : {...d});
 }
 const chLabel = i => `FM${band + 1}-${i + 1}`;
 function setBand(b){
@@ -2821,7 +2839,7 @@ document.querySelectorAll('#bandChips .chip').forEach(b => b.addEventListener('c
 if(band !== 0) setBand(band); else document.querySelectorAll('#bandChips .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.band === '0'));
 
 /* ---------------- 操作音: a short beep and/or a tap of vibration on every key ---------------- */
-let beepMode = store.get('beep', 'off'), bctx = null;
+let beepMode = store.get('beep', 'beep'), bctx = null;   // the beep is on from the start
 function setBeep(m, announce){
   beepMode = m; store.set('beep', m);
   document.querySelectorAll('#beepChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.beep === m));
@@ -2842,7 +2860,7 @@ function keyFeedback(){
 }
 document.addEventListener('pointerdown', e => { if(e.target.closest('.deck .k, .deck .rk button, .deck .bar')) keyFeedback(); }, true);
 document.querySelectorAll('#beepChips .chip').forEach(b => b.addEventListener('click', () => setBeep(b.dataset.beep, true)));
-setBeep(['off', 'beep', 'vib', 'both'].includes(beepMode) ? beepMode : 'off', false);
+setBeep(['off', 'beep', 'vib', 'both'].includes(beepMode) ? beepMode : 'beep', false);
 
 /* ---------------- 音量をそろえる: learn each song's (and station's) loudness and even it out ---------------- */
 let normOn = store.get('norm', false), normMap = store.get('normMap', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
