@@ -197,6 +197,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .rk button:active{background:rgba(0,0,0,.14)}
 
 .strip{height:5px; border-radius:3px; background:var(--illum); box-shadow:0 0 10px var(--illum), 0 0 22px var(--illumglow); opacity:.9}
+:root.dimmed .disp, :root.dimmed .k, :root.dimmed .bar, :root.dimmed .strip, :root.dimmed .k.src{filter:brightness(.55)}   /* 夜のディマー */
 
 .portrait-hint{position:fixed; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 18px); text-align:center; color:var(--muted); font:13px var(--font-ui); display:none}
 @media (orientation:portrait){ .portrait-hint{display:block} }
@@ -489,6 +490,23 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
       </section>
       <section data-tab="look">
+        <h3>夜のディマー</h3>
+        <div class="chips" id="dimChips">
+          <button class="chip" data-dim="auto">AUTO<small>日没〜日の出</small></button>
+          <button class="chip" data-dim="on">いつも暗め</button>
+          <button class="chip" data-dim="off">OFF</button>
+        </div>
+        <p class="rnote">車のライトを点けたときのように、夜はディスプレイとキー照明を少し暗くして眩しさを抑えます。日没・日の出の時刻は季節に合わせて変わります。</p>
+      </section>
+      <section data-tab="look">
+        <h3>オープニング演出</h3>
+        <div class="chips" id="bootChips">
+          <button class="chip" data-boot="1">ON</button>
+          <button class="chip" data-boot="0">OFF</button>
+        </div>
+        <p class="rnote">アプリを開いたとき、蛍光管が温まって「ANTOBi」が光り、スペアナが走る起動演出（約3秒）。画面をタップすると飛ばせます。ON を押すとその場でもう一度見られます。</p>
+      </section>
+      <section data-tab="look">
         <h3>スペアナ</h3>
         <div class="chips" id="specChips">
           <button class="chip" data-spec="bar"><span class="sw sp-bar"></span>BAR<small>バー</small></button>
@@ -680,7 +698,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
-            <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・ROOM のキャラクター</dd>
+            <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・夜のディマー・オープニング演出・スペアナ・キー照明・ROOM のキャラクター</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
@@ -744,6 +762,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）</dd>
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
+            <dt>夜のディマー</dt><dd>AUTO だと日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます</dd>
+            <dt>オープニング演出</dt><dd>アプリを開いたときの起動演出（約3秒）。タップで飛ばせます。OFF にもできます</dd>
             <dt>パネルの色</dt><dd>本体の色（VOLUME・SEEK のボタンと ANTOBi のバッジも同じ色味に）。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面とお店のロゴの画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
             <dt>時計</dt><dd>⚙「時計」タブで、右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
@@ -2787,7 +2807,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125171551';                                 // stamped by build.ps1
+const APP_VER = '20261125172002';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2993,6 +3013,76 @@ $('#myShow').addEventListener('click', () => { setSkin('vfdmine', true); closeSh
 for(let i=0;i<MY_N;i++) mineSync(i);
 renderMine();
 // the MY PHOTO display: nothing set → the spectrum and a hint; one → that picture; several → SHUFFLE among them
+/* ---------------- power-on opening: the tubes warm up, ANTOBi lights, the model name, a spectrum sweep (tap to skip) ---------------- */
+var bootOn = store.get('boot', true) !== false, bootT = bootOn ? 0 : 99, bootStart = performance.now();   // timed by the clock, so it takes 3 s on any phone
+const BOOT_LEN = 3.2;
+const bootTxt = document.createElement('canvas'); bootTxt.width = VB_C; bootTxt.height = VB_R;
+function bootText(){                                       // the words, drawn once at the matrix's own resolution
+  const x = bootTxt.getContext('2d'); x.clearRect(0, 0, VB_C, VB_R);
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = '#f00'; x.font = '900 19px "Arial Black", Arial, sans-serif'; x.fillText('ANTOBi', VB_C/2, 17);
+  x.fillStyle = '#0f0'; x.font = 'bold 9px Arial, sans-serif'; x.fillText('ATB-900MJ', VB_C/2, 33);
+  return x.getImageData(0, 0, VB_C, VB_R).data;
+}
+let bootPx = null;
+function drawBoot(dt){
+  bootT = (performance.now() - bootStart)/1000;
+  if(!bootPx) bootPx = bootText();
+  const cw = W/VB_C, ch = H/VB_R, key = W + 'x' + H + 'x' + DPR + C.dimt;
+  if(key !== vbKey){
+    vbKey = key;
+    [vbLit, vbDim].forEach(c => { c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); });
+    vbd.setTransform(DPR,0,0,DPR,0,0); vbd.clearRect(0,0,W,H); vbd.fillStyle = C.dimt;
+    for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++) vbd.fillRect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  const t = bootT, warm = Math.min(1, t/.5);
+  vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
+  const pc = new Path2D(), pa = new Path2D();
+  const cell = (p, x, y) => p.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++){
+    const i = (y*VB_C + x)*4, r = bootPx[i] > 110, gr = bootPx[i+1] > 110;
+    if(t < .5){ if(Math.random() < .05*warm) cell(pc, x, y); continue; }            // warming up: a few dots flicker
+    const wipe = (t - .5)/.9*(VB_C + 20) - 10;                                       // ANTOBi lights from left to right
+    if(r && x < wipe){ cell(pa, x, y); continue; }
+    if(gr && t > 1.3 && x < (t - 1.3)/.6*VB_C) cell(pc, x, y);                       // then the model line
+  }
+  if(t > 2.1){                                                                        // a spectrum sweep across the bottom
+    const p = (t - 2.1)/.9;
+    for(let x=0;x<VB_C;x++){ const h = Math.max(0, Math.round(6*Math.sin(Math.PI*Math.min(1, Math.max(0, p*1.6 - x/VB_C*.8))))); for(let k=0;k<h;k++) cell(k > 4 ? pa : pc, x, VB_R - 1 - k); }
+  }
+  vbl.fillStyle = C.lit; vbl.fill(pc); vbl.fillStyle = C.lit2; vbl.fill(pa);
+  const fade = t > BOOT_LEN - .3 ? Math.max(0, (BOOT_LEN - t)/.3) : 1;
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  g.globalAlpha = warm; g.drawImage(vbDim, 0, 0, W, H);
+  g.globalAlpha = fade; drawLit(); g.globalAlpha = 1;
+}
+function bootSkip(){ if(bootT < BOOT_LEN){ bootT = BOOT_LEN; vbKey = ''; } }
+document.querySelector('.deck').addEventListener('pointerdown', bootSkip, { capture: true });
+function setBoot(v, announce){
+  bootOn = v; store.set('boot', v);
+  document.querySelectorAll('#bootChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.boot === '1') === v));
+  if(announce){ if(v){ bootT = 0; bootStart = performance.now(); bootPx = null; vbKey = ''; } flash(v ? 'OPENING  ON' : 'OPENING  OFF', 900); }
+}
+document.querySelectorAll('#bootChips .chip').forEach(b => b.addEventListener('click', () => setBoot(b.dataset.boot === '1', true)));
+setBoot(bootOn, false);
+if(bootOn) setTimeout(() => flash('WELCOME', 1800), 600);
+
+/* ---------------- night dimmer: like a car's display dimming with the headlights, from sunset to sunrise ---------------- */
+var dimMode = store.get('dimmer', 'auto');
+function dimNow(){
+  if(dimMode === 'on') return true; if(dimMode !== 'auto') return false;
+  const h = vbHour(), doy = vbDayOfYear(), dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365);
+  return h < 11.6 - dayLen/2 - .3 || h >= 11.6 + dayLen/2 + .3;            // a little after sunset until a little before sunrise
+}
+function applyDim(){ root.classList.toggle('dimmed', dimNow()); }
+function setDimmer(m, announce){
+  dimMode = m; store.set('dimmer', m);
+  document.querySelectorAll('#dimChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.dim === m));
+  applyDim(); if(announce) flash('DIMMER  ' + ({auto: 'AUTO', on: 'ON', off: 'OFF'})[m], 900);
+}
+document.querySelectorAll('#dimChips .chip').forEach(b => b.addEventListener('click', () => setDimmer(b.dataset.dim, true)));
+setDimmer(['auto', 'on', 'off'].includes(dimMode) ? dimMode : 'auto', false);
+setInterval(applyDim, 60e3);
 function drawMine(dt){
   const ks = mineKeys();
   if(!ks.length){ drawVFD(); if(!drawMine.hint){ drawMine.hint = 1; flash('MY PHOTO  ⚙「マイ フォト」で登録してね', 2600); } return; }
@@ -3269,7 +3359,7 @@ function frame(now){
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
-    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
+    if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
