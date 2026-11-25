@@ -2238,9 +2238,27 @@ function drawVFDDrive(dt){
   drSpeed += ((playing ? 1 + drPulse*.25 : .55) - drSpeed)*Math.min(1, dt*1.5);
   drFar += dt*3.2*drSpeed; drNear += dt*46*drSpeed; drWheel += dt*14*drSpeed;
   const RAIL = 33, ROAD = 38;
-  // the sky: a few stars and a crescent moon
-  [[8,3],[21,6],[37,2],[52,5],[71,3],[88,7],[97,2],[124,9]].forEach(([x, y], i) => { if(Math.sin(drT*1.1 + i*2.3) > -.3) dot(x, y, G); });
-  for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) dot(113 + x, 6 + y, A);
+  // the sky follows the clock (sunrise/sunset move with the seasons): the sun by day, a big striped sun at dawn and dusk,
+  // the moon and stars at night; the city's windows and the street lamps light up as it gets dark
+  const h = vbHour(), doy = vbDayOfYear();
+  const dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365), rise = 11.6 - dayLen/2, set = 11.6 + dayLen/2;
+  const day = h >= rise && h < set;
+  const sp = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*sp);
+  const low = day && el < .3;
+  const sx = 10 + sp*112, sy = 30 - el*25;
+  const starsOn = day ? Math.max(0, 1 - el*3.5) : 1;
+  [[8,3],[21,6],[37,2],[52,5],[71,3],[88,7],[97,2],[124,9]].forEach(([x, y], i) => { if(i < Math.round(8*starsOn) && Math.sin(drT*1.1 + i*2.3) > -.3) dot(x, y, G); });
+  if(low){                                                               // sunrise / sunset: a big sun with bands, low over the city
+    for(let y=-6;y<=6;y++) for(let x=-6;x<=6;x++) if(x*x + y*y <= 36 && ((Math.round(sy + y) + Math.floor(drT*1.4)) % 3 !== 0 || y < -2)) dot(sx + x, sy + y, A);
+    for(let k=0;k<3;k++){ const y = Math.round(sy) - 9 - k*3, w = 22 - k*5, o = (drT*(1 + k*.4)) % 30; for(let x=0;x<w;x+=2) dot(sx - w/2 + x + o - 15, y, G); }   // thin clouds lit from below
+  } else if(day){                                                        // daytime: small sun with twinkling rays, clouds drifting
+    for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5) dot(sx + x, sy + y, A);
+    for(let k=0;k<8;k++){ if((k + Math.floor(drT*2)) % 2) continue; const a = k*Math.PI/4; dot(sx + Math.cos(a)*4.5, sy + Math.sin(a)*4.5, A); }
+    [[0, 5, 14], [60, 9, 10], [95, 3, 12]].forEach(([o, y, w]) => { const x = ((o + drT*1.6) % (VB_C + w)) - w; for(let i=0;i<w;i+=2) dot(x + i, y, G); for(let i=3;i<w-2;i+=2) dot(x + i, y - 1, G); });
+  } else {                                                               // night: the crescent moon
+    for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) dot(sx + x, sy + y, A);
+  }
+  const lights = day ? (low ? .55 : .15) : 1;                             // how much of the city is lit
   // the far skyline, drifting slowly; each building's lit windows follow the band above it
   for(let x=0;x<VB_C;x++){
     const wx = x + Math.floor(drFar), c = Math.floor(wx/8), lx = wx - c*8;
@@ -2251,7 +2269,7 @@ function drawVFDDrive(dt){
     else dot(x, top, G);
     if(tall && lx === 3){ dot(x, top - 1, G); dot(x, top - 2, G); if(Math.sin(drT*2.4 + c) > .2) dot(x, top - 3, A); }   // aircraft warning light
     if(lx === 2 || lx === 4){
-      const v = st.v[Math.min(15, Math.floor(x/VB_C*16))], thr = playing ? .78 - v*.55 : .7;
+      const v = st.v[Math.min(15, Math.floor(x/VB_C*16))], thr = 1 - (1 - (playing ? .78 - v*.55 : .7))*lights;
       for(let y=top + 2;y<RAIL - 1;y+=2) if(hash(c*31 + lx*7 + y*13 + Math.floor(drT*.15 + c*.37)*5.3) > thr) dot(x, y, hash(c*17 + y) > .8 ? G : A);
     }
   }
@@ -2260,8 +2278,8 @@ function drawVFDDrive(dt){
   for(let px=-off;px<VB_C + 8;px+=LS){
     vbg.fillStyle = K; vbg.fillRect(px, 3, 1, RAIL - 3);
     for(let y=4;y<RAIL;y++) dot(px, y, G);
-    line(px, 4, px + 5, 4, G); dot(px + 5, 5, A); dot(px + 6, 5, A);
-    for(let y=7;y<RAIL;y+=2){ const s = (y - 5)*.35; for(let x=px + 5.5 - s;x<=px + 5.5 + s;x+=3) dot(x + (y % 4 ? 1.5 : 0), y, A); }
+    line(px, 4, px + 5, 4, G); dot(px + 5, 5, (day && !low) ? G : A); dot(px + 6, 5, (day && !low) ? G : A);
+    if(!day || low) for(let y=7;y<RAIL;y+=2){ const s = (y - 5)*.35; for(let x=px + 5.5 - s;x<=px + 5.5 + s;x+=3) dot(x + (y % 4 ? 1.5 : 0), y, A); }   // lamps are lit from dusk to dawn
   }
   // the guard rail, its posts flicking by
   vbg.fillStyle = K; vbg.fillRect(0, RAIL, VB_C, ROAD - RAIL);
@@ -2269,7 +2287,7 @@ function drawVFDDrive(dt){
   // the road: its edge, lane dashes rushing by, the lamps' glow on the asphalt
   for(let x=0;x<VB_C;x++) dot(x, ROAD, G);
   for(let x=0;x<VB_C;x++) if((x + Math.floor(drNear)) % 14 < 6) dot(x, 41, G);
-  for(let px=-off;px<VB_C + 8;px+=LS) for(let k=-3;k<=3;k+=2) dot(px + 5 + k, 42, A);
+  if(!day || low) for(let px=-off;px<VB_C + 8;px+=LS) for(let k=-3;k<=3;k+=2) dot(px + 5 + k, 42, A);
   for(let x=0;x<VB_C;x+=2) dot(x + (Math.floor(drNear) & 1), 43, G);
   // ---- light the tubes ----
   const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
