@@ -2197,7 +2197,7 @@ setDColor(dcolor, false);
 /* 省電力モード: 15 frames a second and no glow halo. おやすみモード (sleep timer): screen dimmed and power-saving,
    the last minute fades the sound out, then it stops. 目覚まし (alarm): at the set time it starts the radio or the playlist
    and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
-let eco = !!store.get('eco', false), sleepEnd = 0, slept = false, alarmOn = !!store.get('alarm', false), alarmRing = 0;
+let eco = !!store.get('eco', true), sleepEnd = 0, slept = false, alarmOn = !!store.get('alarm', false), alarmRing = 0;
 let alarmTime = store.get('alarmTime', '07:00'), alarmSrc = store.get('alarmSrc', 'radio'), alarmFired = '';
 const ecoNow = () => eco || sleepEnd > 0 || slept || (alarmOn && !alarmRing);
 const shade = document.createElement('div');
