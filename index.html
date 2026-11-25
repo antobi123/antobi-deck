@@ -192,6 +192,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .chips{display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px}
 .chip{border:1px solid var(--line); background:#0c0d11; color:var(--muted); border-radius:10px; padding:8px; display:flex; flex-direction:column; align-items:center; gap:6px; font:700 11px var(--font-print); letter-spacing:.12em}
 .chip small{font:11px var(--font-ui); letter-spacing:0; color:#7c7e88}
+.chip .pet{font-size:22px; line-height:1}
 .chip[aria-pressed="true"]{border-color:var(--illum); color:var(--fg); box-shadow:0 0 12px var(--illumglow)}
 .pbody h3 .mini{float:right; margin-left:6px; font:700 10px var(--font-print); letter-spacing:.1em; color:var(--fg); background:#15171d; border:1px solid var(--line); border-radius:6px; padding:4px 9px}
 .pbody h3 .mini[aria-pressed="true"]{border-color:var(--illum); box-shadow:0 0 10px var(--illumglow)}
@@ -399,13 +400,16 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
       </section>
       <section data-tab="look">
-        <h3>天気（ターンテーブルの窓）</h3>
-        <div class="chips" id="wxChips">
-          <button class="chip" data-wx="auto"><span class="sw sp-fall"></span>自動<small>今いる場所の天気</small></button>
-          <button class="chip" data-wx="clear"><span class="sw vfdb"></span>晴れ<small>いつも晴れ</small></button>
-          <button class="chip" data-wx="rain"><span class="sw sp-fall"></span>雨<small>いつも雨</small></button>
+        <h3>ROOM のキャラクター</h3>
+        <div class="chips" id="petChips">
+          <button class="chip" data-pet="orig"><span class="pet">🐾</span>オリジナル</button>
+          <button class="chip" data-pet="cat"><span class="pet">🐱</span>ネコ</button>
+          <button class="chip" data-pet="dog"><span class="pet">🐶</span>イヌ</button>
+          <button class="chip" data-pet="rabbit"><span class="pet">🐰</span>ウサギ</button>
+          <button class="chip" data-pet="bear"><span class="pet">🐻</span>クマ</button>
+          <button class="chip" data-pet="penguin"><span class="pet">🐧</span>ペンギン</button>
+          <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
-        <p class="rnote">「自動」は最初に位置情報の許可を聞かれます。だいたいの場所（約1km単位）だけを天気サービス（Open-Meteo）に送って、30分ごとに今の天気を確認します。</p>
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
@@ -1419,7 +1423,7 @@ setSpec(spec, false);
 /* ---------------- weather for the window and beach scenes ----------------
    auto: the current weather where you are (asks for location once, then Open-Meteo every 30 min); or always clear / always rain */
 const WEATHERS = ['auto', 'clear', 'rain'], WEATHER_NAME = {auto: 'AUTO', clear: 'CLEAR', rain: 'RAIN'};
-let weatherMode = store.get('weather', 'auto'); if(!WEATHERS.includes(weatherMode)) weatherMode = 'auto';
+let weatherMode = 'auto';   // fixed: the window always follows the real weather
 let wxRain = 0, wxStorm = false, wxAt = 0, wxBusy = false;
 const wxFake = new URLSearchParams(location.search).get('weather');   // ?weather=rain / storm / clear to preview
 function isRaining(){ if(wxFake) return wxFake !== 'clear'; if(weatherMode === 'rain') return true; if(weatherMode === 'clear') return false; return wxRain > 0; }
@@ -1950,8 +1954,19 @@ function drawVFDRoom(dt){
   vbg.fillStyle = K; vbg.fillRect(0, 0, VB_C, VB_R);
   const h = vbHour(), day = h >= 6 && h < 18, night = h >= 23 || h < 6, playing = isActive();
   // the room: window, wall clock, floor
+  // the window follows the real sky, just like TURNTABLE's: sunrise/sunset by season, and the local weather
+  const doy = vbDayOfYear(), dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365), rise = 11.6 - dayLen/2, set = 11.6 + dayLen/2;
+  const sunUp = h >= rise && h < set;
+  wxUpdate(); const rain = isRaining();
+  const wdot = (x, y, c) => { if(x > 10 && x < 36 && y > 5 && y < 22) dot(x, y, c); };
+  if(rain){
+    drawRainClouds(wdot, 11, 36, 6, 6, rmT, G);
+    drawRain(wdot, 11, 36, 6, 22, rainAmount(), rmT, G);
+    if(isStorm() && (rmT % 7) < .14){ let x = 16 + Math.floor(rmT/7)*7 % 14, y = 6; while(y < 16){ wdot(x, y, A); x += (Math.sin(y*3 + rmT) > 0 ? 1 : -1); y++; } }
+  }
   for(let x=10;x<=36;x++){ dot(x, 5, G); dot(x, 22, G); } for(let y=5;y<=22;y++){ dot(10, y, G); dot(36, y, G); dot(23, y, G); } for(let x=10;x<=36;x++) dot(x, 13, G);
-  if(day){ for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5) dot(30 + x, 9 + y, A); [[13,17],[18,18]].forEach(([x, y], i) => { const o = (rmT*1.2 + i*9) % 12; for(let k=0;k<5;k+=2) dot(x + o + k > 22 ? x + o + k - 11 : x + o + k, y, G); }); }
+  if(rain){}
+  else if(sunUp){ for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5) dot(30 + x, 9 + y, A); [[13,17],[18,18]].forEach(([x, y], i) => { const o = (rmT*1.2 + i*9) % 12; for(let k=0;k<5;k+=2) dot(x + o + k > 22 ? x + o + k - 11 : x + o + k, y, G); }); }
   else { for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5 && (x - 1)*(x - 1) + (y + 1)*(y + 1) > 3) dot(30 + x, 9 + y, A); [[14,8],[19,10],[27,17],[32,19],[15,18]].forEach(([x, y], i) => { if(Math.sin(rmT*1.3 + i*2) > .1) dot(x, y, G); }); }
   const cx = 54, cyc = 10, now = new Date(), hr = (vbFakeHour !== null ? vbFakeHour : now.getHours() + now.getMinutes()/60) % 12, mn = now.getMinutes();
   for(let a=0;a<Math.PI*2;a+=.35) dot(cx + Math.cos(a)*4.5, cyc + Math.sin(a)*4.5, G);
@@ -1969,7 +1984,24 @@ function drawVFDRoom(dt){
   for(let y=27;y<=37;y++) dot(124 + Math.sin(y*.6)*.4, y, G); [[-3,-4],[3,-5],[-4,-1],[4,-2],[0,-7]].forEach(([dx, dy], i) => line(124, 30, 124 + dx + Math.sin(rmT + i)*.4, 30 + dy, G));
   for(let x=120;x<=128;x++) dot(x, 37, A); dot(121, 36, A); dot(127, 36, A);
   // behavior: walk to a spot, then do something there for a while
-  if(rmT > rmUntil || (playing && rmState !== 'dance' && rmState !== 'walk' && Math.random() < .004) || (night && !playing && rmState !== 'sleep' && rmState !== 'walk')){
+  // now and then a friend drops by: it walks in from the right, they greet and play (or dance together to the music), then it waves and goes home
+  if(!rmFr && rmT > rmFrNext && !(night && !playing)){
+    const others = Object.keys(RM_PETS).filter(k => k !== pet);
+    rmFr = { sp: others[Math.floor(Math.random()*others.length)], x: 140, state: 'walk', face: -1, until: 0 };
+    rmTarget = 38; rmState = 'walk'; rmNext = ['wait', 99]; rmUntil = rmT + 99;
+  }
+  if(rmFr){
+    const f = rmFr;
+    if(f.state === 'walk'){ f.x -= dt*9; if(f.x <= 50){ f.x = 50; f.state = playing ? 'dance' : 'greet'; f.until = rmT + 12; } }
+    else if(f.state === 'greet' || f.state === 'dance'){
+      f.state = playing ? 'dance' : 'greet';
+      if(rmState !== 'walk'){ rmState = f.state; rmUntil = rmT + 99; }                        // play together
+      if(rmT > f.until){ f.state = 'wave'; f.until = rmT + 2.5; rmState = 'wave'; rmUntil = rmT + 3; }
+    }
+    else if(f.state === 'wave'){ if(rmT > f.until) f.state = 'leave'; }
+    else { f.x += dt*9; f.face = 1; if(f.x > 140){ rmFr = null; rmFrNext = rmT + 90 + Math.random()*150; } }
+  }
+  if(!rmFr && rmT > rmUntil || !rmFr && (playing && rmState !== 'dance' && rmState !== 'walk' && Math.random() < .004) || !rmFr && (night && !playing && rmState !== 'sleep' && rmState !== 'walk')){
     const [spot, act, dur] = rmPick(playing, night);
     rmTarget = spot ? RM_SPOTS[spot] : 14 + Math.random()*90; rmState = 'walk'; rmNext = [act, dur]; rmUntil = rmT + 99;
   }
@@ -1978,31 +2010,41 @@ function drawVFDRoom(dt){
     if(Math.abs(d) < .6){ rmState = rmNext[0]; rmUntil = rmT + rmNext[1]; rmFace = 0; }
     else rmX += Math.sign(d)*Math.min(Math.abs(d), dt*9);
   }
-  // draw the little animal (front view, about 11 x 11 dots)
-  const walking = rmState === 'walk', dancing = rmState === 'dance', sleeping = rmState === 'sleep' || rmState === 'nap';
-  const bob = walking ? (Math.floor(rmT*8) % 2) : dancing ? (rmPulse > .4 || Math.sin(rmT*8) > 0 ? 1 : 0) : rmState === 'eat' ? (Math.sin(rmT*6) > 0 ? 1 : 0) : 0;
-  const ox = Math.round(rmX) - 5, oy = 27 - (sleeping ? -3 : 0) + (rmState === 'eat' ? 1 : 0) - (dancing ? bob : 0) + (walking ? bob*0 : 0);
+  // draw a little animal (front view, about 11 x 11 dots); a visiting friend is drawn the same way
+  const drawPet = (sp, x, state, face, phase) => {
+  const walking = state === 'walk', dancing = state === 'dance', sleeping = state === 'sleep' || state === 'nap', hop = state === 'greet';
+  const bob = walking ? (Math.floor(rmT*8) % 2) : dancing ? (rmPulse > .4 || Math.sin(rmT*8 + phase) > 0 ? 1 : 0) : state === 'eat' ? (Math.sin(rmT*6) > 0 ? 1 : 0) : hop ? (Math.sin(rmT*5 + phase) > .4 ? 2 : 0) : 0;
+  const ox = Math.round(x) - 5, oy = 27 + (sleeping ? 3 : 0) + (state === 'eat' ? 1 : 0) - (dancing || hop ? bob : 0);
   vbg.fillStyle = K; vbg.fillRect(ox, oy, 11, 11);
-  RM_HEAD.forEach((row, r) => { for(let c=0;c<11;c++) if(row[c] === '#') dot(ox + c, oy + r, G); });
-  const look = rmFace + (rmState === 'look' ? -1 : 0);
-  if(sleeping || dancing && Math.sin(rmT*3) > .3 || rmState === 'wave'){ dot(ox + 2 + look, oy + 3, G); dot(ox + 3 + look, oy + 3, G); dot(ox + 7 + look, oy + 3, G); dot(ox + 8 + look, oy + 3, G); }   // happy / closed eyes
+  RM_PETS[sp].head.forEach((row, r) => { for(let c=0;c<11;c++) if(row[c] === '#') dot(ox + c, oy + r, G); });
+  const look = face + (state === 'look' ? -1 : 0);
+  if(sleeping || dancing && Math.sin(rmT*3) > .3 || state === 'wave' || hop){ dot(ox + 2 + look, oy + 3, G); dot(ox + 3 + look, oy + 3, G); dot(ox + 7 + look, oy + 3, G); dot(ox + 8 + look, oy + 3, G); }   // happy / closed eyes
   else if(Math.sin(rmT*1.7) > .97){ dot(ox + 3 + look, oy + 3, G); dot(ox + 7 + look, oy + 3, G); }                               // blink
   else { dot(ox + 3 + look, oy + 3, G); dot(ox + 3 + look, oy + 2, G); dot(ox + 7 + look, oy + 3, G); dot(ox + 7 + look, oy + 2, G); }   // eyes
   dot(ox + 5 + look, oy + 4, A);                                                                     // nose
-  if(rmState === 'wave' || dancing || rmState === 'eat'){ dot(ox + 2, oy + 4, A); dot(ox + 8, oy + 4, A); }   // rosy cheeks
+  if(state === 'wave' || dancing || hop || state === 'eat'){ dot(ox + 2, oy + 4, A); dot(ox + 8, oy + 4, A); }   // rosy cheeks
   if(!sleeping){
     for(let r=7;r<=9;r++){ dot(ox + 2, oy + r, G); dot(ox + 8, oy + r, G); }                        // body
     const step = walking ? Math.floor(rmT*8) % 2 : 0;
     dot(ox + 2 + step, oy + 10, G); dot(ox + 3 + step, oy + 10, G); dot(ox + 7 - step, oy + 10, G); dot(ox + 8 - step, oy + 10, G);   // feet
     if(dancing){ const up = Math.floor(rmT*4) % 2; dot(ox + (up ? 0 : 1), oy + (up ? 5 : 7), G); dot(ox + 1, oy + 6, G); dot(ox + (up ? 9 : 10), oy + (up ? 7 : 5), G); dot(ox + 9, oy + 6, G); }
-    else if(rmState === 'wave'){ dot(ox + 1, oy + 8, G); dot(ox + 9, oy + 7, G); dot(ox + 10, oy + 6, G); dot(ox + 10 + (Math.floor(rmT*5) % 2), oy + 5, G); }
+    else if(state === 'wave' || hop){ dot(ox + 1, oy + 8, G); dot(ox + 9, oy + 7, G); dot(ox + 10, oy + 6, G); dot(ox + 10 + (Math.floor(rmT*5) % 2), oy + 5, G); }
     else { dot(ox + 1, oy + 8, G); dot(ox + 9, oy + 8, G); }                                        // arms down
   } else for(let c=1;c<10;c++) dot(ox + c, oy + 7, G);                                              // curled up
+  RM_PETS[sp].extra(ox, oy, { dot, G, A, K, t: rmT, walking, dancing, sleeping });                // ears, tail, whiskers…
+  return { ox, oy };
+  };
+  const HEART = [[0,0],[1,1],[3,1],[4,0],[0,1],[4,1],[1,2],[2,3],[3,2]], NOTE = [[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]];
+  let fb = null;
+  if(rmFr){ const f = rmFr, o = drawPet(f.sp, f.x, f.state === 'leave' ? 'walk' : f.state, f.face, 1.6); fb = [o.ox - 8, o.oy - 6]; }
+  const { ox, oy } = drawPet(pet, rmX, rmState, rmFr && rmState !== 'walk' ? 1 : rmFace, 0);
+  const walking = rmState === 'walk', dancing = rmState === 'dance', sleeping = rmState === 'sleep' || rmState === 'nap';
   // little thought bubbles
-  const bx = ox + 11, by = oy - 6;
+  let bx = ox + 11, by = oy - 6;
   const bubble = icon => { for(let x=0;x<7;x++){ dot(bx + x, by, G); dot(bx + x, by + 5, G); } for(let y=0;y<=5;y++){ dot(bx, by + y, G); dot(bx + 6, by + y, G); } dot(bx - 1, by + 6, G); icon.forEach(([x, y]) => dot(bx + 1 + x, by + 1 + y, A)); };
   if(dancing && Math.sin(rmT*2) > -.2) bubble([[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]]);                       // ♪
-  if(rmState === 'wave') bubble([[0,0],[1,1],[3,1],[4,0],[0,1],[4,1],[1,2],[2,3],[3,2]]);                         // ♥
+  if(rmState === 'wave' || rmState === 'greet' && Math.sin(rmT*1.6) > 0) bubble(HEART);                         // ♥
+  if(fb && rmFr.state !== 'walk' && rmFr.state !== 'leave' && Math.sin(rmT*1.6) <= 0){ [bx, by] = fb; bubble(rmFr.state === 'dance' ? NOTE : HEART); }   // the friend answers
   if(rmState === 'eat' && Math.sin(rmT*3) > 0) bubble([[0,1],[1,2],[2,2],[3,2],[4,1],[1,3],[3,3]]);               // a happy bowl
   if(rmState === 'idle' && Math.sin(rmT*1.5) > .5) [0, 2, 4].forEach((x, i) => { if(Math.floor(rmT*2) % 4 > i) dot(bx + x, by + 4, G); });   // ...
   if(sleeping){                                                                                       // Zzz drifting up
@@ -2026,7 +2068,37 @@ function drawVFDRoom(dt){
   g.drawImage(vbDim, 0, 0, W, H);
   g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
 }
-let rmNext = ['idle', 2];
+let rmNext = ['idle', 2], rmFr = null, rmFrNext = new URLSearchParams(location.search).has('visit') ? 3 : 45;   // the first friend drops by after a little while (?visit previews it)
+/* ROOM characters: each has its own head outline (11 x 7 dots, eyes go in rows 2-3) and extras like ears, tail, whiskers */
+const RM_PETS = {
+  orig:    { name: 'オリジナル', head: [".##.....##.", "#..#####..#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."], extra(){} },
+  cat:     { name: 'ネコ', head: ["#.........#", "##.#####.##", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, G, t } = s;                                   // whiskers and a curling tail
+               [[-1,3],[-2,3],[-1,5],[-2,5],[11,3],[12,3],[11,5],[12,5]].forEach(([x, y]) => dot(ox + x, oy + y, G));
+               if(!s.sleeping){ const w = Math.round(Math.sin(t*3)); dot(ox + 10, oy + 9, G); dot(ox + 11, oy + 8, G); dot(ox + 12, oy + 7 + w*0, G); dot(ox + 12 + w, oy + 6, G); } } },
+  dog:     { name: 'イヌ', head: ["...#####...", "..#.....#..", "##.......##", "##.......##", "##.......##", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, G, t } = s;                                   // a wagging tail
+               if(!s.sleeping){ const w = Math.floor(t*(s.dancing || s.walking ? 10 : 5)) % 2; dot(ox + 10, oy + 8, G); dot(ox + 11, oy + 7 + w, G); } } },
+  rabbit:  { name: 'ウサギ', head: ["..#######..", ".#.......#.", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, G, t } = s, sw = Math.round(Math.sin(t*1.5)*.6);   // long ears
+               for(let r=1;r<=5;r++){ dot(ox + 2, oy - r, G); dot(ox + 4, oy - r, G); dot(ox + 6 + (r > 3 ? sw : 0), oy - r, G); dot(ox + 8 + (r > 3 ? sw : 0), oy - r, G); }
+               dot(ox + 3, oy - 6, G); dot(ox + 7 + sw, oy - 6, G); } },
+  bear:    { name: 'クマ', head: ["##.......##", "#.#######.#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, A } = s; dot(ox + 4, oy + 5, A); dot(ox + 6, oy + 5, A); } },          // a little muzzle
+  penguin: { name: 'ペンギン', head: ["...#####...", ".##.....##.", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, A } = s; dot(ox + 4, oy + 4, A); dot(ox + 6, oy + 4, A); dot(ox + 5, oy + 5, A);   // beak
+               if(!s.sleeping){ dot(ox + 2, oy + 10, A); dot(ox + 3, oy + 10, A); dot(ox + 7, oy + 10, A); dot(ox + 8, oy + 10, A); } } },   // orange feet
+  hamster: { name: 'ハムスター', head: [".#.......#.", "#.#######.#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, A, G } = s; [[-1,3],[-1,4],[11,3],[11,4]].forEach(([x, y]) => dot(ox + x, oy + y, G)); dot(ox + 2, oy + 4, A); dot(ox + 8, oy + 4, A); } }   // puffy cheeks
+};
+let pet = store.get('pet', 'orig'); if(!RM_PETS[pet]) pet = 'orig';
+function setPet(p, announce){
+  pet = p; store.set('pet', p);
+  document.querySelectorAll('#petChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.pet === p));
+  if(announce) flash('ROOM  ' + RM_PETS[p].name, 900);
+}
+document.querySelectorAll('#petChips .chip').forEach(b => b.addEventListener('click', () => setPet(b.dataset.pet, true)));
+setPet(pet, false);
 
 /* ---------------- loop ---------------- */
 let last = performance.now();
