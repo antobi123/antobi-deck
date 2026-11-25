@@ -1439,7 +1439,7 @@ document.querySelectorAll('#wxChips .chip').forEach(b => b.addEventListener('cli
 // shared rain helpers (dot-matrix): falling streaks and a band of heavy clouds
 const rainDrops = Array.from({length: 70}, (_, i) => [(i*53 + 7) % 132, (i*29 + 3) % 44, .75 + (i % 5)*.12]);
 function drawRain(dot, x0, x1, y0, y1, amount, t, c){
-  const n = Math.round(rainDrops.length*amount), w = x1 - x0, hgt = y1 - y0;
+  const n = Math.round(rainDrops.length*amount*.6), w = x1 - x0, hgt = y1 - y0;   // a little lighter than before
   for(let i=0;i<n;i++){
     const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*28) % hgt, x = x0 + (((rx - (y - y0)*.35) % w) + w) % w;
     dot(x, y, c); if(y - 1 >= y0) dot(x + .35, y - 1, c);
