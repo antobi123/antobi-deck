@@ -576,7 +576,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="night" aria-pressed="false">電力・タイマー</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">電力・タイマー</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
@@ -590,7 +590,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
             <li>他のアプリを開いても、画面を消しても音楽は流れ続けます。ロック画面やイヤホンのボタンで ⏯ ⏭ ⏮ を操作できます</li>
-            <li>ホーム画面に追加すると全画面のアプリとして使えます（⚙「アプリ」タブ）</li>
+            <li>ホーム画面に追加すると全画面のアプリとして使えます。設定のバックアップや更新のお知らせは「アプリ」のページへ</li>
           </ul>
         </div>
         <div class="hpage" data-h="play" hidden>
@@ -611,6 +611,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
             <dt>RADIO</dt><dd>ネットラジオ。1〜6 のボタンが放送局になる。曲名を公開している局は ♪ 曲名 が流れる</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
+            <dt>聴いた曲の履歴</dt><dd>流れた曲名は ⚙「ラジオ」タブの「聴いた曲の履歴」に100曲まで残ります。「コピー」で曲名をコピー、「検索」で YouTube を開けます</dd>
           </dl>
           <h3 style="margin-top:16px">局を入れ替えるには</h3>
           <ol class="hsteps">
@@ -662,11 +663,27 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>SHUFFLE</dt><dd>ロゴの画面をランダムに切り替え続けます</dd>
           </dl>
         </div>
+        <div class="hpage" data-h="sound" hidden>
+          <h3>サウンド（⚙「サウンド」）</h3>
+          <dl class="help">
+            <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です</dd>
+            <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
+            <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
+          </dl>
+        </div>
+        <div class="hpage" data-h="appx" hidden>
+          <h3>アプリ（⚙「アプリ」）</h3>
+          <dl class="help">
+            <dt>インストール</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます</dd>
+            <dt>設定のバックアップ</dt><dd>「設定を書き出す」で、ラジオのプリセット・表示や音の設定・聴いた曲の履歴を1つのファイルに保存。「設定を読み込む」で元に戻せます。機種変更のときや、友達に同じ設定を渡すときに。入れた曲は含まれません</dd>
+            <dt>新しいバージョン</dt><dd>アプリが更新されると、画面の上に「新しいバージョンがあります」と出ます。「更新する」を押すと、今の再生状態のまま最新版になります</dd>
+          </dl>
+        </div>
         <div class="hpage" data-h="night" hidden>
           <h3>電力・タイマー（⚙「電力・タイマー」）</h3>
           <dl class="help">
             <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に</dd>
-            <dt>おやすみモード</dt><dd>15・30・60・90分。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面タップで明るく戻ります</dd>
+            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面タップで明るく戻ります</dd>
             <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなります。毎日同じ時刻に鳴ります</dd>
           </dl>
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
@@ -2539,7 +2556,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125161022';                                 // stamped by build.ps1
+const APP_VER = '20261125161409';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
