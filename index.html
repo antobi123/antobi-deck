@@ -36,6 +36,7 @@
 :root[data-skin="vfd"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdb"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdrec"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdtape"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfddx"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdasahi"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdfrisco"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
@@ -98,7 +99,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -208,6 +209,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
 .sw.vfdrec{background:radial-gradient(ellipse 30% 14% at 70% 66%,#ffa24a 0 22%,transparent 26% 40%,#5ff6e6 42% 48%,transparent 50% 64%,#5ff6e6 66% 74%,transparent 76%),linear-gradient(90deg,transparent 6%,#5ff6e6 6% 8%,transparent 8% 48%,#5ff6e6 48% 50%,transparent 50%) 0 0/100% 72% no-repeat,linear-gradient(180deg,transparent 80%,#5ff6e6 80% 84%,transparent 84%),#021311}
+.sw.vfdtape{background:radial-gradient(circle at 37% 55%,#ffa24a 0 2px,transparent 3px,#5ff6e6 3px 5px,transparent 6px),radial-gradient(circle at 63% 55%,#ffa24a 0 2px,transparent 3px,#5ff6e6 3px 4px,transparent 5px),linear-gradient(#5ff6e6,#5ff6e6) 50% 22%/60% 1px no-repeat,linear-gradient(90deg,#5ff6e6 1px,transparent 1px calc(100% - 1px),#5ff6e6 calc(100% - 1px)) 50% 50%/70% 70% no-repeat,#021311}
 .sw.vfddx{background:linear-gradient(180deg,transparent 30%,rgba(255,162,74,.9) 30% 36%,transparent 36% 50%,rgba(255,162,74,.9) 50% 56%,transparent 56%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 40% no-repeat,#021311}
 .sw.vfdasahi{background:radial-gradient(ellipse 45% 22% at 50% 45%,rgba(255,162,74,.95) 0 60%,transparent 64%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 35% no-repeat,#021311}
 .sw.logo{background:linear-gradient(180deg,transparent 22%,var(--c,#ffa24a) 22% 34%,transparent 34% 44%,var(--c,#ffa24a) 44% 58%,transparent 58%) 15% 0/70% 100% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
@@ -350,6 +352,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfd"><span class="sw vfd"></span>SPECTRUM<small>蛍光管スペアナ</small></button>
           <button class="chip" data-skin="vfdb"><span class="sw vfdb"></span>BEACH<small>蛍光管サンセット</small></button>
           <button class="chip" data-skin="vfdrec"><span class="sw vfdrec"></span>TURNTABLE<small>窓辺のレコード</small></button>
+          <button class="chip" data-skin="vfdtape"><span class="sw vfdtape"></span>CASSETTE<small>カセットプレーヤー</small></button>
           <button class="chip" data-skin="vfddx"><span class="sw vfddx"></span>DX Record</button>
           <button class="chip" data-skin="vfdasahi"><span class="sw vfdasahi"></span>朝日レコード</button>
           <button class="chip" data-skin="vfdfrisco"><span class="sw logo"></span>喫茶フリスコ</button>
@@ -521,11 +524,11 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
-const ADDED = ['vfdrec'];                       // displays added later, oldest first
+const ADDED = ['vfdrec', 'vfdtape'];                       // displays added later, oldest first
 const DEFAULTS = ADDED.map((_, k) => SKINS.filter(s => !ADDED.slice(k).includes(s)));
 DEFAULTS.push(['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb' && !ADDED.includes(s))]);   // the very first default (VFD first)
 if(ORDER.length && DEFAULTS.some(d => ORDER.join() === d.slice(0, ORDER.length).join())) ORDER = [];
@@ -1838,6 +1841,80 @@ function drawVFDTurntable(dt){
   g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
 }
 
+/* CASSETTE: a portable cassette player seen from the front, the tape turning in its window.
+   The reels always turn; the tape moves from the left reel to the right with the song (or slowly on its own),
+   the hubs spin faster as their spool gets thinner; the EQ strip under the window is the spectrum. */
+let csT = 0, csAngL = 0, csAngR = 0, csPulse = 0;
+function drawVFDCassette(dt){
+  csT += dt;
+  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3;
+  csPulse += (bass - csPulse)*.2;
+  const cw = W/VB_C, ch = H/VB_R;
+  const key = W + 'x' + H + 'x' + DPR + C.dimt;
+  if(key !== vbKey){
+    vbKey = key;
+    [vbLit, vbDim].forEach(c => { c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); });
+    vbd.setTransform(DPR,0,0,DPR,0,0); vbd.clearRect(0,0,W,H); vbd.fillStyle = C.dimt;
+    for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++) vbd.fillRect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  const G = '#0f0', A = '#f00', K = '#000';
+  const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); };
+  const line = (x0, y0, x1, y1, c) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); for(let i=0;i<=n;i++) dot(x0 + (x1 - x0)*i/(n || 1), y0 + (y1 - y0)*i/(n || 1), c); };
+  const rbox = (x0, y0, x1, y1, c) => { line(x0 + 2, y0, x1 - 2, y0, c); line(x0 + 2, y1, x1 - 2, y1, c); line(x0, y0 + 2, x0, y1 - 2, c); line(x1, y0 + 2, x1, y1 - 2, c); dot(x0 + 1, y0 + 1, c); dot(x1 - 1, y0 + 1, c); dot(x0 + 1, y1 - 1, c); dot(x1 - 1, y1 - 1, c); };
+  vbg.fillStyle = K; vbg.fillRect(0, 0, VB_C, VB_R);
+  // how far through the tape we are: the song's position, or a slow loop when nothing is loaded
+  let p = (csT/600) % 1;
+  if(mode === 'file' && audio.duration) p = audio.currentTime/audio.duration;
+  const playing = isActive();
+  // the player body, its keys on top (PLAY held down while playing), the headphone cord off to the right
+  rbox(22, 4, 110, 42, G);
+  [[28,'#'], [37,'#'], [46,'P'], [55,'#'], [64,'#']].forEach(([x, k], i) => {
+    const down = k === 'P' && playing;
+    for(let xx=x;xx<x+7;xx++){ dot(xx, down ? 3 : 2, k === 'P' ? A : G); }
+    dot(x, down ? 4 : 3, G); dot(x + 6, down ? 4 : 3, G);
+  });
+  for(let y=14;y<=22;y+=2) dot(111, y, G);                              // volume wheel ridges
+  dot(111, 30, A); dot(112, 30, A);                                       // headphone jack
+  for(let i=0;i<22;i++){ const x = 113 + i*.9, y = 30 + Math.sin(i*.35 + csT*1.1)*2.2 + i*.35; dot(x, y, G); }   // the cord, swaying a little
+  // the cassette in the window
+  rbox(30, 7, 102, 34, G);
+  for(let x=36;x<=96;x+=2) dot(x, 9, G);                                  // label lines
+  for(let x=46;x<=96;x+=3) dot(x, 12, G);
+  [[0,0],[1,-1],[2,-2],[3,-1],[4,0],[1,0],[3,0]].forEach(([x, y]) => dot(35 + x, 13 + y, A));   // side "A"
+  if(playing && Math.sin(csT*6) > -.2) dot(98, 12, A);                    // a little running light
+  // the window: two spools of tape, hubs with turning teeth
+  const lx = 52, rx = 80, cy = 22, rMin = 3.2, rMax = 9;
+  const rL = Math.sqrt(rMin*rMin + (rMax*rMax - rMin*rMin)*(1 - p)), rR = Math.sqrt(rMin*rMin + (rMax*rMax - rMin*rMin)*p);
+  const speed = (playing ? 2.4 : 1.1)*dt;                                 // tape speed; hubs turn faster on a thin spool
+  csAngL += speed*6/rL; csAngR += speed*6/rR;
+  rbox(40, 15, 92, 29, G);                                                // the clear window
+  [[lx, rL, csAngL], [rx, rR, csAngR]].forEach(([x, r, ang]) => {
+    for(let a=0;a<Math.PI*2;a+=.18) dot(x + Math.cos(a)*r, cy + Math.sin(a)*r*.75, G);       // the spool's edge
+    for(let rr=rMin + 1;rr<r - .5;rr+=1.4) for(let a=0;a<Math.PI*2;a+=.5) if(Math.sin(a*3 + ang*2 + rr) > .3) dot(x + Math.cos(a)*rr, cy + Math.sin(a)*rr*.75, G);   // wound tape shimmering as it turns
+    for(let a=0;a<Math.PI*2;a+=.45) dot(x + Math.cos(a)*2.2, cy + Math.sin(a)*1.8, A);        // hub ring
+    for(let k=0;k<6;k++){ const a = ang + k*Math.PI/3; dot(x + Math.cos(a)*1.3, cy + Math.sin(a)*1.1, A); }   // turning teeth
+  });
+  // tape running from the spools down past the head
+  line(lx - rL*.3, cy + rL*.72, 58, 31, G); line(rx + rR*.3, cy + rR*.72, 74, 31, G); line(58, 31, 74, 31, G);
+  for(let x=60;x<=72;x+=3) dot(x, 33, A);                                 // the head
+  // the EQ strip under the cassette = spectrum
+  for(let i=0;i<16;i++){ const lv = Math.round(st.v[i]*4); for(let k=0;k<4;k++) if(k < lv) dot(36 + i*4, 40 - k, k >= 3 ? A : G); }
+  // ---- light the tubes ----
+  const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
+  vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
+  const pc = new Path2D(), pa = new Path2D();
+  for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++){
+    const i = (y*VB_C + x)*4, rr = px[i], gg = px[i+1];
+    if(gg > 110) pc.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+    else if(rr > 110) pa.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  vbl.fillStyle = C.lit; vbl.fill(pc);
+  vbl.fillStyle = C.lit2; vbl.fill(pa);
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  g.drawImage(vbDim, 0, 0, W, H);
+  g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
+}
+
 /* ---------------- loop ---------------- */
 let last = performance.now();
 function frame(now){
@@ -1845,7 +1922,7 @@ function frame(now){
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
-    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
+    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
