@@ -645,6 +645,14 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="eqs"><label>VOLUME<input type="range" id="beepVol" min="5" max="100" step="5" value="45"><b id="beepVolV">45</b></label></div>
         <p class="rnote">デッキのボタンを押したときに、カーステのような「ピッ」という音や短い振動を返します。はじめは「ピッ」（振動は Android のみ）。</p>
       </section>
+      <section data-tab="sound">
+        <h3>自動で再開</h3>
+        <div class="chips" id="resumeChips">
+          <button class="chip" data-ar="1">ON</button>
+          <button class="chip" data-ar="0">OFF</button>
+        </div>
+        <p class="rnote">電話がかかってきたときや、ほかのアプリが音を鳴らしたときに止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません。</p>
+      </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
         <div class="chips" id="favChips" style="margin-bottom:10px"><button class="chip" data-fav="all">すべての曲</button><button class="chip" data-fav="fav">★ お気に入りだけ</button></div>
@@ -706,7 +714,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
-            <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音</dd>
+            <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音・自動で再開</dd>
             <dt>時計</dt><dd>24時間／12時間</dd>
             <dt>電力・タイマー</dt><dd>省電力モード・おやすみモード・目覚まし</dd>
             <dt>使い方</dt><dd>このページ</dd>
@@ -735,6 +743,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。曲名を公開している局は ♪ 曲名 が流れる</dd>
             <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
+            <dt>局のロゴ</dt><dd>ラジオを聴いているとき、ロック画面や車のディスプレイに局のロゴが出ます（ロゴの無い局は局名の画像）</dd>
             <dt>聴いた曲の履歴</dt><dd>流れた曲名は ⚙「ラジオ」タブの「聴いた曲の履歴」に100曲まで残ります。「コピー」で曲名をコピー、「検索」で YouTube を開けます</dd>
           </dl>
           <h3 style="margin-top:16px">局を入れ替えるには</h3>
@@ -813,6 +822,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
             <dt>音量をそろえる</dt><dd>はじめから ON。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。初めての曲は20秒ほどで調整</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整</dd>
+            <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
         </div>
@@ -1650,7 +1660,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:' || location.ho
 function mediaMeta(){
   if(!('mediaSession' in navigator) || (idx < 0 && mode !== 'radio')) return;
   try{
-    const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO' } : tracks[idx];
+    const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO', cover: stationArt(radioNow) } : tracks[idx];   // radio: the station's logo
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => { if(mode === 'radio'){ const el = radioEl(); if(el.paused){ if(!el.src) el.src = radioNow.url; el.play().catch(() => radioReconnect()); } } else if(bgHand === 'file') plain.play().catch(() => {}); else audio.play(); });
     navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); plain.pause(); });
@@ -2808,7 +2818,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125173104';                                 // stamped by build.ps1
+const APP_VER = '20261125173446';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2821,6 +2831,72 @@ function checkUpdate(){
 }
 document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });
 setInterval(checkUpdate, 30*60e3); setTimeout(checkUpdate, 8000);
+/* ---------------- the station's logo on the lock screen / car display ----------------
+   The logo comes from radio-browser.info (the station directory the search already uses), looked up once per station
+   and remembered. Until then, or for a station without one, a picture of the station's name in the deck's dot letters. */
+var stIcons = store.get('stIcons', {}) || {}, stArtGen = {}, stLooking = {};
+function stationArt(st){
+  if(!st) return 'icon-512.png';
+  if(stIcons[st.url]) return stIcons[st.url];
+  if(!stLooking[st.url] && stIcons[st.url] !== ''){ stLooking[st.url] = 1; lookupStationIcon(st); }
+  return stArtGen[st.url] || (stArtGen[st.url] = makeStationArt(st));
+}
+async function lookupStationIcon(st){
+  for(const h of RB_HOSTS){
+    try{
+      const list = await fetch(`https://${h}/json/stations/byurl?url=${encodeURIComponent(st.url)}`).then(r => r.json());
+      const fav = (list || []).map(s => s.favicon).find(f => f && f.startsWith('https://'));
+      if(fav && await new Promise(res => { const im = new Image(); im.onload = () => res(im.naturalWidth >= 48); im.onerror = () => res(false); im.src = fav; })){
+        stIcons[st.url] = fav; store.set('stIcons', stIcons); if(mode === 'radio' && radioNow && radioNow.url === st.url) mediaMeta();
+      }
+      return;
+    }catch(e){}
+  }
+}
+function makeStationArt(st){                               // 512 x 512: the short name glowing like the tubes, the band and genre below
+  const cv = document.createElement('canvas'); cv.width = cv.height = 512; const x = cv.getContext('2d');
+  x.fillStyle = '#05080c'; x.fillRect(0, 0, 512, 512);
+  x.fillStyle = 'rgba(95,246,230,.07)'; for(let yy=8;yy<512;yy+=16) for(let xx=8;xx<512;xx+=16) x.fillRect(xx, yy, 10, 10);
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.shadowColor = '#5ff6e6'; x.shadowBlur = 28; x.fillStyle = '#7ffbee';
+  x.font = '900 ' + (st.short.length > 4 ? 120 : 150) + 'px "Arial Black", Arial, sans-serif'; x.fillText(st.short, 256, 220);
+  x.shadowColor = '#ffa24a'; x.shadowBlur = 14; x.fillStyle = '#ffb35e'; x.font = 'bold 38px Arial, sans-serif';
+  x.fillText((st.genre || 'RADIO').slice(0, 22), 256, 350);
+  x.shadowBlur = 0; x.fillStyle = 'rgba(255,255,255,.55)'; x.font = 'bold 26px Arial, sans-serif'; x.fillText('ANTOBi Deck', 256, 440);
+  return cv.toDataURL('image/png');
+}
+
+/* ---------------- 自動で再開: after a phone call or another app took the sound, play again by itself ----------------
+   Pauses the app makes itself go through .pause(); a pause that comes from the phone (a call, another app) does not,
+   so it is recognised and the sound is tried again every few seconds until it can play (for up to 20 minutes). */
+var autoResume = store.get('autoResume', true) !== false, intr = null;
+[audio, plain, xaudio].forEach(el => {
+  const p = el.pause.bind(el); el.pause = () => { el._byApp = Date.now(); intr = null; p(); };
+  el.addEventListener('pause', () => {
+    if(!autoResume || el.ended || Date.now() - (el._byApp || 0) < 1500) return;
+    if(!((mode === 'file' && el === audio) || (mode === 'radio' && radioNow && el === radioEl()))) return;
+    intr = { el, at: Date.now() };
+  });
+  el.addEventListener('playing', () => { if(intr && intr.el === el) intr = null; });
+});
+function tryResume(){
+  if(!intr) return;
+  const el = intr.el, age = Date.now() - intr.at;
+  if(age > 20*60e3 || !el.paused){ intr = null; return; }
+  if(age < 2500) return;
+  if(mode === 'radio' && radioNow){ if(age > 15000) el.src = radioNow.url; }          // a live stream: after a while, join it fresh
+  else if(mode !== 'file') { intr = null; return; }
+  el.play().then(() => { intr = null; flash('RESUME', 1200); }).catch(() => {});
+}
+setInterval(tryResume, 4000);
+document.addEventListener('visibilitychange', () => { if(!document.hidden) setTimeout(tryResume, 600); });
+function setAutoResume(v, announce){
+  autoResume = v; if(announce) store.set('autoResume', v); if(!v) intr = null;
+  document.querySelectorAll('#resumeChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.ar === '1') === v));
+  if(announce) flash(v ? 'AUTO RESUME  ON' : 'AUTO RESUME  OFF', 900);
+}
+document.querySelectorAll('#resumeChips .chip').forEach(b => b.addEventListener('click', () => setAutoResume(b.dataset.ar === '1', true)));
+setAutoResume(autoResume, false);
 /* ---------------- お気に入り (★): mark songs, play only the ★ ones, LIST held down marks the playing song ---------------- */
 var favs = new Set(store.get('favs', []) || []), favOnly = !!store.get('favOnly', false);
 const favPool = () => tracks.map((t, i) => favs.has(t.key) ? i : -1).filter(i => i >= 0);
