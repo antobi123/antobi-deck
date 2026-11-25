@@ -1709,17 +1709,23 @@ function drawVFDTurntable(dt){
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  // a flower poster: one big bloom on a long stem with two leaves, nodding a little in the breeze
-  const nod = br*.8 + Math.sin(ttT*1.3)*.3, hx = 101 + nod, hy = 8;
-  for(let y=19;y>=hy+4;y--){ const t = (19 - y)/(15 - hy); dot(99 + Math.sin(t*1.6)*1.5 + nod*t, y, G); }   // stem
-  for(let k=1;k<=5;k++){ dot(99 - k, 16 - k*.55, G); dot(99 - k, 17 - k*.3, G); }                           // leaf left
-  for(let k=1;k<=4;k++){ dot(100 + k + nod*.5, 13 - k*.5, G); dot(100 + k + nod*.5, 14 - k*.25, G); }      // leaf right
-  for(let p=0;p<6;p++){                                                                                       // six petals
-    const a = p*Math.PI/3 + Math.sin(ttT*.6)*.08;
-    for(let r=2;r<=6;r++){ const w = Math.sin((r - 1)/5.5*Math.PI)*1.3; for(let s=-w;s<=w;s+=.6) dot(hx + Math.cos(a)*r - Math.sin(a)*s, hy + Math.sin(a)*r*.85 + Math.cos(a)*s*.85, A); }
+  // a hibiscus poster: five broad petals, the long stamen reaching out, two leaves, swaying a little in the breeze
+  const nod = br*.7 + Math.sin(ttT*1.2)*.25, hx = 99 + nod, hy = 10;
+  for(let k=0;k<7;k++){ dot(hx + 4 + k*.6, hy + 4 + k*.8, G); }                                          // stem down to the corner
+  [[-1, 92, 15], [1, 109, 14]].forEach(([s, lx, ly]) => {                                                     // two pointed leaves
+    for(let k=-4;k<=4;k++){ const w = Math.round((1 - Math.abs(k)/4.5)*1.6); for(let v=-w;v<=w;v++) if(Math.abs(v) === w || v === 0) dot(lx + k, ly + k*.35*s + v, G); }
+  });
+  for(let p=0;p<5;p++){                                                                                       // five broad, ruffled petals
+    const a = -Math.PI/2 + p*Math.PI*2/5 + Math.sin(ttT*.5)*.05;
+    for(let r=1.5;r<=6.5;r+=.5){
+      const w = Math.sin(Math.min(1, r/6.2)*Math.PI*.78)*3.1 + (r > 5.5 ? Math.sin(r*5 + p)*.4 : 0);
+      for(let s=-w;s<=w;s+=.7){ const x = hx + Math.cos(a)*r - Math.sin(a)*s, y = hy + (Math.sin(a)*r + Math.cos(a)*s)*.8; dot(x, y, A); }
+    }
   }
-  for(let y=-1;y<=1;y++) for(let x=-1;x<=1;x++) dot(hx + x, hy + y, K);
-  dot(hx, hy, G); dot(hx - 1, hy, G); dot(hx + 1, hy, G); dot(hx, hy - 1, G); dot(hx, hy + 1, G);          // the center
+  for(let p=0;p<5;p++){ const a = -Math.PI/2 + (p + .5)*Math.PI*2/5 + Math.sin(ttT*.5)*.05; for(let r=1.5;r<=5.2;r+=.5) dot(hx + Math.cos(a)*r, hy + Math.sin(a)*r*.8, K); }   // gaps between the petals
+  dot(hx, hy, K); dot(hx - 1, hy, K); dot(hx + 1, hy, K); dot(hx, hy - 1, K); dot(hx, hy + 1, K);   // dark heart
+  for(let k=1;k<=6;k++) dot(hx + k*.9, hy - k*.75, G);                                                       // the stamen
+  [[0,0],[1,0],[0,-1],[1,-1],[2,-1]].forEach(([x, y]) => dot(hx + 6 + x, hy - 5 + y, G));
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
   for(let x=95;x<=130;x++){ dot(x, 31, G); dot(x, 38, G); }
