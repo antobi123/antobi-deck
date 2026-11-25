@@ -1709,23 +1709,17 @@ function drawVFDTurntable(dt){
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  // a poster of a single palm leaf: one arching frond corner to corner, its leaflets stirring a little in the breeze
-  const N = 26, sw = br*.6;
-  let prev = null;
-  for(let i=0;i<=N;i++){
-    const t = i/N, x = 88 + t*24, y = 18 - t*13 - Math.sin(t*Math.PI)*4;   // the spine arching up and over
-    dot(x, y, i < 3 ? A : G);                                              // stalk in amber
-    if(prev){
-      const dx = x - prev[0], dy = y - prev[1], l = Math.hypot(dx, dy), ux = dx/l, uy = dy/l;
-      const len = (t < .12 ? 0 : 5.5*Math.sin(Math.min(1, (t - .1)/.9)*Math.PI*.9) + .5);
-      if(len > 0 && i % 1 === 0) [-1, 1].forEach(sd => {
-        const wob = Math.sin(ttT*2.4 + i*.7 + sd)*.25 + sw;
-        const ax = -uy*sd*.8 + ux*.55, ay = ux*sd*.8 + uy*.55 + .35 + wob*.3;   // leaflets swept toward the tip, drooping
-        for(let k=1;k<=len;k++) dot(x + ax*k, y + ay*k, G);
-      });
-    }
-    prev = [x, y];
+  // a flower poster: one big bloom on a long stem with two leaves, nodding a little in the breeze
+  const nod = br*.8 + Math.sin(ttT*1.3)*.3, hx = 101 + nod, hy = 8;
+  for(let y=19;y>=hy+4;y--){ const t = (19 - y)/(15 - hy); dot(99 + Math.sin(t*1.6)*1.5 + nod*t, y, G); }   // stem
+  for(let k=1;k<=5;k++){ dot(99 - k, 16 - k*.55, G); dot(99 - k, 17 - k*.3, G); }                           // leaf left
+  for(let k=1;k<=4;k++){ dot(100 + k + nod*.5, 13 - k*.5, G); dot(100 + k + nod*.5, 14 - k*.25, G); }      // leaf right
+  for(let p=0;p<6;p++){                                                                                       // six petals
+    const a = p*Math.PI/3 + Math.sin(ttT*.6)*.08;
+    for(let r=2;r<=6;r++){ const w = Math.sin((r - 1)/5.5*Math.PI)*1.3; for(let s=-w;s<=w;s+=.6) dot(hx + Math.cos(a)*r - Math.sin(a)*s, hy + Math.sin(a)*r*.85 + Math.cos(a)*s*.85, A); }
   }
+  for(let y=-1;y<=1;y++) for(let x=-1;x<=1;x++) dot(hx + x, hy + y, K);
+  dot(hx, hy, G); dot(hx - 1, hy, G); dot(hx + 1, hy, G); dot(hx, hy - 1, G); dot(hx, hy + 1, G);          // the center
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
   for(let x=95;x<=130;x++){ dot(x, 31, G); dot(x, 38, G); }
