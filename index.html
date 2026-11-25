@@ -113,10 +113,12 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 @keyframes mq{to{transform:translateX(-50%)}}
 #trk,#time{flex:none; font-variant-numeric:tabular-nums}
 .inds{position:relative; z-index:1; display:flex; gap:12px; padding:2px 18px 0; height:20px; font:12px/1 var(--font-seg); letter-spacing:.1em}
+#dateLine{margin-left:auto; color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.08em; white-space:nowrap; font-family:var(--font-seg), "Segoe UI Symbol", "Apple Symbols", sans-serif}
+#ptime{position:absolute; z-index:4; right:16px; bottom:4px; height:16px; line-height:16px; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none}
 .ind{color:var(--dimt)}
 .ind.on{color:var(--lit2); text-shadow:0 0 7px var(--lit2)}
 #viz{position:relative; z-index:1; display:block; width:664px; height:244px}
-#seek{position:absolute; z-index:4; left:16px; right:16px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
+#seek{position:absolute; z-index:4; left:16px; right:70px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
 #seek::-webkit-slider-runnable-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p)); box-shadow:0 0 6px var(--glow)}
 #seek::-moz-range-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p))}
 #seek::-webkit-slider-thumb{-webkit-appearance:none; width:10px; height:12px; margin-top:-4.5px; background:var(--lit); box-shadow:0 0 8px var(--lit)}
@@ -286,10 +288,11 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="inds">
           <span class="ind" id="iSt">ST</span><span class="ind" id="iLoud">LOUD</span><span class="ind" id="iAtt">ATT</span>
-          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span><span class="ind" id="iSlp">SLP</span><span class="ind" id="iAlm">ALM</span>
+          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span><span class="ind" id="iSlp">SLP</span><span class="ind" id="iAlm">ALM</span><span id="dateLine"></span>
         </div>
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
+        <span id="ptime">0:00</span>
       </div>
 
       <div class="wing l"></div>
@@ -1478,7 +1481,21 @@ setSpec(spec, false);
    auto: the current weather where you are (asks for location once, then Open-Meteo every 30 min); or always clear / always rain */
 const WEATHERS = ['auto', 'clear', 'rain'], WEATHER_NAME = {auto: 'AUTO', clear: 'CLEAR', rain: 'RAIN'};
 let weatherMode = 'auto';   // fixed: the window always follows the real weather
-let wxRain = 0, wxStorm = false, wxAt = 0, wxBusy = false;
+let wxRain = 0, wxStorm = false, wxAt = 0, wxBusy = false, wxCode = -1;
+// the date line under the clock: 11/25 TUE and a weather mark (sun / moon, cloud, umbrella, snow, thunder)
+const WDAY = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+function wxMark(code, day){
+  if(code < 0) return '';
+  if(code >= 95) return '\u26A1';                                   // thunder
+  if((code >= 71 && code <= 77) || code === 85 || code === 86) return '\u2744';   // snow
+  if((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return '\u2602';  // rain: umbrella
+  if(code >= 2) return '\u2601';                                     // cloudy / fog
+  return day ? '\u2600' : '\u263E';                                  // clear: sun by day, moon by night
+}
+function dateLine(d){
+  const code = wxFake ? ({rain: 61, storm: 95, clear: 0})[wxFake] ?? wxCode : wxCode, m = wxMark(code, d.getHours() >= 6 && d.getHours() < 18);
+  $('#dateLine').textContent = (d.getMonth() + 1) + '/' + d.getDate() + ' ' + WDAY[d.getDay()] + (m ? '  ' + m + '\uFE0E' : '');
+}
 const wxFake = new URLSearchParams(location.search).get('weather');   // ?weather=rain / storm / clear to preview
 function isRaining(){ if(wxFake) return wxFake !== 'clear'; if(weatherMode === 'rain') return true; if(weatherMode === 'clear') return false; return wxRain > 0; }
 function rainAmount(){ return wxFake || weatherMode === 'rain' ? (wxFake === 'storm' ? 1 : .7) : Math.max(.4, wxRain); }
@@ -1492,7 +1509,7 @@ function wxUpdate(){
       const j = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=precipitation,weather_code`)).json();
       const c = j.current || {}, code = c.weather_code || 0, pr = c.precipitation || 0;
       const wet = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95 || pr > 0;
-      wxRain = wet ? Math.min(1, .45 + pr*.25) : 0; wxStorm = code >= 95;
+      wxRain = wet ? Math.min(1, .45 + pr*.25) : 0; wxStorm = code >= 95; wxCode = code;
     }catch(e){}
     wxBusy = false;
   }, () => { wxBusy = false; }, { maximumAge: 30*60e3, timeout: 15000 });
@@ -2451,10 +2468,13 @@ function frame(now){
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'radio'){ cur = radioEl().currentTime; }
   if(scan && mode === 'file' && !audio.paused && cur >= 10) step(1, true);
-  if(mode === 'radio'){   // on RADIO the time shows the clock, colon blinking like a car stereo
-    const d = new Date();
-    $('#time').textContent = d.getHours() + (d.getMilliseconds() < 500 ? ':' : ' ') + String(d.getMinutes()).padStart(2, '0');
-  } else $('#time').textContent = fmt(cur);
+  // top right: always the clock (colon blinking like a car stereo), with the date, weekday and weather under it;
+  // the playing time sits at the right end of the seek bar (none on the radio)
+  const d = new Date();
+  $('#time').textContent = d.getHours() + (d.getMilliseconds() < 500 ? ':' : ' ') + String(d.getMinutes()).padStart(2, '0');
+  const pt = mode === 'radio' ? '' : fmt(cur); if(pt !== frame.pt){ frame.pt = pt; $('#ptime').textContent = pt; }
+  const dk = d.getDate() + ':' + wxCode + ':' + (d.getHours() >= 6 && d.getHours() < 18); if(dk !== frame.dk){ frame.dk = dk; dateLine(d); }
+  if(d.getSeconds() % 30 === 0) wxUpdate();
   if(!seeking){ const pr = dur ? cur/dur*1000 : 0; seek.value = pr; seek.style.setProperty('--p', pr/10 + '%'); }
   requestAnimationFrame(frame);
 }
