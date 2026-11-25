@@ -366,7 +366,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdrec"><span class="sw vfdrec"></span>TURNTABLE<small>窓辺のレコード</small></button>
           <button class="chip" data-skin="vfdtape"><span class="sw vfdtape"></span>CASSETTE<small>回るカセット</small></button>
           <button class="chip" data-skin="vfdroom"><span class="sw vfdroom"></span>ROOM<small>動物と暮らす部屋</small></button>
-          <button class="chip" data-skin="vfddrive"><span class="sw vfddrive"></span>NIGHT DRIVE<small>夜景のドライブ</small></button>
+          <button class="chip" data-skin="vfddrive"><span class="sw vfddrive"></span>CITY CRUISE<small>移ろう街を流して</small></button>
           <button class="chip" data-skin="vfdclub"><span class="sw vfdclub"></span>CLUB<small>ネオンの3Dスペアナ</small></button>
           <button class="chip" data-skin="vfddx"><span class="sw vfddx"></span>DX Record</button>
           <button class="chip" data-skin="vfdasahi"><span class="sw vfdasahi"></span>朝日レコード</button>
@@ -552,7 +552,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfddrive:'NIGHT DRIVE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
