@@ -1441,7 +1441,7 @@ const rainDrops = Array.from({length: 70}, (_, i) => [(i*53 + 7) % 132, (i*29 + 
 function drawRain(dot, x0, x1, y0, y1, amount, t, c){
   const n = Math.round(rainDrops.length*amount*.45), w = x1 - x0, hgt = y1 - y0;   // a soft drizzle: few, slow, nearly straight drops
   for(let i=0;i<n;i++){
-    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*9) % hgt, x = x0 + (((rx - (y - y0)*.1) % w) + w) % w;
+    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*15) % hgt, x = x0 + (((rx - (y - y0)*.1) % w) + w) % w;
     if(Math.sin(t*2.3 + i*1.7) > -.6) dot(x, y, c);
   }
 }
@@ -1767,12 +1767,12 @@ function drawVFDTurntable(dt){
   for(let x=0;x<VB_C;x+=3) dot(x, 35, G);
   // curtains on a rod, lifting and swaying with the breeze
   for(let x=2;x<=76;x++) dot(x, 1, A);
-  const br = ttBreeze(ttT);
+  const br = rain ? 0 : ttBreeze(ttT);   // no breeze on a rainy day: the window is closed, curtains hang still
   const curtain = (x0, folds, dir, ph) => {
     for(let f=0;f<folds;f++){
       for(let y=2;y<=31;y++){
         const k = (y - 2)/29;
-        const x = x0 + f*2.4 + Math.sin(y*.28 + ttT*2.1 + f*1.3 + ph)*(.5 + k*1.4) + dir*br*k*k*7;
+        const x = x0 + f*2.4 + Math.sin(y*.28 + (rain ? 0 : ttT*2.1) + f*1.3 + ph)*(.5 + k*1.4) + dir*br*k*k*7;
         dot(x, y, G);
       }
     }
