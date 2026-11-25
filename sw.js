@@ -1,5 +1,5 @@
 // ANTOBi Deck service worker: works offline after the first visit.
-const CACHE = 'mdeck-v1';
+const CACHE = 'mdeck-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -28,11 +28,18 @@ self.addEventListener('fetch', e => {
   }
   if (url.origin !== location.origin) return;
 
+  // the version check always asks the network
+  if (url.pathname.endsWith('/version.json')) return;
+
   // Pages: network first so updates arrive, cache when offline
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then(r => { caches.open(CACHE).then(c => c.put('./index.html', r.clone())); return r; })
       .catch(() => caches.match('./index.html')));
     return;
   }
-  e.respondWith(caches.match(req).then(hit => hit || fetch(req)));
+  // everything else (icons, the shop logos): from the cache, fetched and kept the first time it is needed
+  e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
+    if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+    return r;
+  })));
 });
