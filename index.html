@@ -38,6 +38,10 @@
 :root[data-skin="vfdrec"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdtape"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdroom"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdclub"]{ --lit:#4fb4ff; --lit2:#ff3fd0; --dimt:rgba(190,80,255,.14); --glow:rgba(130,100,255,.6); --screen:#0c0218; }
+:root[data-skin="vfdclub"][data-clubc="blue"]{ --lit:#9fe8ff; --lit2:#3f7bff; --dimt:rgba(60,120,255,.16); --glow:rgba(80,150,255,.6); --screen:#020a24; }
+:root[data-skin="vfdclub"][data-clubc="red"]{ --lit:#ffd24f; --lit2:#ff3a3a; --dimt:rgba(255,60,60,.13); --glow:rgba(255,90,60,.55); --screen:#1a0204; }
+:root[data-skin="vfdclub"][data-clubc="green"]{ --lit:#c8ff7a; --lit2:#20d98a; --dimt:rgba(40,220,140,.13); --glow:rgba(60,230,150,.55); --screen:#01140c; }
 :root[data-skin="vfddx"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdasahi"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdfrisco"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
@@ -100,7 +104,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfdroom"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfdclub"] .disp::before, :root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfdroom"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -213,6 +217,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.vfdrec{background:radial-gradient(ellipse 30% 14% at 70% 66%,#ffa24a 0 22%,transparent 26% 40%,#5ff6e6 42% 48%,transparent 50% 64%,#5ff6e6 66% 74%,transparent 76%),linear-gradient(90deg,transparent 6%,#5ff6e6 6% 8%,transparent 8% 48%,#5ff6e6 48% 50%,transparent 50%) 0 0/100% 72% no-repeat,linear-gradient(180deg,transparent 80%,#5ff6e6 80% 84%,transparent 84%),#021311}
 .sw.vfdtape{background:radial-gradient(circle at 37% 55%,#ffa24a 0 2px,transparent 3px,#5ff6e6 3px 5px,transparent 6px),radial-gradient(circle at 63% 55%,#ffa24a 0 2px,transparent 3px,#5ff6e6 3px 4px,transparent 5px),linear-gradient(#5ff6e6,#5ff6e6) 50% 22%/60% 1px no-repeat,linear-gradient(90deg,#5ff6e6 1px,transparent 1px calc(100% - 1px),#5ff6e6 calc(100% - 1px)) 50% 50%/70% 70% no-repeat,#021311}
 .sw.vfdroom{background:radial-gradient(circle at 50% 52%,#5ff6e6 0 5px,#021311 6px 7px,transparent 8px),radial-gradient(circle at 44% 30%,#5ff6e6 0 2px,transparent 3px),radial-gradient(circle at 56% 30%,#5ff6e6 0 2px,transparent 3px),radial-gradient(circle at 50% 56%,#ffa24a 0 1px,transparent 2px),linear-gradient(#5ff6e6,#5ff6e6) 50% 88%/100% 1px no-repeat,#021311}
+.sw.vfdclub{background:linear-gradient(transparent 0 30%,#0c0218 30%) 0 0/100% 100% no-repeat,repeating-linear-gradient(90deg,#ff3fd0 0 1px,transparent 1px 5px),repeating-linear-gradient(#ff3fd0 0 1px,transparent 1px 5px),linear-gradient(0deg,#4fb4ff 0 45%,transparent 45%),#0c0218;background-blend-mode:normal}
 .sw.vfddx{background:linear-gradient(180deg,transparent 30%,rgba(255,162,74,.9) 30% 36%,transparent 36% 50%,rgba(255,162,74,.9) 50% 56%,transparent 56%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 40% no-repeat,#021311}
 .sw.vfdasahi{background:radial-gradient(ellipse 45% 22% at 50% 45%,rgba(255,162,74,.95) 0 60%,transparent 64%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 35% no-repeat,#021311}
 .sw.logo{background:linear-gradient(180deg,transparent 22%,var(--c,#ffa24a) 22% 34%,transparent 34% 44%,var(--c,#ffa24a) 44% 58%,transparent 58%) 15% 0/70% 100% no-repeat,repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 32% no-repeat,#021311}
@@ -357,6 +362,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdrec"><span class="sw vfdrec"></span>TURNTABLE<small>窓辺のレコード</small></button>
           <button class="chip" data-skin="vfdtape"><span class="sw vfdtape"></span>CASSETTE<small>回るカセット</small></button>
           <button class="chip" data-skin="vfdroom"><span class="sw vfdroom"></span>ROOM<small>動物と暮らす部屋</small></button>
+          <button class="chip" data-skin="vfdclub"><span class="sw vfdclub"></span>CLUB<small>ネオンの3Dスペアナ</small></button>
           <button class="chip" data-skin="vfddx"><span class="sw vfddx"></span>DX Record</button>
           <button class="chip" data-skin="vfdasahi"><span class="sw vfdasahi"></span>朝日レコード</button>
           <button class="chip" data-skin="vfdfrisco"><span class="sw logo"></span>喫茶フリスコ</button>
@@ -397,6 +403,15 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="aqua"><span class="dot" style="background:#2ff2d6;box-shadow:0 0 10px #2ff2d6"></span>AQUA</button>
           <button class="chip" data-illum="white"><span class="dot" style="background:#eef2ff;box-shadow:0 0 10px #eef2ff"></span>WHITE</button>
           <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
+        </div>
+      </section>
+      <section data-tab="look">
+        <h3>CLUB の色</h3>
+        <div class="chips" id="clubChips">
+          <button class="chip" data-clubc="purple"><span class="sw" style="background:linear-gradient(0deg,#4fb4ff 0 40%,#ff3fd0 40% 46%,#0c0218 46%)"></span>パープル</button>
+          <button class="chip" data-clubc="blue"><span class="sw" style="background:linear-gradient(0deg,#9fe8ff 0 40%,#3f7bff 40% 46%,#020a24 46%)"></span>ブルー</button>
+          <button class="chip" data-clubc="red"><span class="sw" style="background:linear-gradient(0deg,#ffd24f 0 40%,#ff3a3a 40% 46%,#1a0204 46%)"></span>レッド</button>
+          <button class="chip" data-clubc="green"><span class="sw" style="background:linear-gradient(0deg,#c8ff7a 0 40%,#20d98a 40% 46%,#01140c 46%)"></span>グリーン</button>
         </div>
       </section>
       <section data-tab="look">
@@ -531,11 +546,11 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
-const ADDED = ['vfdrec', 'vfdtape', 'vfdroom'];                       // displays added later, oldest first
+const ADDED = ['vfdrec', 'vfdtape', 'vfdroom', 'vfdclub'];                       // displays added later, oldest first
 const DEFAULTS = ADDED.map((_, k) => SKINS.filter(s => !ADDED.slice(k).includes(s)));
 DEFAULTS.push(['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb' && !ADDED.includes(s))]);   // the very first default (VFD first)
 if(ORDER.length && DEFAULTS.some(d => ORDER.join() === d.slice(0, ORDER.length).join())) ORDER = [];
@@ -2099,6 +2114,96 @@ function setPet(p, announce){
 }
 document.querySelectorAll('#petChips .chip').forEach(b => b.addEventListener('click', () => setPet(b.dataset.pet, true)));
 setPet(pet, false);
+/* CLUB colour: purple (default), blue, red or green; it re-reads the tube colours and rebuilds the dim grid */
+const CLUB_COLORS = ['purple', 'blue', 'red', 'green'];
+let clubColor = store.get('clubc', 'purple'); if(!CLUB_COLORS.includes(clubColor)) clubColor = 'purple';
+function setClubColor(c, announce){
+  clubColor = c; store.set('clubc', c); root.dataset.clubc = c;
+  document.querySelectorAll('#clubChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.clubc === c));
+  readColors(); vbKey = '';
+  if(announce && skin === 'vfdclub') flash('CLUB  ' + c.toUpperCase(), 900);
+}
+document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setClubColor(b.dataset.clubc, true)));
+setClubColor(clubColor, false);
+
+/* CLUB: a neon 3D spectrum. The bars stand on a slanted grid that narrows into the distance; the grid lines glow magenta,
+   lit segments blue, the peaks white and they hang a moment before falling. On a kick the whole frame flashes. */
+const CL_ROWS = 12, CL_COLS = 16, CL_TOP = 8, CL_BOT = 42;
+let clT = 0, clPulse = 0, clFlash = 0, clLast = 0;
+const clPeak = new Array(CL_COLS).fill(0), clHold = new Array(CL_COLS).fill(0), clLv = new Array(CL_COLS).fill(0);
+function drawVFDClub(dt){
+  clT += dt;
+  const st = bands(CL_COLS), bass = (st.v[0] + st.v[1] + st.v[2])/3;
+  const rise = bass - clPulse; clPulse += (bass - clPulse)*.3;
+  const cw = W/VB_C, ch = H/VB_R;
+  const key = W + 'x' + H + 'x' + DPR + C.dimt;
+  if(key !== vbKey){
+    vbKey = key;
+    [vbLit, vbDim].forEach(c => { c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); });
+    vbd.setTransform(DPR,0,0,DPR,0,0); vbd.clearRect(0,0,W,H); vbd.fillStyle = C.dimt;
+    for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++) vbd.fillRect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  const G = '#0f0', A = '#f00', Wt = '#00f', Gd = '#f0f', K = '#000';   // Gd = the grid, drawn dimmer
+  const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); };
+  vbg.fillStyle = K; vbg.fillRect(0, 0, VB_C, VB_R);
+  const playing = isActive();
+  if(playing && bass > .45 && rise > .07 && clT - clLast > .25){ clLast = clT; clFlash = 1; }
+  clFlash = Math.max(0, clFlash - dt*5);
+  // levels: quick up, smooth down; peaks hold, then drop
+  for(let i=0;i<CL_COLS;i++){
+    const v = st.v[i]*CL_ROWS;
+    clLv[i] = v > clLv[i] ? v : clLv[i] - dt*CL_ROWS*1.6;
+    if(clLv[i] >= clPeak[i]){ clPeak[i] = clLv[i]; clHold[i] = .45; }
+    else if((clHold[i] -= dt) < 0) clPeak[i] = Math.max(0, clPeak[i] - dt*CL_ROWS*.9);
+  }
+  // perspective: rows get thinner and the grid narrower toward the top
+  const k = 1.3, f = t => (1 - 1/(1 + k*t))/(1 - 1/(1 + k));
+  const rowY = r => CL_BOT - (CL_BOT - CL_TOP)*f(r/CL_ROWS);
+  const half = y => 64 - (CL_BOT - y)*.55;
+  const rowAt = y => { for(let r=0;r<CL_ROWS;r++) if(y > rowY(r + 1) - .5) return r; return -1; };
+  for(let y=CL_TOP;y<=CL_BOT;y++){
+    const r = rowAt(y), hw = half(y), lineRow = r !== rowAt(y - 1) || y === CL_BOT;
+    let prevCol = -2;
+    for(let x=0;x<VB_C;x++){
+      const v = (x - 65.5)/(2*hw) + .5;
+      if(v < 0 || v >= 1){ prevCol = -2; continue; }
+      const c = Math.floor(v*CL_COLS), edge = c !== prevCol; prevCol = c;
+      if(lineRow || edge){ dot(x, y, (y === CL_BOT || v < 1/CL_COLS*.2) ? A : Gd); continue; }   // the grid (dim), its base line bright
+      if(r < 0) continue;
+      const lv = Math.round(clLv[c]), pk = Math.max(1, Math.round(clPeak[c]));
+      if(r < lv) dot(x, y, G);                                            // lit segment
+      else if(playing && r === pk - 1 + (pk - 1 < lv ? 1 : 0) && clPeak[c] > .5) dot(x, y, Wt);   // the peak hangs above
+    }
+    if(r >= 0 || y === CL_BOT){ const x1 = Math.round(65.5 + hw); if(x1 < VB_C) dot(x1, y, A); }   // close the right edge
+  }
+  // a kick flashes the frame and sends a spark up each side
+  if(clFlash > .2){
+    for(let y=CL_TOP;y<=CL_BOT;y++){ dot(Math.round(65.5 - half(y)) - 2, y, Wt); dot(Math.round(65.5 + half(y)) + 2, y, Wt); }
+  }
+  // top strip: a running marquee of segments and two blinking beat lamps
+  const run = Math.floor(clT*(playing ? 10 : 3));
+  for(let x=10;x<=122;x+=2) if(((x >> 1) + run) % 7 < 3) dot(x, 2, G);
+  for(let x=10;x<=122;x+=2) dot(x, 4, A);
+  [[4, 3], [127, 3]].forEach(([x, y]) => { const on = clFlash > .3 || (!playing && Math.sin(clT*2) > .6); for(let a=-1;a<=1;a++) for(let b=-1;b<=1;b++) if(on || (a === 0 && b === 0)) dot(x + a, y + b, on ? Wt : A); });
+  // ---- light the tubes: blue = lit, magenta = grid, white = peaks ----
+  const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
+  vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
+  const pc = new Path2D(), pa = new Path2D(), pw = new Path2D(), pd = new Path2D();
+  for(let y=0;y<VB_R;y++) for(let x=0;x<VB_C;x++){
+    const i = (y*VB_C + x)*4, rr = px[i], gg = px[i+1], bb = px[i+2];
+    if(rr > 110 && bb > 110){ pd.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4); continue; }
+    if(gg > 110) pc.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+    else if(rr > 110) pa.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+    else if(bb > 110) pw.rect(x*cw + .7, y*ch + .7, cw - 1.4, ch - 1.4);
+  }
+  vbl.fillStyle = C.lit; vbl.fill(pc);
+  vbl.fillStyle = C.lit2; vbl.fill(pa);
+  vbl.fillStyle = '#f4f6ff'; vbl.fill(pw);
+  vbl.save(); vbl.globalAlpha = .38; vbl.fillStyle = C.lit2; vbl.fill(pd); vbl.restore();
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  g.drawImage(vbDim, 0, 0, W, H);
+  g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
+}
 
 /* ---------------- loop ---------------- */
 let last = performance.now();
@@ -2107,7 +2212,7 @@ function frame(now){
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
-    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
+    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
