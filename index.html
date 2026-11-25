@@ -64,6 +64,7 @@
 :root[data-illum="purple"]{ --illum:#a970ff; --illumglow:rgba(160,100,255,.6); }
 :root[data-illum="aqua"]{ --illum:#2ff2d6; --illumglow:rgba(40,240,210,.55); }
 :root[data-illum="white"]{ --illum:#eef2ff; --illumglow:rgba(220,230,255,.5); }
+:root[data-illum="yellow"]{ --illum:#ffe63a; --illumglow:rgba(255,225,50,.55); }
 /* key light colors fade into each other instead of snapping */
 @property --illum{ syntax:"<color>"; inherits:true; initial-value:#4aa8ff; }
 @property --illumglow{ syntax:"<color>"; inherits:true; initial-value:rgba(60,140,255,.65); }
@@ -240,6 +241,8 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.sp-fall{background:repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 7px),linear-gradient(180deg,#5ff6e6,rgba(95,246,230,.15) 80%,#021311)}
 .sw.sp-ring{background:radial-gradient(ellipse at 50% 50%,#021311 0 22%,#ffa24a 22% 27%,transparent 27% 60%,#021311 60%),repeating-conic-gradient(#5ff6e6 0 9deg,#021311 9deg 22deg)}
 .sw.sp-hill{background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 22%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 22V15L14 8L28 12L42 4L58 10L72 6L86 13L100 11V22Z%27 fill=%27%235ff6e6%27 fill-opacity=%27.45%27 stroke=%27%23ffa24a%27 stroke-width=%271.6%27/%3E%3C/svg%3E") center/100% 100% no-repeat,#021311}
+.sw.sp-needle{background:linear-gradient(60deg,transparent 48%,#f4fbff 48% 53%,transparent 53%) 30% 100%/45% 85% no-repeat,linear-gradient(120deg,transparent 48%,#ffa24a 48% 53%,transparent 53%) 75% 100%/45% 85% no-repeat,radial-gradient(ellipse at 30% 105%,transparent 0 55%,#5ff6e6 56% 61%,transparent 62%),radial-gradient(ellipse at 75% 105%,transparent 0 55%,#5ff6e6 56% 61%,transparent 62%),#021311}
+.sw.sp-spark{background:radial-gradient(circle at 20% 40%,#ffa24a 0 1.5px,transparent 2px),radial-gradient(circle at 45% 22%,#ffa24a 0 1.5px,transparent 2px),radial-gradient(circle at 62% 48%,#5ff6e6 0 1.5px,transparent 2px),radial-gradient(circle at 80% 30%,#ffa24a 0 1.5px,transparent 2px),radial-gradient(circle at 34% 60%,#5ff6e6 0 1.5px,transparent 2px),linear-gradient(0deg,#5ff6e6 0 16%,transparent 16%),#021311}
 .sw{width:100%; height:22px; border-radius:4px; box-shadow:inset 0 1px 4px #000}
 .sw.vfd{background:repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px)}
 .sw.vfdb{background:radial-gradient(circle at 64% 58%,#ffa24a 0 5px,transparent 6px) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 4px,#021311 4px 5px),linear-gradient(180deg,#021311 60%,#5ff6e6 60% 64%,#021311 64% 72%,#5ff6e6 72% 75%,#021311 75%)}
@@ -466,6 +469,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-spec="fall"><span class="sw sp-fall"></span>WATERFALL<small>滝</small></button>
           <button class="chip" data-spec="ring"><span class="sw sp-ring"></span>RING<small>リング</small></button>
           <button class="chip" data-spec="hill"><span class="sw sp-hill"></span>MOUNTAIN<small>山なみ</small></button>
+          <button class="chip" data-spec="needle"><span class="sw sp-needle"></span>NEEDLE<small>針のメーター</small></button>
+          <button class="chip" data-spec="spark"><span class="sw sp-spark"></span>SPARK<small>火花</small></button>
         </div>
       </section>
       <section data-tab="look">
@@ -479,6 +484,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="purple"><span class="dot" style="background:#a970ff;box-shadow:0 0 10px #a970ff"></span>PURPLE</button>
           <button class="chip" data-illum="aqua"><span class="dot" style="background:#2ff2d6;box-shadow:0 0 10px #2ff2d6"></span>AQUA</button>
           <button class="chip" data-illum="white"><span class="dot" style="background:#eef2ff;box-shadow:0 0 10px #eef2ff"></span>WHITE</button>
+          <button class="chip" data-illum="yellow"><span class="dot" style="background:#ffe63a;box-shadow:0 0 10px #ffe63a"></span>YELLOW</button>
           <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
         </div>
       </section>
@@ -662,8 +668,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
             <dt>パネルの色</dt><dd>本体の色。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
-            <dt>スペアナ</dt><dd>8種類から選べます（DISC 中は 6 ボタンでも切り替え）</dd>
-            <dt>ILLUMI</dt><dd>キー照明の色（8色＋RANDOM）。⚙「表示」からも選べます</dd>
+            <dt>スペアナ</dt><dd>10種類から選べます（DISC 中は 6 ボタンでも切り替え）</dd>
+            <dt>ILLUMI</dt><dd>キー照明の色（9色＋RANDOM）。⚙「表示」からも選べます</dd>
           </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
@@ -746,7 +752,7 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','random'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
@@ -1067,7 +1073,7 @@ function setSkin(s, announce){
 }
 const ILLUM_COL = {
   blue:['#4aa8ff','rgba(60,140,255,.65)'], green:['#5dff8a','rgba(70,255,120,.55)'], red:['#ff4d3d','rgba(255,70,50,.6)'], amber:['#ffb23a','rgba(255,170,40,.6)'],
-  pink:['#ff5fb0','rgba(255,80,170,.6)'], purple:['#a970ff','rgba(160,100,255,.6)'], aqua:['#2ff2d6','rgba(40,240,210,.55)'], white:['#eef2ff','rgba(220,230,255,.5)']
+  pink:['#ff5fb0','rgba(255,80,170,.6)'], purple:['#a970ff','rgba(160,100,255,.6)'], aqua:['#2ff2d6','rgba(40,240,210,.55)'], white:['#eef2ff','rgba(220,230,255,.5)'], yellow:['#ffe63a','rgba(255,225,50,.55)']
 };
 let illumTimer = 0, illumNow = '';
 function illumStep(){   // RANDOM: drift to another color every few seconds (the color change itself fades, see @property)
@@ -1587,8 +1593,8 @@ function rr(x, y, w, h, r){ g.beginPath(); if(g.roundRect) g.roundRect(x, y, w, 
 
 /* ---------------- skins ---------------- */
 /* ---------------- spectrum styles: all drawn as VFD dot-matrix cells ---------------- */
-const SPECS = ['bar','center','peak','meter','scope','fall','ring','hill'];
-const SPEC_NAME = {bar:'BAR', center:'CENTER', peak:'PEAK', meter:'L/R METER', scope:'SCOPE', fall:'WATERFALL', ring:'RING', hill:'MOUNTAIN'};
+const SPECS = ['bar','center','peak','meter','scope','fall','ring','hill','needle','spark'];
+const SPEC_NAME = {bar:'BAR', center:'CENTER', peak:'PEAK', meter:'L/R METER', scope:'SCOPE', fall:'WATERFALL', ring:'RING', hill:'MOUNTAIN', needle:'NEEDLE', spark:'SPARK'};
 let spec = store.get('spec','bar'); if(!SPECS.includes(spec)) spec = 'bar';
 function setSpec(s, announce){
   spec = s; store.set('spec', s);
@@ -1764,9 +1770,69 @@ function specHill(solo){
   }
   litOff(); freqLabels();
 }
+// 9. NEEDLE: a pair of analog VU meters drawn in dots, the needles swinging with a little weight
+const needle = { L: -40, R: -40 };
+function specNeedle(solo){
+  levels();
+  const cols = 96, rows = 24, cw = (W - SPX*2)/cols, ch = (H - SPT - SPB)/rows;
+  dimGrid(cols, rows, SPX, SPT, cw, ch, solo);
+  const pos = db => Math.max(0, Math.min(1, (db + 30)/33));            // -30 dB … +3 dB across the scale
+  const ANG = 1.0;                                                     // the scale spans ±57° around straight up
+  needle.L += (levL - needle.L)*.22; needle.R += (levR - needle.R)*.22;
+  litOn(solo);
+  [['L', needle.L, .25], ['R', needle.R, .75]].forEach(([chn, db, fx]) => {
+    const px = SPX + (W - SPX*2)*fx, py = H - SPB - ch*.5, R = Math.min((H - SPT - SPB)*.86, (W - SPX*2)*.25/Math.sin(ANG)*.92), sx = 1;   // pivot at the bottom, each arc in its own half
+    const na = (pos(db)*2 - 1)*ANG;
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      const x = SPX + (c + .5)*cw, y = SPT + (r + .5)*ch, dx = (x - px)/sx, dy = py - y, d = Math.hypot(dx, dy);
+      if(dy < 0 || d > R + ch) continue;
+      const a = Math.atan2(dx, dy);
+      let col = null;
+      if(Math.abs(a) <= ANG && Math.abs(d - R) < ch*.5){                // the scale arc, red zone past 0 dB
+        const p = (a/ANG + 1)/2; col = p > pos(0) ? C.lit2 : C.lit;
+        g.globalAlpha = (solo ? 1 : .9)*(p > pos(0) ? 1 : .55);
+      } else if(Math.abs(a) <= ANG && Math.abs(d - R*.86) < ch*.5){     // tick marks
+        const p = (a/ANG + 1)/2; if([-20, -10, -5, -3, 0, 3].some(t => Math.abs(p - pos(t)) < .012)){ col = p > pos(0) ? C.lit2 : C.lit; g.globalAlpha = solo ? 1 : .9; }
+      } else if(d < R*.95 && d > ch && Math.abs(Math.sin(a - na))*d < cw*.55/sx && Math.cos(a - na) > 0){   // the needle
+        col = db > 0 ? C.lit2 : '#f4fbff'; g.globalAlpha = solo ? 1 : .9;
+      }
+      if(col){ g.fillStyle = col; g.fillRect(SPX + c*cw + 1, SPT + r*ch + 1, cw - 2, ch - 2); }
+    }
+    g.globalAlpha = 1;
+    g.font = '12px "Share Tech Mono", monospace'; g.fillStyle = C.lit; g.textAlign = 'center'; g.globalAlpha = .75;
+    g.fillText(chn, px, H - SPB + 13); g.globalAlpha = 1;
+  });
+  litOff();
+}
+// 10. SPARK: the bars stay low and throw sparks up with the music; the sparks arc up and fall back
+const spark = { list: [], t: 0 };
+function specSpark(solo){
+  const n = 32, cols = 96, rows = 22, st = bands(n);
+  const cw = (W - SPX*2)/cols, ch = (H - SPT - SPB)/rows, per = cols/n;
+  const dt = Math.min(.1, Math.max(0, T - spark.t)); spark.t = T;
+  dimGrid(cols, rows, SPX, SPT, cw, ch, solo);
+  for(let i=0;i<n;i++){                                                // throw sparks: more and higher the louder the band
+    const v = st.v[i];
+    if(v > .18 && Math.random() < v*v*dt*26 && spark.list.length < 260)
+      spark.list.push({ x: (i + Math.random())*per, y: rows - 1 - v*3, vx: (Math.random() - .5)*4, vy: -(8 + v*30)*(.7 + Math.random()*.5), life: 1 });
+  }
+  spark.list.forEach(p => { p.vy += 26*dt; p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt*.55; });
+  spark.list = spark.list.filter(p => p.life > 0 && p.y < rows && p.x >= 0 && p.x < cols);
+  litOn(solo);
+  for(let i=0;i<n;i++){                                                // the low bars along the bottom
+    const h = Math.max(1, Math.round(st.v[i]*4));
+    for(let s=0;s<h;s++){ g.fillStyle = s >= 3 ? C.lit2 : C.lit; for(let k=0;k<Math.floor(per);k++) g.fillRect(SPX + (Math.floor(i*per) + k)*cw + 1, H - SPB - (s + 1)*ch + 1, cw - 2, ch - 2); }
+  }
+  spark.list.forEach(p => {
+    const c = Math.floor(p.x), r = Math.floor(p.y); if(r < 0) return;
+    g.fillStyle = p.vy < 0 ? C.lit2 : C.lit; g.globalAlpha = (solo ? 1 : .9)*Math.min(1, p.life*1.4);
+    g.fillRect(SPX + c*cw + 1, SPT + r*ch + 1, cw - 2, ch - 2);
+  });
+  litOff(); freqLabels();
+}
 function drawSpec(solo){
   if(spec === 'center') specCenter(solo); else if(spec === 'peak') specPeak(solo); else if(spec === 'meter') specMeter(solo);
-  else if(spec === 'scope') specScope(solo); else if(spec === 'fall') specFall(solo); else if(spec === 'ring') specRing(solo); else if(spec === 'hill') specHill(solo); else specBar(solo);
+  else if(spec === 'scope') specScope(solo); else if(spec === 'fall') specFall(solo); else if(spec === 'ring') specRing(solo); else if(spec === 'hill') specHill(solo); else if(spec === 'needle') specNeedle(solo); else if(spec === 'spark') specSpark(solo); else specBar(solo);
 }
 function drawVFD(){ g.fillStyle = C.screen; g.fillRect(0, 0, W, H); drawSpec(true); }
 setSpec(spec, false);
@@ -2613,7 +2679,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125161815';                                 // stamped by build.ps1
+const APP_VER = '20261125162057';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
