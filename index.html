@@ -376,7 +376,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
     <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
-    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
+    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="night" aria-pressed="false">電源・タイマー</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
     </div>
     <div class="pbody">
       <section data-tab="look">
@@ -428,38 +428,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
       </section>
       <section data-tab="look">
-        <h3>省電力モード</h3>
-        <div class="chips" id="ecoChips">
-          <button class="chip" data-eco="0">OFF</button>
-          <button class="chip" data-eco="1">ON</button>
-        </div>
-        <p class="rnote">描画を毎秒15回に減らし、光のにじみをなくして電池と発熱を抑えます。見た目は少しシンプルになります。</p>
-      </section>
-      <section data-tab="look">
-        <h3>おやすみモード <span id="sleepLeft" style="float:right"></span></h3>
-        <div class="chips" id="sleepChips">
-          <button class="chip" data-sleep="0">OFF</button>
-          <button class="chip" data-sleep="15">15分</button>
-          <button class="chip" data-sleep="30">30分</button>
-          <button class="chip" data-sleep="60">60分</button>
-          <button class="chip" data-sleep="90">90分</button>
-        </div>
-        <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップすると明るく戻ります。</p>
-      </section>
-      <section data-tab="look">
-        <h3>目覚まし <span id="alarmLeft" style="float:right"></span></h3>
-        <div class="chips" id="alarmChips">
-          <button class="chip" data-alarm="0">OFF</button>
-          <button class="chip" data-alarm="1">ON</button>
-          <input type="time" id="alarmTime" value="07:00" style="background:#0c0d11; border:1px solid var(--line); border-radius:8px; color:var(--fg); padding:7px 10px; font:15px var(--font-ui)">
-        </div>
-        <div class="chips" id="alarmSrcChips" style="margin-top:8px">
-          <button class="chip" data-asrc="radio">ラジオ（最後の局）</button>
-          <button class="chip" data-asrc="disc">曲（プレイリスト）</button>
-        </div>
-        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにして、暗く保ちます。アプリを開いたまま、できれば充電しながら使ってください。</p>
-      </section>
-      <section data-tab="look">
         <h3>スペアナ</h3>
         <div class="chips" id="specChips">
           <button class="chip" data-spec="bar"><span class="sw sp-bar"></span>BAR<small>バー</small></button>
@@ -495,6 +463,38 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="penguin"><span class="pet">🐧</span>ペンギン</button>
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
+      </section>
+      <section data-tab="night">
+        <h3>省電力モード</h3>
+        <div class="chips" id="ecoChips">
+          <button class="chip" data-eco="0">OFF</button>
+          <button class="chip" data-eco="1">ON</button>
+        </div>
+        <p class="rnote">描画を毎秒15回に減らし、光のにじみをなくして電池と発熱を抑えます。見た目は少しシンプルになります。</p>
+      </section>
+      <section data-tab="night">
+        <h3>おやすみモード <span id="sleepLeft" style="float:right"></span></h3>
+        <div class="chips" id="sleepChips">
+          <button class="chip" data-sleep="0">OFF</button>
+          <button class="chip" data-sleep="15">15分</button>
+          <button class="chip" data-sleep="30">30分</button>
+          <button class="chip" data-sleep="60">60分</button>
+          <button class="chip" data-sleep="90">90分</button>
+        </div>
+        <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップすると明るく戻ります。</p>
+      </section>
+      <section data-tab="night">
+        <h3>目覚まし <span id="alarmLeft" style="float:right"></span></h3>
+        <div class="chips" id="alarmChips">
+          <button class="chip" data-alarm="0">OFF</button>
+          <button class="chip" data-alarm="1">ON</button>
+          <input type="time" id="alarmTime" value="07:00" style="background:#0c0d11; border:1px solid var(--line); border-radius:8px; color:var(--fg); padding:7px 10px; font:15px var(--font-ui)">
+        </div>
+        <div class="chips" id="alarmSrcChips" style="margin-top:8px">
+          <button class="chip" data-asrc="radio">ラジオ（最後の局）</button>
+          <button class="chip" data-asrc="disc">曲（プレイリスト）</button>
+        </div>
+        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにして、暗く保ちます。アプリを開いたまま、できれば充電しながら使ってください。</p>
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
