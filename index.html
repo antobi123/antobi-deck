@@ -334,6 +334,17 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 #alarmUI #alarmStop{background:var(--illum); color:#06070a}
 #alarmUI #alarmStop small{color:#06070a; opacity:.7}
 .sw.vfdmine{background:radial-gradient(circle at 50% 38%,#ffd9a8 0 4px,transparent 5px),radial-gradient(ellipse at 50% 95%,#ffd9a8 0 9px,transparent 10px),repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.35) 2px 3px),#021311}
+.myimgs{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px; margin-top:10px}
+.mi{position:relative; border:1px solid var(--line); border-radius:10px; background:#0c0d11; padding:8px; display:flex; flex-direction:column; gap:6px}
+.mi .no{position:absolute; left:12px; top:10px; z-index:1; font:700 11px var(--font-seg); color:var(--illum); text-shadow:0 0 6px var(--illumglow)}
+.mi .pv{aspect-ratio:4/3; border-radius:6px; background:#050608 center/contain no-repeat; display:grid; place-items:center; align-content:center; color:var(--muted); font:700 22px var(--font-ui); cursor:pointer; border:1px dashed var(--line); text-align:center}
+.mi .pv small{display:block; font:600 11px var(--font-ui)}
+.mi.has .pv{border-style:solid; border-color:var(--illum); box-shadow:0 0 10px var(--illumglow)}
+.mi.off .pv{opacity:.3; filter:grayscale(1); border-color:var(--line); box-shadow:none}
+.mi .ops{display:flex; gap:6px}
+.mi .ops button{flex:1; padding:7px 4px; border-radius:7px; border:1px solid var(--line); background:#15171d; color:var(--fg); font:700 11px var(--font-ui)}
+.mi .ops button[aria-pressed="true"]{border-color:var(--illum); box-shadow:0 0 8px var(--illumglow)}
+.mi .ops button.arm{background:#a3262b; border-color:#ff6b6b; color:#fff}
 </style>
 
 <div class="stage" id="stage">
@@ -421,7 +432,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
     <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
-    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="night" aria-pressed="false">電力・タイマー</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
+    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="photo" aria-pressed="false">画像</button><button data-tab="clock" aria-pressed="false">時計</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="night" aria-pressed="false">電力・タイマー</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
     </div>
     <div class="pbody">
       <section data-tab="look">
@@ -519,22 +530,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
       </section>
-      <section data-tab="look">
-        <h3>MY PHOTO（自分の画像）</h3>
-        <div class="row" style="display:flex; gap:8px; flex-wrap:wrap">
-          <label class="pbtn pri" style="cursor:pointer">画像を選ぶ<input type="file" id="myImgFile" accept="image/*" hidden></label>
-          <button class="pbtn" id="myImgClear">消す</button>
-        </div>
-        <p class="rnote" id="myImgState">まだ画像がありません</p>
-        <p class="rnote">好きな写真やロゴを選ぶと、ディスプレイ「MY PHOTO」で蛍光管のドットのように光ります。画像はこの端末の中だけに保存されます。</p>
-      </section>
-      <section data-tab="look">
-        <h3>時計</h3>
-        <div class="chips" id="clockChips">
-          <button class="chip" data-c12="0">24時間</button>
-          <button class="chip" data-c12="1">12時間（AM/PM）</button>
-        </div>
-      </section>
       <section data-tab="night">
         <h3>省電力モード</h3>
         <div class="chips" id="ecoChips">
@@ -567,6 +562,20 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-asrc="disc">曲（プレイリスト）</button>
         </div>
         <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにして、暗く保ちます。アプリを開いたまま、できれば充電しながら使ってください。</p>
+      </section>
+      <section data-tab="photo">
+        <h3>MY PHOTO（自分の画像） <span id="myCount" style="float:right; font:600 11px var(--font-ui); color:var(--muted)"></span></h3>
+        <div class="myimgs" id="myImgs"></div>
+        <div class="row" style="margin-top:12px"><button class="pbtn pri" id="myShow">MY PHOTO を表示する</button></div>
+        <p class="rnote">5枚まで登録できます。「使う」にした画像がディスプレイ「MY PHOTO」で蛍光管のドットのように光り、2枚以上あるとランダムで切り替わります。画像をタップすると差し替え。画像はこの端末の中だけに保存されます。</p>
+      </section>
+      <section data-tab="clock">
+        <h3>時計の表示</h3>
+        <div class="chips" id="clockChips">
+          <button class="chip" data-c12="0">24時間</button>
+          <button class="chip" data-c12="1">12時間（AM/PM）</button>
+        </div>
+        <p class="rnote">ディスプレイ右上の時計の表示です。目覚ましの画面もこの表示に合わせます。</p>
       </section>
       <section data-tab="sound">
         <h3>イコライザー</h3>
@@ -725,8 +734,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
             <dt>パネルの色</dt><dd>本体の色（VOLUME・SEEK のボタンと ANTOBi のバッジも同じ色味に）。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面とお店のロゴの画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
-            <dt>時計</dt><dd>右上の時計を24時間か12時間（AM/PM）で</dd>
-            <dt>MY PHOTO</dt><dd>⚙「表示」→「画像を選ぶ」で、好きな写真やロゴがディスプレイ「MY PHOTO」でドット風に光ります</dd>
+            <dt>時計</dt><dd>⚙「時計」タブで、右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
+            <dt>MY PHOTO</dt><dd>⚙「画像」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
           </dl>
         </div>
@@ -741,7 +750,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>お店のロゴ</dt><dd>レコード屋さんなどのロゴが光ります</dd>
-            <dt>MY PHOTO</dt><dd>自分で選んだ画像の画面（⚙「表示」で設定。SHUFFLE には入りません）</dd>
+            <dt>MY PHOTO</dt><dd>自分で登録した画像がドット風に光る画面。「使う」にした画像が2枚以上あると、SHUFFLE と同じようにランダムで切り替わります（お店のロゴの SHUFFLE には入りません）</dd>
             <dt>SHUFFLE</dt><dd>お店のロゴ14種類から、16秒ごとにランダムで切り替わります（同じロゴは続きません）</dd>
           </dl>
         </div>
@@ -2133,7 +2142,8 @@ const LOGOS = {   // 'native' = the image keeps its own colors; the last value i
   vfdbeat: makeLogo(BEATBOOM_SRC, false, WHITE_TUBE), vfdhmv: makeLogo(HMV_SRC, false, 'native', '#ff3d8b'), vfdnext: makeLogo(NEXT_SRC, false, 'native', '#ffa21f'),
   vfdface: makeLogo(FACE_SRC, false, 'native', WHITE_TUBE), vfdunion: makeLogo(UNION_SRC, false, 'native', '#ff2a2a'), vfdyuji: makeLogo(YUJI_SRC, false, 'native', '#2fd06a'),
   vfdnote: makeLogo(NOTE_SRC, false, 'native', WHITE_TUBE), vfdtower: makeLogo(TOWER_SRC, false, 'native', '#ffd21a'),
-  vfdmine: makeLogo('', false, 'native', WHITE_TUBE)   // MY PHOTO: the picture is set from ⚙ 表示
+  mine0: makeLogo('', false, 'native', WHITE_TUBE), mine1: makeLogo('', false, 'native', WHITE_TUBE), mine2: makeLogo('', false, 'native', WHITE_TUBE),
+  mine3: makeLogo('', false, 'native', WHITE_TUBE), mine4: makeLogo('', false, 'native', WHITE_TUBE)   // MY PHOTO 1-5 (⚙「画像」)
 };
 // the ⚙ panel swatches take each logo's color
 document.querySelectorAll('#skinChips .chip').forEach(b => { const L = LOGOS[b.dataset.skin], sw = b.querySelector('.sw'); if(!L || !sw) return; sw.className = 'sw logo' + (L.color === 'rainbow' || b.dataset.skin === 'vfdasahi' ? ' rainbow' : ''); if(L.color !== 'rainbow') sw.style.setProperty('--c', L.glow || L.color); });
@@ -2186,13 +2196,16 @@ const shuf = {cur: null, next: null, t: 0, fading: false, grid: null};
 const shA = document.createElement('canvas'), sha = shA.getContext('2d');
 const shB = document.createElement('canvas'), shb = shB.getContext('2d');
 const shM = document.createElement('canvas'), shm = shM.getContext('2d');
-function shufPick(){ const keys = Object.keys(LOGOS).filter(k => k !== shuf.cur && k !== shuf.next && k !== 'vfdmine'); return keys[Math.floor(Math.random()*keys.length)]; }
+const shufPool = () => skin === 'vfdmine' ? mineKeys() : Object.keys(LOGOS).filter(k => !k.startsWith('mine'));   // the shop logos, or your own pictures on MY PHOTO
+function shufPick(){ const pool = shufPool(); let keys = pool.filter(k => k !== shuf.cur && k !== shuf.next); if(!keys.length) keys = pool.filter(k => k !== shuf.cur); return keys[Math.floor(Math.random()*keys.length)] || pool[0]; }
 function shufStart(){
   shuf.next = shuf.queued || shufPick(); shuf.queued = null; shuf.fading = true; shuf.t = 0; shuf.grid = null;
   logoReady(LOGOS[shuf.next]);
-  flash('♪ ' + SKIN_NAME[shuf.next].replace(/^VFD /, ''), 2600);
+  flash('♪ ' + (SKIN_NAME[shuf.next] || 'MY PHOTO ' + (+shuf.next.slice(4) + 1)).replace(/^VFD /, ''), 2600);
 }
 function drawShuffle(dt){
+  const pool = shufPool();                                // switched between the logos and MY PHOTO, or a picture turned off: start over
+  if((shuf.cur && !pool.includes(shuf.cur)) || (shuf.next && !pool.includes(shuf.next)) || (shuf.queued && !pool.includes(shuf.queued))){ shuf.cur = null; shuf.next = null; shuf.queued = null; shuf.fading = false; }
   g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
   const st = bands(28), bass = (st.v[0] + st.v[1] + st.v[2])/3;
   if(!shuf.cur && !shuf.fading) shufStart();
@@ -2748,7 +2761,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125165440';                                 // stamped by build.ps1
+const APP_VER = '20261125170155';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2780,7 +2793,7 @@ var snoozeAt = 0;
 const alarmUI = document.createElement('div'); alarmUI.id = 'alarmUI'; alarmUI.hidden = true;
 alarmUI.innerHTML = '<div class="at" id="alarmUITime"></div><div class="ab"><button id="alarmSnooze">SNOOZE<small>5分後にもう一度</small></button><button id="alarmStop">STOP<small>止める</small></button></div>';
 document.body.appendChild(alarmUI);
-function showAlarmUI(){ const d = new Date(); $('#alarmUITime').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); alarmUI.hidden = false; }
+function showAlarmUI(){ $('#alarmUITime').textContent = clockText(new Date(), true); alarmUI.hidden = false; }
 function alarmQuiet(){ audio.pause(); try{ plain.pause(); }catch(e){} alarmRing = 0; sleepFade = 1; applyVol(); alarmUI.hidden = true; setShade(); updateUI(); }
 $('#alarmStop').addEventListener('click', () => { snoozeAt = 0; alarmQuiet(); flash('ALARM  STOP', 1200); });
 $('#alarmSnooze').addEventListener('click', () => { snoozeAt = Date.now() + 5*60e3; alarmQuiet(); flash('SNOOZE  5MIN', 1500); });
@@ -2902,31 +2915,64 @@ function setClock12(v, announce){
   document.querySelectorAll('#clockChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.c12 === '1') === v));
   if(announce) flash(v ? 'CLOCK  12H' : 'CLOCK  24H', 900);
 }
-function clockText(d){
-  const h = d.getHours(), colon = d.getMilliseconds() < 500 ? ':' : ' ', m = String(d.getMinutes()).padStart(2, '0');
+function clockText(d, steady){
+  const h = d.getHours(), colon = steady || d.getMilliseconds() < 500 ? ':' : ' ', m = String(d.getMinutes()).padStart(2, '0');
   return clock12 ? (h < 12 ? 'AM' : 'PM') + ' ' + (h % 12 || 12) + colon + m : h + colon + m;
 }
 document.querySelectorAll('#clockChips .chip').forEach(b => b.addEventListener('click', () => setClock12(b.dataset.c12 === '1', true)));
 setClock12(clock12, false);
 
-/* ---------------- MY PHOTO: your own picture glowing on the dot matrix like the shop logos ---------------- */
-function myPhotoSet(url){
-  const L = LOGOS.vfdmine; L.img.removeAttribute('src'); L.img.dataset.src = url || ''; L.key = '';
-  $('#myImgState').textContent = url ? '設定済み。ディスプレイの「MY PHOTO」で表示されます' : 'まだ画像がありません';
+/* ---------------- MY PHOTO: up to five of your own pictures, each on or off; several on = they take turns at random ---------------- */
+const MY_N = 5;
+var myImgs = (store.get('myImgs', null) || []).slice(0, MY_N);
+if(!myImgs.length && store.get('myImg', '')) myImgs = [{ url: store.get('myImg', ''), on: true }];   // the single picture from before
+while(myImgs.length < MY_N) myImgs.push({ url: '', on: true });
+const mineKeys = () => myImgs.map((m, i) => m.url && m.on ? 'mine' + i : null).filter(Boolean);
+function mineSync(i){                                     // point slot i's glowing image at its picture
+  const L = LOGOS['mine' + i]; L.img.removeAttribute('src'); L.img.dataset.src = myImgs[i].url || ''; L.key = '';
 }
-$('#myImgFile').addEventListener('change', async e => {
-  const f = e.target.files[0]; e.target.value = ''; if(!f) return;
+function mineSave(){ store.set('myImgs', myImgs); store.set('myImg', ''); }
+function renderMine(){
+  const box = $('#myImgs'); box.innerHTML = '';
+  myImgs.forEach((m, i) => {
+    const d = document.createElement('div'); d.className = 'mi' + (m.url ? ' has' : '') + (m.url && !m.on ? ' off' : '');
+    d.innerHTML = `<span class="no">${i + 1}</span><label class="pv">${m.url ? '' : '＋<small>画像を選ぶ</small>'}<input type="file" accept="image/*" hidden></label>`
+      + (m.url ? `<div class="ops"><button data-a="on" aria-pressed="${m.on}">${m.on ? '使う' : '使わない'}</button><button data-a="del">消す</button></div>` : '');
+    if(m.url) d.querySelector('.pv').style.backgroundImage = `url("${m.url}")`;
+    d.querySelector('input').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if(f) mineLoad(i, f); });
+    d.addEventListener('click', e => {
+      const a = e.target.dataset && e.target.dataset.a; if(!a) return;
+      if(a === 'on'){ m.on = !m.on; mineSave(); renderMine(); flash(`MY PHOTO ${i + 1}  ${m.on ? 'ON' : 'OFF'}`, 900); }
+      else if(a === 'del'){
+        if(!e.target.classList.contains('arm')){ e.target.classList.add('arm'); e.target.textContent = 'もう一度'; setTimeout(() => { e.target.classList.remove('arm'); e.target.textContent = '消す'; }, 3000); return; }
+        myImgs[i] = { url: '', on: true }; mineSave(); mineSync(i); renderMine(); flash(`MY PHOTO ${i + 1}  CLEARED`, 900);
+      }
+    });
+    box.append(d);
+  });
+  const n = mineKeys().length;
+  $('#myCount').textContent = n ? `表示する画像 ${n}枚${n > 1 ? '（ランダムで切り替え）' : ''}` : '';
+}
+async function mineLoad(i, f){
   try{
     const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(f); });
     const s = Math.min(1, 360/Math.max(img.naturalWidth, img.naturalHeight)), cv = document.createElement('canvas');
     cv.width = Math.max(1, Math.round(img.naturalWidth*s)); cv.height = Math.max(1, Math.round(img.naturalHeight*s));
     cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(img.src);
-    const url = cv.toDataURL('image/jpeg', .85);
-    store.set('myImg', url); myPhotoSet(url); setSkin('vfdmine', true);
-  }catch(err){ $('#myImgState').textContent = 'この画像は読み込めませんでした'; }
-});
-$('#myImgClear').addEventListener('click', () => { store.set('myImg', ''); myPhotoSet(''); flash('MY PHOTO  CLEARED', 900); });
-myPhotoSet(store.get('myImg', ''));
+    myImgs[i] = { url: cv.toDataURL('image/jpeg', .85), on: true }; mineSave(); mineSync(i); renderMine();
+    flash(`MY PHOTO ${i + 1}  SET`, 1200);
+  }catch(err){ flash('この画像は読み込めません', 1500); }
+}
+$('#myShow').addEventListener('click', () => { setSkin('vfdmine', true); closeSheet && closeSheet(); });
+for(let i=0;i<MY_N;i++) mineSync(i);
+renderMine();
+// the MY PHOTO display: nothing set → the spectrum and a hint; one → that picture; several → SHUFFLE among them
+function drawMine(dt){
+  const ks = mineKeys();
+  if(!ks.length){ drawVFD(); if(!drawMine.hint){ drawMine.hint = 1; flash('MY PHOTO  ⚙「画像」で登録してね', 2600); } return; }
+  drawMine.hint = 0;
+  if(ks.length === 1) drawVFDLogo(LOGOS[ks[0]]); else drawShuffle(dt);
+}
 /* 省電力モード: 15 frames a second and no glow halo. おやすみモード (sleep timer): screen dimmed and power-saving,
    the last minute fades the sound out, then it stops. 目覚まし (alarm): at the set time it starts the radio or the playlist
    and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
@@ -3197,7 +3243,7 @@ function frame(now){
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
-    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
+    if(W*DPR >= 1) { if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
