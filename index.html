@@ -1709,19 +1709,14 @@ function drawVFDTurntable(dt){
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  // an American classic poster: a long, low '50s cruiser with tail fins, chrome and whitewalls, against a striped sunset
-  for(let y=-6;y<=0;y++) for(let x=-6;x<=6;x++) if(x*x + y*y <= 36 && y !== -2 && y !== -4) dot(101 + x, 11 + y, A);   // sunset behind
-  const car = [[85,16.5],[85,13.2],[86.5,10.4],[89,12.2],[95,12],[97.5,9.8],[103.5,9.6],[106.5,12],[113,12.3],[115,13.6],[115,16.5]];
-  vbg.fillStyle = K; vbg.beginPath(); car.forEach(([x, y], i) => i ? vbg.lineTo(x, y) : vbg.moveTo(x, y)); vbg.closePath(); vbg.fill();
-  for(let i=0;i<car.length - 1;i++) line(car[i][0], car[i][1], car[i+1][0], car[i+1][1], G);
-  line(85, 16.5, 87.5, 16.5, G); line(93.5, 16.5, 105.5, 16.5, G); line(111.5, 16.5, 115, 16.5, G);            // rocker between the wheels
-  line(98.5, 10.7, 103, 10.7, G); dot(101, 10.2, G);                                                             // low hardtop windows
-  line(89, 14.2, 110, 13.6, A); dot(110, 13, A);                                                                 // chrome side spear
-  for(let y=14;y<=16;y++){ dot(84.5, y, A); dot(115.5, y, A); }                                                 // chrome bumpers
-  if(Math.sin(ttT*2) > -.6) dot(86.5, 11, A);                                                                    // tail light on the fin
-  dot(114.5, 13.4, A);                                                                                           // headlight
-  [90.5, 108.5].forEach(wx => { for(let a=0;a<Math.PI*2;a+=.35) dot(wx + Math.cos(a)*2.4, 16.8 + Math.sin(a)*2.4, G); for(let a=0;a<Math.PI*2;a+=.7) dot(wx + Math.cos(a)*1.2, 16.8 + Math.sin(a)*1.2, A); });   // whitewall tires
-  for(let x=86;x<=115;x++) if((x + Math.floor(ttT*6)) % 4 < 2) dot(x, 19.5, G);                                  // road rushing by
+  // a sunflower poster: a big seeded face ringed with petals on a tall stem with broad leaves, nodding in the breeze
+  const nod = br*.7 + Math.sin(ttT*1.1)*.25, hx = 100 + nod, hy = 8.5;
+  for(let y=19;y>=hy+5;y--){ const t = (19 - y)/(19 - hy - 5); dot(100 + nod*t, y, G); }                     // stem
+  [[-1, 94.5, 15.5], [1, 105.5, 13.5]].forEach(([s, lx, ly]) => {                                            // broad heart-shaped leaves
+    for(let k=0;k<=5;k++){ const w = Math.sin(k/5*Math.PI)*1.8; for(let v=-w;v<=w;v+=.7) if(Math.abs(v) > w - .8 || k === 0) dot(lx - s*k + (s > 0 ? 5*s : 0) - (s < 0 ? 0 : 0), ly + v - k*.25, G); }
+  });
+  for(let p=0;p<14;p++){ const a = p*Math.PI*2/14 + Math.sin(ttT*.5)*.04; for(let r=3.6;r<=6;r+=.6) dot(hx + Math.cos(a)*r, hy + Math.sin(a)*r*.82, A); }   // petals
+  for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9) dot(hx + x, hy + y*.85, (x + y) % 2 === 0 ? G : K);   // the seeded face
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
   for(let x=95;x<=130;x++){ dot(x, 31, G); dot(x, 38, G); }
