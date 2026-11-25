@@ -104,6 +104,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 :root[data-panel="carbon"]{ --p1:#3a3b40; --p2:#1d1e22; --p3:#0e0f11; --p4:#1a1b1e; --p5:#050506; --w1:#55565c; --w2:#2a2b30; --w3:#16171a; --w4:#070708;
   --ring:#2c2d33; --r1:#1a1b1f; --r2:#5d5e65; --r3:#34353b; --r4:#141518; --rtext:#d8dae0; --ltext:#c4c6cd; --lshadow:rgba(0,0,0,.6) }
 :root[data-panel="carbon"] .plate{background:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 3px,transparent 3px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.45) 0 3px,transparent 3px 6px),linear-gradient(180deg,var(--p1) 0%,var(--p2) 20%,var(--p3) 48%,var(--p4) 76%,var(--p5) 100%)}
+:root[data-panel="pink"]{ --p1:#ffd3e6; --p2:#f39cc2; --p3:#d9679c; --p4:#e985b3; --p5:#9e3a6c; --w1:#ffe8f2; --w2:#f5a9cb; --w3:#d46797; --w4:#933862;
+  --ltext:#3a1027; --lshadow:rgba(255,255,255,.5) }
+:root[data-panel="turq"]{ --p1:#b9f3ee; --p2:#5fd6cc; --p3:#22a99f; --p4:#3cc0b5; --p5:#0f6b66; --w1:#dcfbf8; --w2:#74ddd4; --w3:#25a69c; --w4:#0e5f5a;
+  --ltext:#06302d; --lshadow:rgba(255,255,255,.45) }
 :root[data-panel="red"]{ --p1:#e0787c; --p2:#b8333a; --p3:#8c1a21; --p4:#a8282f; --p5:#5a0d12; --w1:#f2a3a6; --w2:#c43e45; --w3:#8a1a20; --w4:#560b10;
   --ltext:#fbe9ea; --lshadow:rgba(0,0,0,.45) }
 /* ---------- body ---------- */
@@ -446,6 +450,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-panel="white"><span class="sw" style="background:linear-gradient(180deg,#ffffff,#dedfe4 55%,#b9bbc2)"></span>パールホワイト</button>
           <button class="chip" data-panel="red"><span class="sw" style="background:linear-gradient(180deg,#e0787c,#8c1a21 55%,#5a0d12)"></span>メタリックレッド</button>
           <button class="chip" data-panel="blue"><span class="sw" style="background:linear-gradient(180deg,#9cc1ee,#2a5197 55%,#14295a)"></span>メタリックブルー</button>
+          <button class="chip" data-panel="pink"><span class="sw" style="background:linear-gradient(180deg,#ffd3e6,#d9679c 55%,#9e3a6c)"></span>メタリックピンク</button>
+          <button class="chip" data-panel="turq"><span class="sw" style="background:linear-gradient(180deg,#b9f3ee,#22a99f 55%,#0f6b66)"></span>ターコイズブルー</button>
           <button class="chip" data-panel="carbon"><span class="sw" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.12) 0 2px,transparent 2px 4px),linear-gradient(180deg,#3a3b40,#0e0f11)"></span>カーボン</button>
         </div>
       </section>
@@ -655,7 +661,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）</dd>
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
-            <dt>パネルの色</dt><dd>本体の色。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・カーボン</dd>
+            <dt>パネルの色</dt><dd>本体の色。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
             <dt>スペアナ</dt><dd>8種類から選べます（DISC 中は 6 ボタンでも切り替え）</dd>
             <dt>ILLUMI</dt><dd>キー照明の色（8色＋RANDOM）。⚙「表示」からも選べます</dd>
           </dl>
@@ -2485,13 +2491,13 @@ function setDColor(c, announce){
 document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setDColor(b.dataset.clubc, true)));
 setDColor(dcolor, false);
 /* panel colour: the deck's body (silver by default) */
-const PANELS = ['silver', 'black', 'gun', 'gold', 'white', 'red', 'blue', 'carbon'];
+const PANELS = ['silver', 'black', 'gun', 'gold', 'white', 'red', 'blue', 'pink', 'turq', 'carbon'];
 let panel = store.get('panel', 'silver'); if(!PANELS.includes(panel)) panel = 'silver';
 function setPanel(p, announce){
   panel = p; store.set('panel', p);
   if(p === 'silver') delete root.dataset.panel; else root.dataset.panel = p;
   document.querySelectorAll('#panelChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.panel === p));
-  if(announce) flash('PANEL  ' + ({silver: 'SILVER', black: 'BLACK', gun: 'GUNMETAL', gold: 'GOLD', white: 'PEARL WHITE', red: 'RED', blue: 'BLUE', carbon: 'CARBON'})[p], 900);
+  if(announce) flash('PANEL  ' + ({silver: 'SILVER', black: 'BLACK', gun: 'GUNMETAL', gold: 'GOLD', white: 'PEARL WHITE', red: 'RED', blue: 'BLUE', pink: 'PINK', turq: 'TURQUOISE', carbon: 'CARBON'})[p], 900);
 }
 document.querySelectorAll('#panelChips .chip').forEach(b => b.addEventListener('click', () => setPanel(b.dataset.panel, true)));
 setPanel(panel, false);
@@ -2607,7 +2613,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125161706';                                 // stamped by build.ps1
+const APP_VER = '20261125161815';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
