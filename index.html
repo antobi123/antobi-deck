@@ -1702,15 +1702,25 @@ function drawVFDTurntable(dt){
   [[-1.2,-6],[0,-8],[1.3,-6],[-.6,-4],[.8,-4]].forEach(([a, l], i) => { const sw = Math.sin(ttT*1.4 + i)*.6 + br*.8; line(78.5, 28, 78.5 + a*2.2 + sw, 28 + l, G); });
   for(let y=29;y<=32;y++){ dot(85, y, A); dot(90, y, A); } for(let x=85;x<=90;x++){ dot(x, 32, A); dot(x, 29, A); } dot(91, 30, A); dot(92, 31, A); dot(91, 32, A);
   ttSteam.forEach(([ph, dx], i) => { const t = (ph + ttT*.22) % 1; if(t < .85 && Math.sin(ttT*5 + i) > -.4) dot(87.5 + dx + Math.sin(ttT*1.5 + i*2)*t*2.5, 28 - t*12, G); });
-  // one poster on the wall: a retro sunset, its lower corner lifting a little in the breeze
+  // one poster on the wall, its lower corner lifting a little in the breeze
   const px0 = 84, px1 = 116, py0 = 2, py1 = 20;
   const lift = x => x > px1 - 8 ? -Math.round(br*((x - (px1 - 8))/8)*2.2) : 0;
   for(let x=px0;x<=px1;x++){ dot(x, py0, G); dot(x, py1 + lift(x), G); }
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  for(let y=-7;y<=7;y++) for(let x=-7;x<=7;x++) if(x*x + y*y <= 49 && y <= 5 && y !== 1 && y !== 3 && y !== 5) dot(100 + x, 12 + y, A);   // a big striped sun, no lettering
-  for(let x=px0+2;x<=px1-2;x++) if(x % 2 === 0 || Math.sin(x + ttT*2) > .2) dot(x, 18, G);               // sea line
+  // a botanical print: a potted monstera, leaves with their split edges
+  for(let y=16;y<=19;y++) for(let x=96 - (19 - y)*.5;x<=104 + (19 - y)*.5;x++) if(y === 16 || y === 19 || x < 97 - (19 - y)*.5 || x > 103 + (19 - y)*.5) dot(x, y, A);   // pot
+  const leaf = (cx, cy, rx, ry, ang, sx, sy) => {
+    const c = Math.cos(ang), s = Math.sin(ang), P = (u, v) => [cx + u*c - v*s, cy + u*s + v*c];
+    for(let a=0;a<Math.PI*2;a+=.12){ const [x, y] = P(Math.cos(a)*rx, Math.sin(a)*ry); dot(x, y, G); }
+    for(let u=-rx;u<=rx;u+=1){ const [x, y] = P(u, 0); dot(x, y, G); }                  // midrib
+    [-.55, 0, .55].forEach(f => { for(let v=ry*.55;v<=ry;v+=.5){ const [x, y] = P(rx*f, v); dot(x, y, K); const [x2, y2] = P(rx*f + .8, -v); dot(x2, y2, K); } });   // the splits
+    line(sx, sy, ...P(-rx, 0), G);                                // stem down to the pot
+  };
+  leaf(94, 8, 7, 4.5, -.35, 99, 16);
+  leaf(107, 7, 5, 3.2, .4, 101, 16);
+  leaf(101, 12, 3.5, 2.2, -.1, 100, 16);
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
   for(let x=95;x<=130;x++){ dot(x, 31, G); dot(x, 38, G); }
