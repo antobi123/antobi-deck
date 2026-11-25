@@ -733,7 +733,9 @@ async function loadLibrary(){
   const recs = await DB.all();
   if(recs && recs.length){
     recs.forEach(r => { tracks.push(makeTrack(r)); known.add(trackKey(r.name, r.blob.size)); });
-    idx = 0; $('#trk').textContent = '-01'; setTitle(trackLabel(tracks[0]));
+    const last = store.get('last', null), li = last ? tracks.findIndex(t => t.key === last.key) : -1;
+    idx = Math.max(0, li); if(li >= 0){ resumeIdx = li; resumeAt = last.t || 0; }   // pick up the last song where it stopped
+    if(mode !== 'radio'){ $('#trk').textContent = '-' + String(idx + 1).padStart(2, '0'); setTitle(trackLabel(tracks[idx])); }
     renderList(); flash(`${tracks.length} TRACKS`, 1000);
     // songs saved before tag reading existed: read their tags once, in the background
     for(let i = 0; i < recs.length; i++){
@@ -751,7 +753,9 @@ function playIndex(i){
   if(!tracks[i]) return;
   ensureAudio();
   idx = i; mode = 'file'; presetLabels(false);
+  const at = i === resumeIdx ? resumeAt : 0; resumeIdx = -1; resumeAt = 0;
   audio.src = tracks[i].url;
+  if(at > 2) audio.addEventListener('loadedmetadata', () => { audio.currentTime = Math.min(at, (audio.duration || at + 1) - 1); }, { once: true });
   audio.play().catch(() => {});
   $('#srcl').textContent = 'DISC';
   $('#trk').textContent = '-' + String(i+1).padStart(2,'0');
@@ -926,7 +930,7 @@ function playStation(st, label){
   $('#srcl').textContent = 'RADIO'; $('#trk').textContent = label;
   setTitle(`${st.name} ── ${st.genre}`);
   flash(`${label}  ${st.short}`, 1200);
-  mediaMeta(); updateUI(); startMeta();
+  mediaMeta(); updateUI(); startMeta(); saveState();
 }
 function tune(ch){
   radioCh = (ch + STATIONS.length) % STATIONS.length; store.set('radioCh', radioCh);
@@ -1930,8 +1934,24 @@ function frame(now){
 }
 
 /* ---------------- boot ---------------- */
-setSkin(ORDER[0], false); setIllum(illum, false); setVol(vol, false); installState(); renderList();
+/* ---------------- remember where we were: source, track and position survive closing the app ---------------- */
+let resumeIdx = -1, resumeAt = 0;
+function saveState(){
+  store.set('src', mode === 'radio' ? 'radio' : 'disc');
+  if(mode === 'file' && tracks[idx]) store.set('last', { key: tracks[idx].key, t: Math.floor(audio.currentTime || 0) });
+}
+setInterval(() => { if(mode === 'file' && !audio.paused) saveState(); }, 5000);
+document.addEventListener('visibilitychange', () => { if(document.hidden) saveState(); });
+window.addEventListener('pagehide', saveState);
+audio.addEventListener('pause', saveState);
+function restoreRadio(){                         // back on the radio, ready to play with ▶ (phones need a tap before sound)
+  mode = 'radio'; radioNow = STATIONS[radioCh]; presetLabels(true);
+  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = 'P' + (radioCh + 1);
+  setTitle(`${radioNow.name} ── ${radioNow.genre}`); updateUI();
+}
+setSkin(SKINS.includes(skin) ? skin : ORDER[0], false); setIllum(illum, false);   // reopen on the last display setVol(vol, false); installState(); renderList();
 renderMarq(titleText); fit(); setWeather(weatherMode, false);
+if(store.get('src', 'disc') === 'radio') restoreRadio();
 loadLibrary();
 if(document.fonts) document.fonts.ready.then(() => { if(!flashT) renderMarq(titleText); });
 requestAnimationFrame(frame);
