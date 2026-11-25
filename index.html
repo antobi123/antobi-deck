@@ -1670,14 +1670,32 @@ function drawVFDTurntable(dt){
   const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); };
   const line = (x0, y0, x1, y1, c) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); for(let i=0;i<=n;i++) dot(x0 + (x1 - x0)*i/(n || 1), y0 + (y1 - y0)*i/(n || 1), c); };
   vbg.fillStyle = K; vbg.fillRect(0, 0, VB_C, VB_R);
-  // the window: night outside with the moon, stars and a sleeping town
+  // the window follows the real clock (sunrise/sunset shift with the season, like VFD BEACH):
+  // a striped sun rising or setting behind the town, a high sun with drifting clouds by day, the moon and stars at night
   const wx0 = 8, wx1 = 70, wy0 = 3, wy1 = 30;
-  [[16,7],[27,5],[45,9],[33,12],[52,6]].forEach(([x, y], i) => { if(Math.sin(ttT*1.2 + i*1.9) > .1) dot(x, y, G); });
-  for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) dot(60 + x, 8 + y, A);
+  const wdot = (x, y, c) => { if(x > wx0 && x < wx1 && y > wy0 && y < wy1) dot(x, y, c); };
+  const h = vbHour(), doy = vbDayOfYear();
+  const dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365), rise = 11.6 - dayLen/2, set = 11.6 + dayLen/2;
+  const day = h >= rise && h < set;
+  const p = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*p);
+  const low = day && el < .3, bx = 14 + p*50, by = 27 - el*21;
+  const starsOn = day ? Math.max(0, 1 - el*3.5) : 1;
+  [[16,7],[27,5],[45,9],[33,12],[52,6],[22,11],[62,10]].forEach(([x, y], i) => { if(i < Math.round(7*starsOn) && Math.sin(ttT*1.2 + i*1.9) > .1) wdot(x, y, G); });
+  if(low){                                                         // sunrise / sunset: big striped sun low over the town
+    for(let y=-6;y<=6;y++) for(let x=-6;x<=6;x++) if(x*x + y*y <= 36 && ((Math.round(by + y) + Math.floor(ttT*1.4)) % 3 !== 0 || y < -2)) wdot(bx + x, by + y, A);
+  } else if(day){                                                  // daytime: small sun with twinkling rays, clouds drifting by
+    for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5) wdot(bx + x, by + y, A);
+    for(let k=0;k<8;k++){ if((k + Math.floor(ttT*2)) % 2) continue; const a = k*Math.PI/4; wdot(bx + Math.cos(a)*4.5, by + Math.sin(a)*4.5, A); }
+    [[0, 7, 12], [34, 12, 9]].forEach(([o, y, w]) => { const x = wx0 + ((o + ttT*1.5) % (wx1 - wx0 + w)) - w/2; for(let i=0;i<w;i+=2) wdot(x + i, y, G); for(let i=3;i<w-2;i+=2) wdot(x + i, y - 1, G); });
+  } else {                                                         // night: the crescent moon
+    for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) wdot(bx + x, by + y, A);
+  }
+  const litOver = low ? .78 : day ? .94 : .6;                      // fewer windows lit by day, most at night
   [[9,24,6],[16,21,7],[24,25,5],[30,20,6],[37,23,8],[46,19,6],[53,24,7],[61,22,8]].forEach(([x, top, w], j) => {
+    vbg.fillStyle = K; vbg.fillRect(x, top, w, wy1 - top);         // buildings hide the sun behind them
     for(let y=top;y<=wy1;y++){ dot(x, y, G); dot(x + w - 1, y, G); }
     for(let i=0;i<w;i++) dot(x + i, top, G);
-    for(let y=top+2;y<wy1;y+=2) for(let i=2;i<w-1;i+=2){ const s = Math.sin((x + i)*12.9 + y*7.3 + Math.floor(ttT*.25 + j)*3.1)*43758.5; if(s - Math.floor(s) > .6) dot(x + i, y, A); }
+    for(let y=top+2;y<wy1;y+=2) for(let i=2;i<w-1;i+=2){ const s = Math.sin((x + i)*12.9 + y*7.3 + Math.floor(ttT*.25 + j)*3.1)*43758.5; if(s - Math.floor(s) > litOver) dot(x + i, y, A); }
   });
   for(let x=wx0;x<=wx1;x++){ dot(x, wy0, G); dot(x, wy1, G); dot(x, 16, G); }   // frame and mullions
   for(let y=wy0;y<=wy1;y++){ dot(wx0, y, G); dot(wx1, y, G); dot(39, y, G); }
