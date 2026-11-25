@@ -642,6 +642,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-beep="vib">振動</button>
           <button class="chip" data-beep="both">ピッ＋振動</button>
         </div>
+        <div class="eqs"><label>VOLUME<input type="range" id="beepVol" min="5" max="100" step="5" value="45"><b id="beepVolV">45</b></label></div>
         <p class="rnote">デッキのボタンを押したときに、カーステのような「ピッ」という音や短い振動を返します。はじめは「ピッ」（振動は Android のみ）。</p>
       </section>
       <section data-tab="music" id="listSec">
@@ -767,7 +768,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）</dd>
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
-            <dt>夜のディマー</dt><dd>AUTO だと日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます</dd>
+            <dt>夜のディマー</dt><dd>はじめは OFF。AUTO にすると日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます</dd>
             <dt>オープニング演出</dt><dd>アプリを開いたときの起動演出（約3秒）。タップで飛ばせます。OFF にもできます</dd>
             <dt>パネルの色</dt><dd>本体の色（VOLUME・SEEK のボタンと ANTOBi のバッジも同じ色味に）。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面とお店のロゴの画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
@@ -810,8 +811,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
-            <dt>音量をそろえる</dt><dd>ON にすると、曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。初めての曲は20秒ほどで調整</dd>
-            <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動</dd>
+            <dt>音量をそろえる</dt><dd>はじめから ON。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。初めての曲は20秒ほどで調整</dd>
+            <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
         </div>
@@ -2807,7 +2808,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125172440';                                 // stamped by build.ps1
+const APP_VER = '20261125173019';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2936,9 +2937,9 @@ document.querySelectorAll('#bandChips .chip').forEach(b => b.addEventListener('c
 if(band !== 0) setBand(band); else document.querySelectorAll('#bandChips .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.band === '0'));
 
 /* ---------------- 操作音: a short beep and/or a tap of vibration on every key ---------------- */
-let beepMode = store.get('beep', 'beep'), bctx = null;   // the beep is on from the start
+let beepMode = store.get('beep2', 'beep'), bctx = null, beepVol = +store.get('beepVol', 45);   // beepVol 5-100   // the beep is on from the start
 function setBeep(m, announce){
-  beepMode = m; store.set('beep', m);
+  beepMode = m; if(announce) store.set('beep2', m);   // saved only when you choose it, so a new default reaches everyone
   document.querySelectorAll('#beepChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.beep === m));
   if(announce){ keyFeedback(); flash('BEEP  ' + ({off: 'OFF', beep: 'ON', both: 'ON + VIBRATION', vib: 'VIBRATION'})[m], 900); }
 }
@@ -2949,7 +2950,7 @@ function keyFeedback(){
       bctx = bctx || new (window.AudioContext || window.webkitAudioContext)();
       if(bctx.state !== 'running') bctx.resume();
       const o = bctx.createOscillator(), gn = bctx.createGain(), t = bctx.currentTime;
-      o.type = 'square'; o.frequency.value = 2200; gn.gain.setValueAtTime(.045, t); gn.gain.exponentialRampToValueAtTime(.0001, t + .05);
+      o.type = 'square'; o.frequency.value = 2200; gn.gain.setValueAtTime(Math.max(.002, .1*beepVol/100), t); gn.gain.exponentialRampToValueAtTime(.0001, t + .05);
       o.connect(gn); gn.connect(bctx.destination); o.start(t); o.stop(t + .06);
     }catch(e){}
   }
@@ -2958,12 +2959,16 @@ function keyFeedback(){
 document.addEventListener('pointerdown', e => { if(e.target.closest('.deck .k, .deck .rk button, .deck .bar')) keyFeedback(); }, true);
 document.querySelectorAll('#beepChips .chip').forEach(b => b.addEventListener('click', () => setBeep(b.dataset.beep, true)));
 setBeep(['off', 'beep', 'vib', 'both'].includes(beepMode) ? beepMode : 'beep', false);
+// beep volume slider
+$('#beepVol').value = beepVol; $('#beepVolV').textContent = beepVol;
+$('#beepVol').addEventListener('input', e => { beepVol = +e.target.value; store.set('beepVol', beepVol); $('#beepVolV').textContent = beepVol; });
+$('#beepVol').addEventListener('change', () => { if(beepMode === 'beep' || beepMode === 'both') keyFeedback(); });   // a sample beep at the new level
 
 /* ---------------- 音量をそろえる: learn each song's (and station's) loudness and even it out ---------------- */
-let normOn = store.get('norm', false), normMap = store.get('normMap', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
+let normOn = store.get('norm2', true), normMap = store.get('normMap', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
 const NORM_TARGET = -19;                                // average loudness the songs are brought to (dBFS RMS)
 function setNorm(v, announce){
-  normOn = v; store.set('norm', v);
+  normOn = v; if(announce) store.set('norm2', v);
   document.querySelectorAll('#normChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.norm === '1') === v));
   normApply(); if(announce) flash(v ? 'AUTO LEVEL  ON' : 'AUTO LEVEL  OFF', 900);
 }
@@ -3059,7 +3064,14 @@ function bootText(){                                       // the words, drawn o
   const x = bootTxt.getContext('2d'); x.clearRect(0, 0, VB_C, VB_R);
   x.textAlign = 'center'; x.textBaseline = 'middle';
   x.fillStyle = '#f00'; x.font = '900 19px "Arial Black", Arial, sans-serif'; x.fillText('ANTOBi', VB_C/2, 17);
-  x.fillStyle = '#0f0'; x.font = 'bold 9px Arial, sans-serif'; x.fillText('ATB-900MJ', VB_C/2, 33);
+  // the model name in a real 5x7 dot font, so every letter stays readable on the matrix
+  const F57 = { A: ['01110','10001','10001','11111','10001','10001','10001'], T: ['11111','00100','00100','00100','00100','00100','00100'],
+    B: ['11110','10001','10001','11110','10001','10001','11110'], '-': ['00000','00000','00000','11111','00000','00000','00000'],
+    9: ['01110','10001','10001','01111','00001','00010','01100'], 0: ['01110','10001','10011','10101','11001','10001','01110'],
+    M: ['10001','11011','10101','10101','10001','10001','10001'], J: ['00111','00010','00010','00010','00010','10010','01100'] };
+  const word = 'ATB-900MJ', x0 = Math.round((VB_C - word.length*6 + 1)/2);
+  x.fillStyle = '#0f0';
+  [...word].forEach((c, k) => F57[c].forEach((row, r) => { for(let b=0;b<5;b++) if(row[b] === '1') x.fillRect(x0 + k*6 + b, 30 + r, 1, 1); }));
   return x.getImageData(0, 0, VB_C, VB_R).data;
 }
 let bootPx = null;
@@ -3106,7 +3118,7 @@ setBoot(bootOn, false);
 if(bootOn) setTimeout(() => flash('WELCOME', 1800), 600);
 
 /* ---------------- night dimmer: like a car's display dimming with the headlights, from sunset to sunrise ---------------- */
-var dimMode = store.get('dimmer', 'auto');
+var dimMode = store.get('dimmer2', 'off');
 function dimNow(){
   if(dimMode === 'on') return true; if(dimMode !== 'auto') return false;
   const h = vbHour(), doy = vbDayOfYear(), dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365);
@@ -3114,12 +3126,12 @@ function dimNow(){
 }
 function applyDim(){ root.classList.toggle('dimmed', dimNow()); }
 function setDimmer(m, announce){
-  dimMode = m; store.set('dimmer', m);
+  dimMode = m; if(announce) store.set('dimmer2', m);
   document.querySelectorAll('#dimChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.dim === m));
   applyDim(); if(announce) flash('DIMMER  ' + ({auto: 'AUTO', on: 'ON', off: 'OFF'})[m], 900);
 }
 document.querySelectorAll('#dimChips .chip').forEach(b => b.addEventListener('click', () => setDimmer(b.dataset.dim, true)));
-setDimmer(['auto', 'on', 'off'].includes(dimMode) ? dimMode : 'auto', false);
+setDimmer(['auto', 'on', 'off'].includes(dimMode) ? dimMode : 'off', false);
 setInterval(applyDim, 60e3);
 function drawMine(dt){
   const ks = mineKeys();
@@ -3130,7 +3142,7 @@ function drawMine(dt){
 /* 省電力モード: 15 frames a second and no glow halo. おやすみモード (sleep timer): screen dimmed and power-saving,
    the last minute fades the sound out, then it stops. 目覚まし (alarm): at the set time it starts the radio or the playlist
    and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
-let eco = !!store.get('eco', true), sleepEnd = 0, slept = false, alarmOn = !!store.get('alarm', false), alarmRing = 0;
+let eco = !!store.get('eco2', true), sleepEnd = 0, slept = false, alarmOn = !!store.get('alarm', false), alarmRing = 0;
 let alarmTime = store.get('alarmTime', '07:00'), alarmSrc = store.get('alarmSrc', 'radio'), alarmFired = '';
 const ecoNow = () => eco || sleepEnd > 0 || sleepAtEnd || slept || (alarmOn && !alarmRing);
 const shade = document.createElement('div');
@@ -3142,7 +3154,7 @@ function setShade(){
 }
 shade.addEventListener('click', () => { slept = false; setShade(); });
 function setEco(v, announce){
-  eco = v; store.set('eco', v);
+  eco = v; if(announce) store.set('eco2', v);
   document.querySelectorAll('#ecoChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.eco === '1') === v));
   if(announce) flash(v ? 'ECO  ON' : 'ECO  OFF', 900);
 }
