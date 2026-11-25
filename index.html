@@ -2118,9 +2118,10 @@ const shuf = {cur: null, next: null, t: 0, fading: false, grid: null};
 const shA = document.createElement('canvas'), sha = shA.getContext('2d');
 const shB = document.createElement('canvas'), shb = shB.getContext('2d');
 const shM = document.createElement('canvas'), shm = shM.getContext('2d');
-function shufPick(){ const keys = Object.keys(LOGOS).filter(k => k !== shuf.cur); return keys[Math.floor(Math.random()*keys.length)]; }
+function shufPick(){ const keys = Object.keys(LOGOS).filter(k => k !== shuf.cur && k !== shuf.next); return keys[Math.floor(Math.random()*keys.length)]; }
 function shufStart(){
-  shuf.next = shufPick(); shuf.fading = true; shuf.t = 0; shuf.grid = null;
+  shuf.next = shuf.queued || shufPick(); shuf.queued = null; shuf.fading = true; shuf.t = 0; shuf.grid = null;
+  logoReady(LOGOS[shuf.next]);
   flash('♪ ' + SKIN_NAME[shuf.next].replace(/^VFD /, ''), 2600);
 }
 function drawShuffle(dt){
@@ -2156,7 +2157,7 @@ function drawShuffle(dt){
     const by = q*H - 10, beam = g.createLinearGradient(0, by - 18, 0, by + 18);   // soft scan beam
     beam.addColorStop(0, 'rgba(255,255,255,0)'); beam.addColorStop(.5, `rgba(255,255,255,${.22*(1 - p)})`); beam.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = beam; g.fillRect(0, by - 18, W, 36);
-    if(p >= 1){ shuf.cur = shuf.next; shuf.next = null; shuf.fading = false; shuf.t = 0; }
+    if(p >= 1){ shuf.cur = shuf.next; shuf.next = null; shuf.fading = false; shuf.t = 0; shuf.queued = shufPick(); logoReady(LOGOS[shuf.queued]); }   // start loading the one after, so it is ready in time
   }
   drawSpectrumFront(st);
 }
@@ -2679,7 +2680,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125162348';                                 // stamped by build.ps1
+const APP_VER = '20261125162414';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
