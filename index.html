@@ -662,7 +662,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">MY PHOTO</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">電力・タイマー</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">電力・タイマー</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
@@ -767,7 +767,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </dl>
         </div>
         <div class="hpage" data-h="photo" hidden>
-          <h3>MY PHOTO（⚙「マイ フォト」）</h3>
+          <h3>マイ フォト（ディスプレイ「MY PHOTO」）</h3>
           <ol class="hsteps">
             <li>⚙「マイ フォト」で、1〜5 の枠の「＋ 画像を選ぶ」をタップして写真やロゴを選ぶ<br><small>選んだ画像はプレビューで確認できます。画像をタップすると差し替え</small></li>
             <li>枠の下のボタンで<b>「使う」／「使わない」</b>を切り替え<br><small>「使わない」にしても画像は残るので、あとでまた使えます</small></li>
@@ -2787,7 +2787,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125171101';                                 // stamped by build.ps1
+const APP_VER = '20261125171551';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
