@@ -270,7 +270,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="inds">
           <span class="ind" id="iSt">ST</span><span class="ind" id="iLoud">LOUD</span><span class="ind" id="iAtt">ATT</span>
-          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iAuto">AUTO</span><span class="ind" id="iLock">LOCK</span>
+          <span class="ind" id="iRdm">RDM</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span>
         </div>
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
@@ -311,7 +311,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <span class="lbl c" style="left:325px;top:420px">RDM</span>
       <span class="lbl c" style="left:397px;top:420px">REP</span>
       <span class="lbl c" style="left:469px;top:420px">LOUD</span>
-      <span class="lbl c" style="left:541px;top:420px">DEMO</span>
+      <span class="lbl c" style="left:541px;top:420px">SPEC</span>
       <button class="k" id="p1" style="left:150px;top:434px;width:62px;height:26px">1</button>
       <button class="k" id="p2" style="left:222px;top:434px;width:62px;height:26px">2</button>
       <button class="k" id="p3" style="left:294px;top:434px;width:62px;height:26px">3</button>
@@ -427,9 +427,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>はじめに</h3>
           <ol class="hsteps">
             <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません</small></li>
-            <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">6</b> でデモ曲が鳴ります</small></li>
+            <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">SRC</b> でラジオが聴けます</small></li>
             <li><b class="kb">DISP</b> か画面タップで、ディスプレイの柄を切り替え</li>
-            <li><b class="kb">SRC</b> で <b>DISC → RADIO → DEMO</b> を切り替え</li>
+            <li><b class="kb">SRC</b> で <b>DISC ⇄ RADIO</b> を切り替え</li>
           </ol>
         </div>
         <div class="hpage" data-h="play" hidden>
@@ -448,7 +448,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
             <dt>RADIO</dt><dd>ネットラジオ。1〜6 のボタンが放送局になる。右上の時間表示は今の時刻に。曲名を公開している局は ♪ 曲名 が流れる</dd>
-            <dt>DEMO</dt><dd>内蔵のデモ曲</dd>
           </dl>
           <h3 style="margin-top:16px">局を入れ替えるには</h3>
           <ol class="hsteps">
@@ -460,13 +459,13 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="keys" hidden>
           <h3>1〜6 ボタン</h3>
           <table class="htab">
-            <tr><th></th><th>DISC・DEMO 中</th></tr>
+            <tr><th></th><th>DISC 中</th></tr>
             <tr><td>1</td><td>SCROLL　曲名のスクロール表示 ON/OFF</td></tr>
             <tr><td>2</td><td>SCN　イントロスキャン（各曲の頭10秒ずつ）</td></tr>
             <tr><td>3</td><td>RDM　ランダム再生</td></tr>
             <tr><td>4</td><td>REP　リピート（全曲 → 1曲 → オフ）</td></tr>
             <tr><td>5</td><td>LOUD　ラウドネス（低音と高音を持ち上げる）</td></tr>
-            <tr><td>6</td><td>DEMO　デモ曲の再生／停止</td></tr>
+            <tr><td>6</td><td>SPEC　スペアナの種類を切り替え</td></tr>
           </table>
           <p style="margin-top:12px"><b>RADIO 中</b>は 1〜6 がプリセット局になり、ボタンの上の文字も局名に変わります。長押しで今の局を登録できます。</p>
         </div>
@@ -522,7 +521,7 @@ let vol = store.get('vol', 28), att = false;
 let loud = store.get('loud', false), shuffle = store.get('shuffle', false), repeat = store.get('repeat', 'all');
 let scroll = store.get('scroll', true), scan = false;
 const tracks = []; let idx = -1;
-let mode = 'idle'; // idle | file | demo
+let mode = 'idle'; // idle | file | radio
 const audio = new Audio(); audio.crossOrigin = 'anonymous'; audio.preload = 'auto'; audio.setAttribute('playsinline','');
 
 /* ---------------- saved library (IndexedDB) ---------------- */
@@ -563,73 +562,8 @@ const volGain = v => Math.pow(v/40, 2);
 function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1), AC.currentTime, .03); try{ plain.volume = Math.min(1, volGain(vol) * (att ? .1 : 1)); }catch(e){} }
 function applyLoud(){ if(!lowS) return; lowS.gain.value = loud ? 9 : 0; highS.gain.value = loud ? 6 : 0; }
 
-/* ---------------- demo synth (Am - F - C - G) ---------------- */
-const demo = { on:false, timer:null, step:0, next:0, bus:null, dly:null, noise:null, t0:0, acc:0 };
-const BPM = 92, S16 = 60/BPM/4;
-const PROG = [[45,3],[41,4],[48,4],[43,4]];
-const mtof = m => 440*Math.pow(2,(m-69)/12);
-function buildDemo(){
-  demo.bus = AC.createGain(); demo.bus.gain.value = .85;
-  const pan = AC.createStereoPanner ? AC.createStereoPanner() : AC.createGain();
-  demo.bus.connect(pan); pan.connect(lowS);
-  demo.dly = AC.createDelay(1); demo.dly.delayTime.value = S16*3;
-  const fb = AC.createGain(); fb.gain.value = .38;
-  const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2200;
-  const wet = AC.createGain(); wet.gain.value = .5;
-  const wp = AC.createStereoPanner ? AC.createStereoPanner() : AC.createGain(); if(wp.pan) wp.pan.value = .5;
-  demo.dly.connect(lp); lp.connect(fb); fb.connect(demo.dly); lp.connect(wet); wet.connect(wp); wp.connect(lowS);
-  const len = AC.sampleRate; const b = AC.createBuffer(1, len, AC.sampleRate); const d = b.getChannelData(0);
-  for(let i=0;i<len;i++) d[i] = Math.random()*2-1; demo.noise = b;
-}
-function tone(f, t, dur, type, peak, {pan=0, send=false, atk=.006, cut=2600, cutEnd=600}={}){
-  const o = AC.createOscillator(); o.type = type; o.frequency.value = f;
-  const fl = AC.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.setValueAtTime(cut, t); fl.frequency.exponentialRampToValueAtTime(cutEnd, t+dur);
-  const a = AC.createGain(); a.gain.setValueAtTime(.0001, t); a.gain.exponentialRampToValueAtTime(peak, t+atk); a.gain.exponentialRampToValueAtTime(.0001, t+dur);
-  o.connect(fl); fl.connect(a);
-  let out = a;
-  if(AC.createStereoPanner){ const p = AC.createStereoPanner(); p.pan.value = pan; a.connect(p); out = p; }
-  out.connect(demo.bus); if(send) out.connect(demo.dly);
-  o.start(t); o.stop(t+dur+.05);
-}
-function noiseHit(t, hp, peak, dur){
-  const s = AC.createBufferSource(); s.buffer = demo.noise;
-  const f = AC.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = hp;
-  const a = AC.createGain(); a.gain.setValueAtTime(peak, t); a.gain.exponentialRampToValueAtTime(.0001, t+dur);
-  s.connect(f); f.connect(a); a.connect(demo.bus); s.start(t, Math.random()*.5); s.stop(t+dur+.02);
-}
-function kick(t){
-  const o = AC.createOscillator(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t+.13);
-  const a = AC.createGain(); a.gain.setValueAtTime(.95, t); a.gain.exponentialRampToValueAtTime(.0001, t+.34);
-  o.connect(a); a.connect(demo.bus); o.start(t); o.stop(t+.36);
-}
-const ARP = [0,1,2,3,4,3,2,1, 0,2,1,3,2,4,5,3];
-function playStep(s, t){
-  const bar = Math.floor(s/16) % 4, st = s % 16;
-  const [r, third] = PROG[bar];
-  const ch = [0, third, 7, 12, 12+third, 19];
-  tone(mtof(r+24+ch[ARP[st]]), t, S16*1.6, 'sawtooth', .07, {pan: st%2 ? .45 : -.45, send:true, cut:3200, cutEnd:700});
-  if(st % 2 === 0) tone(mtof(r + (st===6||st===14 ? 12 : 0)), t, S16*1.8, 'triangle', .32, {cut:900, cutEnd:300});
-  if(st === 0) [0, third, 7].forEach((iv,k) => tone(mtof(r+12+iv)*(1+(k-1)*.003), t, S16*15, 'sawtooth', .022, {atk:.5, cut:1400, cutEnd:500, pan:(k-1)*.6}));
-  if(st===0 || st===8 || st===10) kick(t);
-  if(st===4 || st===12){ noiseHit(t, 1400, .32, .18); tone(190, t, .1, 'triangle', .2, {cut:2000, cutEnd:800}); }
-  if(st % 2 === 1) noiseHit(t, 7500, .07, .04);
-  if(st === 14) noiseHit(t, 6500, .06, .22);
-}
-function sched(){ while(demo.next < AC.currentTime + .14){ playStep(demo.step, demo.next); demo.next += S16; demo.step++; } }
-function startDemo(){
-  if(mode === 'radio') leaveRadio();
-  ensureAudio(); if(!demo.bus) buildDemo();
-  audio.pause(); mode = 'demo';
-  demo.on = true; demo.next = AC.currentTime + .06; demo.t0 = AC.currentTime - demo.acc;
-  clearInterval(demo.timer); demo.timer = setInterval(sched, 25);
-  $('#srcl').textContent = 'DEMO'; $('#trk').textContent = '-01';
-  setTitle('MIDNIGHT HIGHWAY ── 真夜中の高速、ラジオから流れる知らない曲');
-  renderList(); wake(true);
-}
-function stopDemo(keep){ if(!demo.on) return; clearInterval(demo.timer); demo.on = false; if(AC) demo.acc = keep ? AC.currentTime - demo.t0 : 0; updateUI(); }
-
 /* ---------------- playback ---------------- */
-function isActive(){ return (mode === 'file' && !audio.paused) || (mode === 'radio' && !radioEl().paused) || (mode === 'demo' && demo.on); }
+function isActive(){ return (mode === 'file' && !audio.paused) || (mode === 'radio' && !radioEl().paused); }
 /* ---------------- song tags: title / artist / album / cover from MP3 (ID3), M4A/AAC (MP4) and FLAC ---------------- */
 const tdec = (enc, b) => { try{ return new TextDecoder(enc).decode(b); }catch(e){ return ''; } };
 const tclean = s => (s || '').replace(/\0+$/, '').replace(/\0/g, ' / ').trim();
@@ -798,7 +732,7 @@ async function loadLibrary(){
 }
 function playIndex(i){
   if(!tracks[i]) return;
-  ensureAudio(); stopDemo(false);
+  ensureAudio();
   idx = i; mode = 'file'; presetLabels(false);
   audio.src = tracks[i].url;
   audio.play().catch(() => {});
@@ -812,8 +746,7 @@ function togglePlay(){
   ensureAudio();
   if(mode === 'radio'){ if(radioEl().paused){ if(radioNow) playStation(radioNow, $('#trk').textContent); else tune(radioCh); } else { audio.pause(); plain.pause(); } updateUI(); return; }
   if(mode === 'file'){ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); }
-  else if(mode === 'demo'){ demo.on ? stopDemo(true) : startDemo(); }
-  else if(tracks.length) playIndex(Math.max(0, idx)); else startDemo();
+  else if(tracks.length) playIndex(Math.max(0, idx)); else flash('NO DISC  ▲ DISC LOAD', 1500);
   updateUI();
 }
 function step(dir, auto){
@@ -833,7 +766,7 @@ audio.addEventListener('pause', () => { updateUI(); wake(false); });
 audio.addEventListener('error', () => { if(mode === 'file') flash('READ ERROR', 1500); });
 
 /* ---------------- display text ---------------- */
-let titleText = 'INSERT DISC ── ▲ DISC LOAD で曲を入れてね ── ▶ でデモ再生', flashT = 0;
+let titleText = 'INSERT DISC ── ▲ DISC LOAD で曲を入れてね ── SRC でラジオ', flashT = 0;
 function setTitle(t){ titleText = t; if(!flashT) renderMarq(t); }
 function flash(msg, ms){ clearTimeout(flashT); renderMarq(msg, true); flashT = setTimeout(() => { flashT = 0; renderMarq(titleText); }, ms); }
 function renderMarq(t, still){
@@ -853,10 +786,10 @@ function updateUI(){
   const on = isActive();
   $('#playIcon').innerHTML = on ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4v16l13-8z"/>';
   const ind = (id, v) => $(id).classList.toggle('on', !!v);
-  ind('#iSt', on); ind('#iLoud', loud); ind('#iAtt', att); ind('#iRdm', shuffle); ind('#iRep', repeat !== 'off'); ind('#iScn', scan); ind('#iAuto', mode === 'demo');
+  ind('#iSt', on); ind('#iLoud', loud); ind('#iAtt', att); ind('#iRdm', shuffle); ind('#iRep', repeat !== 'off'); ind('#iScn', scan);
   $('#iRep').textContent = repeat === 'one' ? 'REP1' : 'REP';
   const key = (id, v) => $(id).classList.toggle('on', !!v);
-  key('#p1', scroll); key('#p2', scan); key('#p3', shuffle); key('#p4', repeat !== 'off'); key('#p5', loud); key('#p6', mode === 'demo' && demo.on); key('#attBtn', att);
+  key('#p1', scroll); key('#p2', scan); key('#p3', shuffle); key('#p4', repeat !== 'off'); key('#p5', loud); key('#p6', false); key('#attBtn', att);
   if(mode === 'radio') ['#p1','#p2','#p3','#p4','#p5','#p6'].forEach((id, i) => key(id, !!radioNow && STATIONS[i].url === radioNow.url));
 }
 function renderList(){
@@ -955,7 +888,7 @@ const DEFAULT_STATIONS = [   // 1-3 hip-hop, 4-6 soul; each checked to play with
 let STATIONS = DEFAULT_STATIONS.map((d, i) => { const s = (store.get('presets', []) || [])[i]; return s && s.url ? s : {...d}; });
 let radioCh = store.get('radioCh', 0); if(!STATIONS[radioCh]) radioCh = 0;
 let radioNow = null;            // the station on air (a preset or a search result being tried)
-const presetLbls = [...document.querySelectorAll('.lbl')].filter(l => ['SCROLL','SCN','RDM','REP','LOUD','DEMO'].includes(l.textContent));
+const presetLbls = [...document.querySelectorAll('.lbl')].filter(l => ['SCROLL','SCN','RDM','REP','LOUD','SPEC'].includes(l.textContent));
 const presetFn = presetLbls.map(l => l.textContent);
 function presetLabels(radio){ presetLbls.forEach((l, i) => l.textContent = radio ? STATIONS[i].short : presetFn[i]); }
 const shortName = n => {   // a short button label: the first meaningful word that fits in 6 letters
@@ -969,7 +902,7 @@ const plain = new Audio(); plain.preload = 'none'; plain.setAttribute('playsinli
 let radioPlain = false;
 const radioEl = () => radioPlain ? plain : audio;
 function playStation(st, label){
-  ensureAudio(); stopDemo(false);
+  ensureAudio();
   mode = 'radio'; scan = false; radioNow = st; presetLabels(true);
   plain.pause(); plain.removeAttribute('src'); radioPlain = false;
   audio.src = st.url; audio.play().catch(() => {});
@@ -1143,14 +1076,11 @@ on('#ruAdd', () => {
   $('#ruMsg').textContent = `${slot + 1} に登録しました`; flash(`MEMORY  P${slot + 1}`, 1200);
 });
 renderPresets();
-on('#srcBtn', () => {            // SRC: DISC → RADIO → DEMO → DISC
+on('#srcBtn', () => {            // SRC: DISC ⇄ RADIO
   ensureAudio();
-  const cur = mode === 'radio' ? 'radio' : mode === 'demo' ? 'demo' : 'disc';
-  const next = {disc:'radio', radio:'demo', demo:'disc'}[cur];
-  if(next === 'radio'){ audio.pause(); tune(radioCh); }
-  else if(next === 'demo'){ leaveRadio(); startDemo(); flash('SOURCE  DEMO', 900); }
+  if(mode !== 'radio'){ audio.pause(); tune(radioCh); }
   else {
-    leaveRadio(); stopDemo(false);
+    leaveRadio();
     if(tracks.length){ playIndex(Math.max(0, idx)); flash('SOURCE  DISC', 900); }
     else { mode = 'idle'; $('#srcl').textContent = 'DISC'; setTitle('NO DISC ── ▲ DISC LOAD で曲を入れてね'); updateUI(); flash('SOURCE  DISC', 900); }
   }
@@ -1160,7 +1090,7 @@ on('#p2', () => { if(mode === 'radio'){ tune(2 - 1); return; } if(mode !== 'file
 on('#p3', () => { if(mode === 'radio'){ tune(3 - 1); return; } shuffle = !shuffle; store.set('shuffle', shuffle); flash(shuffle ? 'RANDOM  ON' : 'RANDOM  OFF', 900); updateUI(); });
 on('#p4', () => { if(mode === 'radio'){ tune(4 - 1); return; } repeat = {all:'one', one:'off', off:'all'}[repeat]; store.set('repeat', repeat); flash({all:'REPEAT  ALL', one:'REPEAT  1', off:'REPEAT  OFF'}[repeat], 900); updateUI(); });
 on('#p5', () => { if(mode === 'radio'){ tune(5 - 1); return; } loud = !loud; store.set('loud', loud); applyLoud(); flash(loud ? 'LOUDNESS  ON' : 'LOUDNESS  OFF', 900); updateUI(); });
-on('#p6', () => { if(mode === 'radio'){ tune(6 - 1); return; } if(mode === 'demo' && demo.on) stopDemo(true); else startDemo(); });
+on('#p6', () => { if(mode === 'radio'){ tune(6 - 1); return; } setSpec(SPECS[(SPECS.indexOf(spec) + 1) % SPECS.length], true); });   // 6 = SPEC: next spectrum style
 
 function holdRepeat(el, fn){
   el.querySelectorAll('button').forEach(b => {
@@ -1725,7 +1655,6 @@ function frame(now){
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'radio'){ cur = radioEl().currentTime; }
-  else if(mode === 'demo' && AC){ cur = demo.on ? AC.currentTime - demo.t0 : demo.acc; }
   if(scan && mode === 'file' && !audio.paused && cur >= 10) step(1, true);
   if(mode === 'radio'){   // on RADIO the time shows the clock, colon blinking like a car stereo
     const d = new Date();
