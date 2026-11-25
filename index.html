@@ -54,6 +54,7 @@
 :root[data-skin="vfdyuji"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdnote"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdtower"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdmine"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdshuffle"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 
 
@@ -135,7 +136,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfddrive"] .disp::before, :root[data-skin="vfdclub"] .disp::before, :root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfdroom"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfdmine"] .disp::before, :root[data-skin="vfddrive"] .disp::before, :root[data-skin="vfdclub"] .disp::before, :root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfdroom"] .disp::before, :root[data-skin="vfddx"] .disp::before, :root[data-skin="vfdasahi"] .disp::before, :root[data-skin="vfdfrisco"] .disp::before, :root[data-skin="vfdpen"] .disp::before, :root[data-skin="vfdmellow"] .disp::before, :root[data-skin="vfdsea"] .disp::before, :root[data-skin="vfdbeat"] .disp::before, :root[data-skin="vfdhmv"] .disp::before, :root[data-skin="vfdnext"] .disp::before, :root[data-skin="vfdface"] .disp::before, :root[data-skin="vfdunion"] .disp::before, :root[data-skin="vfdyuji"] .disp::before, :root[data-skin="vfdnote"] .disp::before, :root[data-skin="vfdtower"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -321,6 +322,18 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 #updBar{position:fixed; z-index:950; left:50%; top:10px; transform:translateX(-50%); display:flex; align-items:center; gap:10px; padding:8px 10px 8px 16px; border-radius:999px; background:#14151a; border:1px solid var(--illum); box-shadow:0 0 18px var(--illumglow); color:var(--fg); font:700 13px var(--font-ui); white-space:nowrap}
 #updBar button{border:0; border-radius:999px; padding:6px 12px; font:700 12px var(--font-ui); background:var(--illum); color:#06070a}
 #updBar #updLater{background:transparent; color:var(--muted); padding:6px 8px}
+#plist li{display:flex; align-items:center; gap:4px}
+#plist li > button:first-child{flex:1; min-width:0}
+#plist button.del{flex:none; width:auto; display:block; padding:8px 10px; border:1px solid var(--line); border-radius:8px; color:var(--muted); font:700 12px var(--font-ui); background:#0c0d11}
+#plist button.del.arm{color:#fff; background:#a3262b; border-color:#ff6b6b}
+#alarmUI{position:fixed; inset:0; z-index:960; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; background:rgba(2,3,6,.86)}
+#alarmUI .at{font:64px/1 var(--font-seg); color:var(--illum); text-shadow:0 0 18px var(--illumglow); letter-spacing:.06em}
+#alarmUI .ab{display:flex; gap:18px}
+#alarmUI button{min-width:150px; padding:18px 22px; border-radius:18px; border:2px solid var(--illum); background:#101217; color:var(--fg); font:800 22px var(--font-print); letter-spacing:.12em; box-shadow:0 0 22px var(--illumglow)}
+#alarmUI button small{display:block; margin-top:6px; font:600 12px var(--font-ui); letter-spacing:0; color:var(--muted)}
+#alarmUI #alarmStop{background:var(--illum); color:#06070a}
+#alarmUI #alarmStop small{color:#06070a; opacity:.7}
+.sw.vfdmine{background:radial-gradient(circle at 50% 38%,#ffd9a8 0 4px,transparent 5px),radial-gradient(ellipse at 50% 95%,#ffd9a8 0 9px,transparent 10px),repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.35) 2px 3px),#021311}
 </style>
 
 <div class="stage" id="stage">
@@ -435,6 +448,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdyuji"><span class="sw logo"></span>YUJI CAFE</button>
           <button class="chip" data-skin="vfdnote"><span class="sw logo"></span>Note</button>
           <button class="chip" data-skin="vfdtower"><span class="sw logo"></span>TOWER RECORDS</button>
+          <button class="chip" data-skin="vfdmine"><span class="sw vfdmine"></span>MY PHOTO<small>自分の画像</small></button>
           <button class="chip" data-skin="vfdshuffle"><span class="sw shuffle"></span>SHUFFLE<small>ランダム</small></button>
         </div>
       </section>
@@ -505,6 +519,22 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
       </section>
+      <section data-tab="look">
+        <h3>MY PHOTO（自分の画像）</h3>
+        <div class="row" style="display:flex; gap:8px; flex-wrap:wrap">
+          <label class="pbtn pri" style="cursor:pointer">画像を選ぶ<input type="file" id="myImgFile" accept="image/*" hidden></label>
+          <button class="pbtn" id="myImgClear">消す</button>
+        </div>
+        <p class="rnote" id="myImgState">まだ画像がありません</p>
+        <p class="rnote">好きな写真やロゴを選ぶと、ディスプレイ「MY PHOTO」で蛍光管のドットのように光ります。画像はこの端末の中だけに保存されます。</p>
+      </section>
+      <section data-tab="look">
+        <h3>時計</h3>
+        <div class="chips" id="clockChips">
+          <button class="chip" data-c12="0">24時間</button>
+          <button class="chip" data-c12="1">12時間（AM/PM）</button>
+        </div>
+      </section>
       <section data-tab="night">
         <h3>省電力モード</h3>
         <div class="chips" id="ecoChips">
@@ -567,6 +597,24 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <p class="rnote">曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません。</p>
       </section>
+      <section data-tab="sound">
+        <h3>音量をそろえる</h3>
+        <div class="chips" id="normChips">
+          <button class="chip" data-norm="0">OFF</button>
+          <button class="chip" data-norm="1">ON</button>
+        </div>
+        <p class="rnote">曲ごと（ラジオは局ごと）の音の大きさを覚えて、大きすぎる曲は下げ、小さい曲は上げます。初めての曲は流れ始めて20秒ほどで調整されます。</p>
+      </section>
+      <section data-tab="sound">
+        <h3>操作音</h3>
+        <div class="chips" id="beepChips">
+          <button class="chip" data-beep="off">OFF</button>
+          <button class="chip" data-beep="beep">ピッ</button>
+          <button class="chip" data-beep="vib">振動</button>
+          <button class="chip" data-beep="both">ピッ＋振動</button>
+        </div>
+        <p class="rnote">デッキのボタンを押したときに、カーステのような「ピッ」という音や短い振動を返します（振動は Android のみ）。</p>
+      </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
         <div class="row">
@@ -578,6 +626,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="radio">
         <h3>ラジオ プリセット</h3>
+        <div class="chips" id="bandChips" style="margin-bottom:10px"><button class="chip" data-band="0">FM1</button><button class="chip" data-band="1">FM2</button><button class="chip" data-band="2">FM3</button></div>
         <ol id="presetList"></ol>
         <div class="rsearch"><input id="rq" type="search" placeholder="ジャンル・局名で検索（hiphop, soul, jazz…）" enterkeyhint="search"><button class="pbtn" id="rqBtn">検索</button></div>
         <p class="rnote" id="rqMsg">世界のネットラジオを検索できます（radio-browser.info）。</p>
@@ -612,7 +661,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません</small></li>
             <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">SRC</b> でラジオが聴けます</small></li>
             <li><b class="kb">DISP</b> か画面タップで、ディスプレイの柄を切り替え</li>
-            <li><b class="kb">SRC</b> で <b>DISC ⇄ RADIO</b> を切り替え</li>
+            <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
           </ol>
           <h3 style="margin-top:16px">覚えておくと便利</h3>
           <ul class="hsteps">
@@ -630,6 +679,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>一番下のバー</dt><dd>曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
             <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）</dd>
+            <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
             <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
           </dl>
         </div>
@@ -637,7 +687,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>SRC・ラジオ</h3>
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
-            <dt>RADIO</dt><dd>ネットラジオ。1〜6 のボタンが放送局になる。曲名を公開している局は ♪ 曲名 が流れる</dd>
+            <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。曲名を公開している局は ♪ 曲名 が流れる</dd>
+            <dt>空きのボタン</dt><dd>FM2・FM3 ははじめ空き（----）。聴いている局を 1〜6 の<b>長押し</b>で登録するか、⚙「ラジオ」で FM2・FM3 を選んでから検索して登録</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
             <dt>聴いた曲の履歴</dt><dd>流れた曲名は ⚙「ラジオ」タブの「聴いた曲の履歴」に100曲まで残ります。「コピー」で曲名をコピー、「検索」で YouTube を開けます</dd>
           </dl>
@@ -674,6 +725,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
             <dt>パネルの色</dt><dd>本体の色（VOLUME・SEEK のボタンと ANTOBi のバッジも同じ色味に）。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面とお店のロゴの画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
+            <dt>時計</dt><dd>右上の時計を24時間か12時間（AM/PM）で</dd>
+            <dt>MY PHOTO</dt><dd>⚙「表示」→「画像を選ぶ」で、好きな写真やロゴがディスプレイ「MY PHOTO」でドット風に光ります</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
           </dl>
         </div>
@@ -688,6 +741,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>お店のロゴ</dt><dd>レコード屋さんなどのロゴが光ります</dd>
+            <dt>MY PHOTO</dt><dd>自分で選んだ画像の画面（⚙「表示」で設定。SHUFFLE には入りません）</dd>
             <dt>SHUFFLE</dt><dd>お店のロゴ14種類から、16秒ごとにランダムで切り替わります（同じロゴは続きません）</dd>
           </dl>
         </div>
@@ -696,6 +750,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
+            <dt>音量をそろえる</dt><dd>ON にすると、曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。初めての曲は20秒ほどで調整</dd>
+            <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ・振動・ピッ＋振動</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
         </div>
@@ -712,7 +768,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に</dd>
             <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面タップで明るく戻ります</dd>
-            <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなります。毎日同じ時刻に鳴ります</dd>
+            <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります</dd>
           </dl>
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
           <ol class="hsteps">
@@ -757,11 +813,11 @@ const store = {
 };
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdshuffle'], SKIN_NAME = {vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdmine','vfdshuffle'], SKIN_NAME = {vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
-const ADDED = ['vfdrec', 'vfdtape', 'vfdroom', 'vfdclub', 'vfddrive'];                       // displays added later, oldest first
+const ADDED = ['vfdrec', 'vfdtape', 'vfdroom', 'vfdclub', 'vfddrive', 'vfdmine'];                       // displays added later, oldest first
 const DEFAULTS = ADDED.map((_, k) => SKINS.filter(s => !ADDED.slice(k).includes(s)));
 DEFAULTS.push(['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb' && !ADDED.includes(s))]);   // the very first default (VFD first)
 if(ORDER.length && DEFAULTS.some(d => ORDER.join() === d.slice(0, ORDER.length).join())) ORDER = [];
@@ -786,11 +842,12 @@ const DB = {
   add(rec){ return this.req('readwrite', s => s.add(rec)); },
   put(rec){ return this.req('readwrite', s => s.put(rec)); },
   all(){ return this.req('readonly', s => s.getAll()); },
+  del(id){ return this.req('readwrite', s => s.delete(id)); },
   clear(){ return this.req('readwrite', s => s.clear()); }
 };
 
 /* ---------------- audio graph ---------------- */
-let AC, master, analyser, anL, anR, lowS, highS, mediaSrc, freq, tdL, tdR, eqB, eqM, eqT, fadeG, xSrc, xG;
+let AC, master, analyser, anL, anR, lowS, highS, mediaSrc, freq, tdL, tdR, eqB, eqM, eqT, fadeG, xSrc, xG, normG, normAn;
 function ensureAudio(){
   if(AC){ if(AC.state !== 'running') AC.resume().catch(() => {}); return; }   // iPhone leaves it 'interrupted' after the background
   AC = new (window.AudioContext || window.webkitAudioContext)();
@@ -804,7 +861,7 @@ function ensureAudio(){
   eqB = AC.createBiquadFilter(); eqB.type = 'lowshelf'; eqB.frequency.value = 120;      // the EQ (⚙ サウンド)
   eqM = AC.createBiquadFilter(); eqM.type = 'peaking'; eqM.frequency.value = 1200; eqM.Q.value = .8;
   eqT = AC.createBiquadFilter(); eqT.type = 'highshelf'; eqT.frequency.value = 7000;
-  lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); eqT.connect(master);
+  lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); normG = AC.createGain(); normAn = AC.createAnalyser(); normAn.fftSize = 2048; eqT.connect(normG); normG.connect(master); eqT.connect(normAn);   // normG: 音量をそろえる
   master.connect(analyser); analyser.connect(AC.destination);
   master.connect(split); split.connect(anL, 0); split.connect(anR, 1);
   mediaSrc = AC.createMediaElementSource(audio); fadeG = AC.createGain(); mediaSrc.connect(fadeG); fadeG.connect(lowS);   // fadeG: fades the new song in
@@ -1011,7 +1068,7 @@ function togglePlay(){
   updateUI();
 }
 function step(dir, auto){
-  if(mode === 'radio'){ tune(radioCh + dir); return; }
+  if(mode === 'radio'){ tuneNext(dir); return; }
   if(mode !== 'file' || !tracks.length){ flash(tracks.length ? 'PRESS SRC' : 'NO DISC', 900); return; }
   if(!auto && dir < 0 && audio.currentTime > 3){ audio.currentTime = 0; return; }
   let n;
@@ -1066,7 +1123,9 @@ function renderList(){
     const tb = document.createElement('b'); tb.textContent = t.title || t.name; nm.append(tb);
     if(t.artist || t.album){ const sm = document.createElement('small'); sm.textContent = [t.artist, t.album].filter(Boolean).join(' · '); nm.append(sm); }
     b.append(n, cv, nm); b.addEventListener('click', () => { playIndex(i); closeSheet(); });
-    li.append(b); ul.append(li);
+    const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕'; del.setAttribute('aria-label', 'この曲を外す');
+    del.addEventListener('click', e => { e.stopPropagation(); if(!del.classList.contains('arm')){ del.classList.add('arm'); del.textContent = '外す？'; setTimeout(() => { del.classList.remove('arm'); del.textContent = '✕'; }, 3000); return; } removeTrack(i); });
+    li.append(b, del); ul.append(li);
   });
   updateUI();
 }
@@ -1173,8 +1232,10 @@ function playStation(st, label){
   mediaMeta(); updateUI(); startMeta(); saveState();
 }
 function tune(ch){
+  ch = (ch + STATIONS.length) % STATIONS.length;
+  if(!STATIONS[ch].url){ radioCh = ch; store.set('radioCh', ch); flash(chLabel(ch) + '  EMPTY', 1200); return; }
   radioCh = (ch + STATIONS.length) % STATIONS.length; store.set('radioCh', radioCh);
-  playStation(STATIONS[radioCh], 'P' + (radioCh + 1));
+  playStation(STATIONS[radioCh], chLabel(radioCh));
 }
 function leaveRadio(){
   if(mode !== 'radio') return;
@@ -1183,8 +1244,8 @@ function leaveRadio(){
 }
 function savePreset(i, st){
   STATIONS[i] = { short: (st.short || shortName(st.name)).slice(0, 6), name: st.name, genre: st.genre || '', url: st.url };
-  store.set('presets', STATIONS);
-  if(mode === 'radio'){ presetLabels(true); if(radioNow && radioNow.url === st.url){ radioCh = i; store.set('radioCh', i); $('#trk').textContent = 'P' + (i + 1); } }
+  store.set(bandKey(band), STATIONS);
+  if(mode === 'radio'){ presetLabels(true); if(radioNow && radioNow.url === st.url){ radioCh = i; store.set('radioCh', i); $('#trk').textContent = chLabel(i); } }
   renderPresets(); updateUI();
 }
 audio.addEventListener('error', () => {
@@ -1367,13 +1428,13 @@ function renderPresets(){
   const ol = $('#presetList'); ol.innerHTML = '';
   STATIONS.forEach((s, i) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span class="rpn">${i + 1}</span><span class="rpt"><b></b><small></small></span><button data-a="play" aria-label="聴く">▶</button><button data-a="name">名前</button><button data-a="reset">初期</button>`;
+    li.innerHTML = `<span class="rpn">${i + 1}</span><span class="rpt"><b></b><small></small></span><button data-a="play" aria-label="聴く">▶</button><button data-a="name">名前</button><button data-a="reset">${band === 0 ? '初期' : '消す'}</button>`;
     li.querySelector('b').textContent = s.short; li.querySelector('small').textContent = s.name + (s.genre ? ' · ' + s.genre : '');
     li.addEventListener('click', e => {
       const a = e.target.dataset && e.target.dataset.a; if(!a) return;
-      if(a === 'play'){ tune(i); }
+      if(a === 'play'){ if(s.url) tune(i); else flash(chLabel(i) + '  EMPTY', 900); }
       else if(a === 'name'){ const v = prompt('ボタンに出す名前（6文字まで）', s.short); if(v && v.trim()){ savePreset(i, {...s, short: v.trim().toUpperCase()}); } }
-      else if(a === 'reset'){ savePreset(i, DEFAULT_STATIONS[i]); flash(`P${i + 1}  RESET`, 900); }
+      else if(a === 'reset'){ savePreset(i, band === 0 ? DEFAULT_STATIONS[i] : EMPTY_ST); flash(chLabel(i) + (band === 0 ? '  RESET' : '  CLEAR'), 900); }
     });
     ol.append(li);
   });
@@ -1426,9 +1487,10 @@ on('#ruAdd', () => {
   $('#ruMsg').textContent = `${slot + 1} に登録しました`; flash(`MEMORY  P${slot + 1}`, 1200);
 });
 renderPresets();
-on('#srcBtn', () => {            // SRC: DISC ⇄ RADIO
+on('#srcBtn', () => {            // SRC: DISC → FM1 → FM2 → FM3 → DISC
   ensureAudio();
-  if(mode !== 'radio'){ audio.pause(); tune(radioCh); }
+  if(mode !== 'radio'){ audio.pause(); setBand(0); enterBand(); }
+  else if(band < 2){ setBand(band + 1); enterBand(); }
   else {
     leaveRadio();
     if(tracks.length){ playIndex(Math.max(0, idx)); flash('SOURCE  DISC', 900); }
@@ -1453,7 +1515,7 @@ function holdRepeat(el, fn){
 }
 holdRepeat($('#volRk'), d => setVol(vol + d, true));
 holdRepeat($('#seekRk'), d => {
-  if(mode === 'radio'){ tune(radioCh + d); return; }
+  if(mode === 'radio'){ tuneNext(d); return; }
   if(mode !== 'file' || !audio.duration){ flash('DISC ONLY', 700); return; }
   audio.currentTime = Math.max(0, Math.min(audio.duration - .5, audio.currentTime + d*10));
   flash((d > 0 ? '▶▶ ' : '◀◀ ') + fmt(audio.currentTime), 700);
@@ -2070,13 +2132,14 @@ const LOGOS = {   // 'native' = the image keeps its own colors; the last value i
   vfdpen: makeLogo(PENINSULA_SRC, false, 'native', '#3ddc4a'), vfdmellow: makeLogo(MELLOW_SRC, false, 'native', '#ffd21a'), vfdsea: makeLogo(SEA_SRC, false, 'native', '#4fb6e0'),
   vfdbeat: makeLogo(BEATBOOM_SRC, false, WHITE_TUBE), vfdhmv: makeLogo(HMV_SRC, false, 'native', '#ff3d8b'), vfdnext: makeLogo(NEXT_SRC, false, 'native', '#ffa21f'),
   vfdface: makeLogo(FACE_SRC, false, 'native', WHITE_TUBE), vfdunion: makeLogo(UNION_SRC, false, 'native', '#ff2a2a'), vfdyuji: makeLogo(YUJI_SRC, false, 'native', '#2fd06a'),
-  vfdnote: makeLogo(NOTE_SRC, false, 'native', WHITE_TUBE), vfdtower: makeLogo(TOWER_SRC, false, 'native', '#ffd21a')
+  vfdnote: makeLogo(NOTE_SRC, false, 'native', WHITE_TUBE), vfdtower: makeLogo(TOWER_SRC, false, 'native', '#ffd21a'),
+  vfdmine: makeLogo('', false, 'native', WHITE_TUBE)   // MY PHOTO: the picture is set from ⚙ 表示
 };
 // the ⚙ panel swatches take each logo's color
 document.querySelectorAll('#skinChips .chip').forEach(b => { const L = LOGOS[b.dataset.skin], sw = b.querySelector('.sw'); if(!L || !sw) return; sw.className = 'sw logo' + (L.color === 'rainbow' || b.dataset.skin === 'vfdasahi' ? ' rainbow' : ''); if(L.color !== 'rainbow') sw.style.setProperty('--c', L.glow || L.color); });
 function logoCol(L){ return L.color === 'rainbow' ? `hsl(${Math.round(T*24) % 360},100%,62%)` : L.color === 'native' ? L.glow : (L.color || C.lit2); }
 function logoReady(L){
-  if(!L.img.getAttribute('src')) L.img.src = L.img.dataset.src;
+  if(!L.img.getAttribute('src') && L.img.dataset.src) L.img.src = L.img.dataset.src;
   if(!(L.img.complete && L.img.naturalWidth)) return false;
   const col = logoCol(L);
   if(L.color === 'native'){ if(!L.key){ L.key = 'native'; L.cv.width = L.img.naturalWidth; L.cv.height = L.img.naturalHeight; L.cx.drawImage(L.img, 0, 0); } }
@@ -2123,7 +2186,7 @@ const shuf = {cur: null, next: null, t: 0, fading: false, grid: null};
 const shA = document.createElement('canvas'), sha = shA.getContext('2d');
 const shB = document.createElement('canvas'), shb = shB.getContext('2d');
 const shM = document.createElement('canvas'), shm = shM.getContext('2d');
-function shufPick(){ const keys = Object.keys(LOGOS).filter(k => k !== shuf.cur && k !== shuf.next); return keys[Math.floor(Math.random()*keys.length)]; }
+function shufPick(){ const keys = Object.keys(LOGOS).filter(k => k !== shuf.cur && k !== shuf.next && k !== 'vfdmine'); return keys[Math.floor(Math.random()*keys.length)]; }
 function shufStart(){
   shuf.next = shuf.queued || shufPick(); shuf.queued = null; shuf.fading = true; shuf.t = 0; shuf.grid = null;
   logoReady(LOGOS[shuf.next]);
@@ -2685,7 +2748,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125164049';                                 // stamped by build.ps1
+const APP_VER = '20261125164915';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2698,6 +2761,154 @@ function checkUpdate(){
 }
 document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });
 setInterval(checkUpdate, 30*60e3); setTimeout(checkUpdate, 8000);
+/* ---------------- 曲: remove a single song (two taps on its ✕) ---------------- */
+async function removeTrack(i){
+  const t = tracks[i]; if(!t) return;
+  const wasCur = i === idx && mode === 'file';
+  if(wasCur){ audio.pause(); audio.removeAttribute('src'); audio.load(); }
+  URL.revokeObjectURL(t.url); if(t.cover) URL.revokeObjectURL(t.cover);
+  known.delete(t.key); tracks.splice(i, 1);
+  if(t.id != null) await DB.del(t.id);
+  if(i < idx) idx--;
+  if(!tracks.length){ idx = -1; if(mode === 'file') mode = 'idle'; $('#trk').textContent = '-00'; setTitle('NO DISC ── ▲ DISC LOAD で曲を入れてね'); }
+  else if(wasCur){ idx = Math.min(i, tracks.length - 1); $('#trk').textContent = '-' + String(idx + 1).padStart(2, '0'); setTitle(trackLabel(tracks[idx])); }
+  renderList(); flash('REMOVED', 900);
+}
+
+/* ---------------- 目覚まし: STOP / SNOOZE ---------------- */
+var snoozeAt = 0;
+const alarmUI = document.createElement('div'); alarmUI.id = 'alarmUI'; alarmUI.hidden = true;
+alarmUI.innerHTML = '<div class="at" id="alarmUITime"></div><div class="ab"><button id="alarmSnooze">SNOOZE<small>5分後にもう一度</small></button><button id="alarmStop">STOP<small>止める</small></button></div>';
+document.body.appendChild(alarmUI);
+function showAlarmUI(){ const d = new Date(); $('#alarmUITime').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); alarmUI.hidden = false; }
+function alarmQuiet(){ audio.pause(); try{ plain.pause(); }catch(e){} alarmRing = 0; sleepFade = 1; applyVol(); alarmUI.hidden = true; setShade(); updateUI(); }
+$('#alarmStop').addEventListener('click', () => { snoozeAt = 0; alarmQuiet(); flash('ALARM  STOP', 1200); });
+$('#alarmSnooze').addEventListener('click', () => { snoozeAt = Date.now() + 5*60e3; alarmQuiet(); flash('SNOOZE  5MIN', 1500); });
+setInterval(() => { if(snoozeAt && Date.now() >= snoozeAt){ snoozeAt = 0; ringAlarm(); } }, 1000);
+
+/* ---------------- ラジオ: bands FM1 / FM2 / FM3, six presets each ---------------- */
+const EMPTY_ST = { short: '----', name: '(空き)', genre: '', url: '' };
+var band = +store.get('band', 0) || 0; if(band < 0 || band > 2) band = 0;
+const bandKey = b => b === 0 ? 'presets' : 'presets' + (b + 1);
+function bandStations(b){
+  if(b === 0) return DEFAULT_STATIONS.map((d, i) => { const s = (store.get('presets', []) || [])[i]; return s && s.url ? s : {...d}; });
+  const saved = store.get(bandKey(b), []) || [];
+  return [0, 1, 2, 3, 4, 5].map(i => saved[i] && saved[i].url ? saved[i] : {...EMPTY_ST});
+}
+const chLabel = i => `FM${band + 1}-${i + 1}`;
+function setBand(b){
+  band = b; store.set('band', b); STATIONS = bandStations(b);
+  document.querySelectorAll('#bandChips .chip').forEach(x => x.setAttribute('aria-pressed', +x.dataset.band === b));
+  if(mode === 'radio') presetLabels(true);
+  renderPresets(); updateUI();
+}
+const firstFilled = () => STATIONS.findIndex(s => s.url);
+function bandEmpty(){                                   // a band with nothing stored yet
+  audio.pause(); try{ plain.pause(); }catch(e){} stopMeta();
+  mode = 'radio'; radioNow = null; presetLabels(true);
+  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = 'FM' + (band + 1);
+  setTitle(`FM${band + 1} ── まだ局がありません。⚙「ラジオ」で検索して 1〜6 に登録してね`); updateUI(); saveState();
+}
+function enterBand(){
+  const i = STATIONS[radioCh] && STATIONS[radioCh].url ? radioCh : firstFilled();
+  if(i >= 0) tune(i); else { bandEmpty(); flash('FM' + (band + 1) + '  EMPTY', 1200); }
+}
+function tuneNext(dir){
+  for(let k=1;k<=6;k++){ const i = ((radioCh + dir*k) % 6 + 6) % 6; if(STATIONS[i].url){ tune(i); return; } }
+  flash('FM' + (band + 1) + '  EMPTY', 1200);
+}
+document.querySelectorAll('#bandChips .chip').forEach(b => b.addEventListener('click', () => setBand(+b.dataset.band)));
+if(band !== 0) setBand(band); else document.querySelectorAll('#bandChips .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.band === '0'));
+
+/* ---------------- 操作音: a short beep and/or a tap of vibration on every key ---------------- */
+let beepMode = store.get('beep', 'off'), bctx = null;
+function setBeep(m, announce){
+  beepMode = m; store.set('beep', m);
+  document.querySelectorAll('#beepChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.beep === m));
+  if(announce){ keyFeedback(); flash('BEEP  ' + ({off: 'OFF', beep: 'ON', both: 'ON + VIBRATION', vib: 'VIBRATION'})[m], 900); }
+}
+function keyFeedback(){
+  if(beepMode === 'off') return;
+  if(beepMode === 'beep' || beepMode === 'both'){
+    try{
+      bctx = bctx || new (window.AudioContext || window.webkitAudioContext)();
+      if(bctx.state !== 'running') bctx.resume();
+      const o = bctx.createOscillator(), gn = bctx.createGain(), t = bctx.currentTime;
+      o.type = 'square'; o.frequency.value = 2200; gn.gain.setValueAtTime(.045, t); gn.gain.exponentialRampToValueAtTime(.0001, t + .05);
+      o.connect(gn); gn.connect(bctx.destination); o.start(t); o.stop(t + .06);
+    }catch(e){}
+  }
+  if((beepMode === 'vib' || beepMode === 'both') && navigator.vibrate) try{ navigator.vibrate(12); }catch(e){}
+}
+document.addEventListener('pointerdown', e => { if(e.target.closest('.deck .k, .deck .rk button, .deck .bar')) keyFeedback(); }, true);
+document.querySelectorAll('#beepChips .chip').forEach(b => b.addEventListener('click', () => setBeep(b.dataset.beep, true)));
+setBeep(['off', 'beep', 'vib', 'both'].includes(beepMode) ? beepMode : 'off', false);
+
+/* ---------------- 音量をそろえる: learn each song's (and station's) loudness and even it out ---------------- */
+let normOn = store.get('norm', false), normMap = store.get('normMap', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
+const NORM_TARGET = -19;                                // average loudness the songs are brought to (dBFS RMS)
+function setNorm(v, announce){
+  normOn = v; store.set('norm', v);
+  document.querySelectorAll('#normChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.norm === '1') === v));
+  normApply(); if(announce) flash(v ? 'AUTO LEVEL  ON' : 'AUTO LEVEL  OFF', 900);
+}
+function normCurKey(){ return mode === 'file' && tracks[idx] ? 'f:' + tracks[idx].key : mode === 'radio' && radioNow ? 'r:' + radioNow.url : ''; }
+function normApply(){
+  if(!normG) return;
+  const db = normOn && normMap[normKey] != null ? normMap[normKey] : 0;
+  normG.gain.setTargetAtTime(Math.pow(10, db/20), AC.currentTime, .6);
+}
+[audio, plain].forEach(el => el.addEventListener('playing', () => { const k = normCurKey(); if(k !== normKey){ normKey = k; normAcc = 0; normN = 0; } normApply(); }));
+setInterval(() => {                                      // listen for ~20 s of music per song, then settle its gain
+  if(!normOn || !normAn || !isActive() || radioPlain || !normKey || normMap[normKey] != null && normN === 0) return;
+  if(!normBuf) normBuf = new Float32Array(normAn.fftSize);
+  normAn.getFloatTimeDomainData(normBuf);
+  let s = 0; for(let i=0;i<normBuf.length;i++) s += normBuf[i]*normBuf[i];
+  const db = 10*Math.log10(s/normBuf.length + 1e-12);
+  if(db < -50) return;                                  // skip silence
+  normAcc += Math.pow(10, db/10); normN++;
+  if(normN >= 80){                                      // 80 × 250 ms
+    const avg = 10*Math.log10(normAcc/normN), gain = Math.max(-9, Math.min(9, NORM_TARGET - avg));
+    normMap[normKey] = Math.round(gain*10)/10; normN = 0; normAcc = 0;
+    const keys = Object.keys(normMap); if(keys.length > 400) delete normMap[keys[0]];
+    store.set('normMap', normMap); normApply();
+  }
+}, 250);
+document.querySelectorAll('#normChips .chip').forEach(b => b.addEventListener('click', () => setNorm(b.dataset.norm === '1', true)));
+setNorm(!!normOn, false);
+
+/* ---------------- 時計: 24-hour or 12-hour ---------------- */
+let clock12 = !!store.get('clock12', false);
+function setClock12(v, announce){
+  clock12 = v; store.set('clock12', v);
+  document.querySelectorAll('#clockChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.c12 === '1') === v));
+  if(announce) flash(v ? 'CLOCK  12H' : 'CLOCK  24H', 900);
+}
+function clockText(d){
+  const h = d.getHours(), colon = d.getMilliseconds() < 500 ? ':' : ' ', m = String(d.getMinutes()).padStart(2, '0');
+  return clock12 ? (h < 12 ? 'AM' : 'PM') + ' ' + (h % 12 || 12) + colon + m : h + colon + m;
+}
+document.querySelectorAll('#clockChips .chip').forEach(b => b.addEventListener('click', () => setClock12(b.dataset.c12 === '1', true)));
+setClock12(clock12, false);
+
+/* ---------------- MY PHOTO: your own picture glowing on the dot matrix like the shop logos ---------------- */
+function myPhotoSet(url){
+  const L = LOGOS.vfdmine; L.img.removeAttribute('src'); L.img.dataset.src = url || ''; L.key = '';
+  $('#myImgState').textContent = url ? '設定済み。ディスプレイの「MY PHOTO」で表示されます' : 'まだ画像がありません';
+}
+$('#myImgFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if(!f) return;
+  try{
+    const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(f); });
+    const s = Math.min(1, 360/Math.max(img.naturalWidth, img.naturalHeight)), cv = document.createElement('canvas');
+    cv.width = Math.max(1, Math.round(img.naturalWidth*s)); cv.height = Math.max(1, Math.round(img.naturalHeight*s));
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(img.src);
+    const url = cv.toDataURL('image/jpeg', .85);
+    store.set('myImg', url); myPhotoSet(url); setSkin('vfdmine', true);
+  }catch(err){ $('#myImgState').textContent = 'この画像は読み込めませんでした'; }
+});
+$('#myImgClear').addEventListener('click', () => { store.set('myImg', ''); myPhotoSet(''); flash('MY PHOTO  CLEARED', 900); });
+myPhotoSet(store.get('myImg', ''));
 /* 省電力モード: 15 frames a second and no glow halo. おやすみモード (sleep timer): screen dimmed and power-saving,
    the last minute fades the sound out, then it stops. 目覚まし (alarm): at the set time it starts the radio or the playlist
    and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
@@ -2737,7 +2948,7 @@ function alarmLeftText(){
   const m = Math.round((t - now)/60000); $('#alarmLeft').textContent = 'あと ' + Math.floor(m/60) + '時間' + (m % 60) + '分';
 }
 function setAlarm(v, announce){
-  alarmOn = v; store.set('alarm', v); if(!v){ alarmRing = 0; sleepFade = sleepEnd ? sleepFade : 1; applyVol(); }
+  alarmOn = v; store.set('alarm', v); if(!v){ snoozeAt = 0; alarmRing = 0; sleepFade = sleepEnd ? sleepFade : 1; applyVol(); }
   document.querySelectorAll('#alarmChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.alarm === '1') === v));
   $('#iAlm').classList.toggle('on', v); alarmLeftText(); setShade(); keepAwake();
   if(announce) flash(v ? 'ALARM  ' + alarmTime : 'ALARM  OFF', 1200);
@@ -2762,7 +2973,8 @@ function ringAlarm(){
   alarmRing = Date.now(); slept = false; sleepEnd = 0; sleepChipsOff();
   sleepFade = 0; applyVol(); setShade();
   if(alarmSrc === 'disc' && tracks.length){ leaveRadio(); playIndex(Math.max(0, idx)); }
-  else tune(radioCh);
+  else { if(!(STATIONS[radioCh] && STATIONS[radioCh].url)){ const i = firstFilled(); if(i >= 0) radioCh = i; else setBand(0); } tune(radioCh); }
+  showAlarmUI();
   flash('GOOD MORNING', 4000);
 }
 setInterval(() => {
@@ -2976,7 +3188,7 @@ function frame(now){
   // top right: always the clock (colon blinking like a car stereo), with the date, weekday and weather under it;
   // the playing time sits at the right end of the seek bar (none on the radio)
   const d = new Date();
-  $('#time').textContent = d.getHours() + (d.getMilliseconds() < 500 ? ':' : ' ') + String(d.getMinutes()).padStart(2, '0');
+  $('#time').textContent = clockText(d);
   const pt = mode === 'radio' ? '' : fmt(cur); if(pt !== frame.pt){ frame.pt = pt; $('#ptime').textContent = pt; }
   const dk = d.getDate() + ':' + wxCode + ':' + (d.getHours() >= 6 && d.getHours() < 18); if(dk !== frame.dk){ frame.dk = dk; dateLine(d); }
   if(d.getSeconds() % 30 === 0) wxUpdate();
@@ -2996,8 +3208,9 @@ document.addEventListener('visibilitychange', () => { if(document.hidden) saveSt
 window.addEventListener('pagehide', saveState);
 audio.addEventListener('pause', saveState);
 function restoreRadio(){                         // back on the radio, ready to play with ▶ (phones need a tap before sound)
+  if(!(STATIONS[radioCh] && STATIONS[radioCh].url)){ bandEmpty(); return; }
   mode = 'radio'; radioNow = STATIONS[radioCh]; presetLabels(true);
-  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = 'P' + (radioCh + 1);
+  $('#srcl').textContent = 'RADIO'; $('#trk').textContent = chLabel(radioCh);
   setTitle(`${radioNow.name} ── ${radioNow.genre}`); updateUI();
 }
 setSkin(SKINS.includes(skin) ? skin : ORDER[0], false); setIllum(illum, false);   // reopen on the last display setVol(vol, false); installState(); renderList();
