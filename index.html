@@ -39,9 +39,6 @@
 :root[data-skin="vfdtape"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdroom"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdclub"]{ --lit:#4fb4ff; --lit2:#ff3fd0; --dimt:rgba(190,80,255,.14); --glow:rgba(130,100,255,.6); --screen:#0c0218; }
-:root[data-skin="vfdclub"][data-clubc="blue"]{ --lit:#9fe8ff; --lit2:#3f7bff; --dimt:rgba(60,120,255,.16); --glow:rgba(80,150,255,.6); --screen:#020a24; }
-:root[data-skin="vfdclub"][data-clubc="red"]{ --lit:#ffd24f; --lit2:#ff3a3a; --dimt:rgba(255,60,60,.13); --glow:rgba(255,90,60,.55); --screen:#1a0204; }
-:root[data-skin="vfdclub"][data-clubc="green"]{ --lit:#c8ff7a; --lit2:#20d98a; --dimt:rgba(40,220,140,.13); --glow:rgba(60,230,150,.55); --screen:#01140c; }
 :root[data-skin="vfddx"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdasahi"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdfrisco"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
@@ -265,6 +262,11 @@ dl.help dd{margin:0; color:#c9cad2}
 ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; color:#c9cad2}
 #file{position:absolute; width:1px; height:1px; opacity:0; pointer-events:none}
 @media (prefers-reduced-motion: reduce){ #marq.run{animation:none} }
+/* display colour (⚙ 表示): overrides every display's tube colours; logos keep their own */
+:root[data-skin][data-dcolor="purple"]{ --lit:#4fb4ff; --lit2:#ff3fd0; --dimt:rgba(190,80,255,.14); --glow:rgba(130,100,255,.6); --screen:#0c0218; }
+:root[data-skin][data-dcolor="blue"]{ --lit:#9fe8ff; --lit2:#3f7bff; --dimt:rgba(60,120,255,.16); --glow:rgba(80,150,255,.6); --screen:#020a24; }
+:root[data-skin][data-dcolor="red"]{ --lit:#ffd24f; --lit2:#ff3a3a; --dimt:rgba(255,60,60,.13); --glow:rgba(255,90,60,.55); --screen:#1a0204; }
+:root[data-skin][data-dcolor="green"]{ --lit:#c8ff7a; --lit2:#20d98a; --dimt:rgba(40,220,140,.13); --glow:rgba(60,230,150,.55); --screen:#01140c; }
 </style>
 
 <div class="stage" id="stage">
@@ -406,8 +408,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
       </section>
       <section data-tab="look">
-        <h3>CLUB の色</h3>
+        <h3>ディスプレイの色</h3>
         <div class="chips" id="clubChips">
+          <button class="chip" data-clubc="std"><span class="sw" style="background:linear-gradient(0deg,#5ff6e6 0 40%,#ffa24a 40% 46%,#021311 46%)"></span>標準</button>
           <button class="chip" data-clubc="purple"><span class="sw" style="background:linear-gradient(0deg,#4fb4ff 0 40%,#ff3fd0 40% 46%,#0c0218 46%)"></span>パープル</button>
           <button class="chip" data-clubc="blue"><span class="sw" style="background:linear-gradient(0deg,#9fe8ff 0 40%,#3f7bff 40% 46%,#020a24 46%)"></span>ブルー</button>
           <button class="chip" data-clubc="red"><span class="sw" style="background:linear-gradient(0deg,#ffd24f 0 40%,#ff3a3a 40% 46%,#1a0204 46%)"></span>レッド</button>
@@ -2114,17 +2117,19 @@ function setPet(p, announce){
 }
 document.querySelectorAll('#petChips .chip').forEach(b => b.addEventListener('click', () => setPet(b.dataset.pet, true)));
 setPet(pet, false);
-/* CLUB colour: purple (default), blue, red or green; it re-reads the tube colours and rebuilds the dim grid */
-const CLUB_COLORS = ['purple', 'blue', 'red', 'green'];
-let clubColor = store.get('clubc', 'purple'); if(!CLUB_COLORS.includes(clubColor)) clubColor = 'purple';
-function setClubColor(c, announce){
-  clubColor = c; store.set('clubc', c); root.dataset.clubc = c;
+/* display colour: 標準 keeps each display's own colours; purple / blue / red / green recolour every display's tubes
+   (the record-shop logos keep their own colours, their spectrum follows). CLUB on 標準 is purple. */
+const DCOLORS = ['std', 'purple', 'blue', 'red', 'green'];
+let dcolor = store.get('dcolor', 'std'); if(!DCOLORS.includes(dcolor)) dcolor = 'std';
+function setDColor(c, announce){
+  dcolor = c; store.set('dcolor', c);
+  if(c === 'std') delete root.dataset.dcolor; else root.dataset.dcolor = c;
   document.querySelectorAll('#clubChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.clubc === c));
   readColors(); vbKey = '';
-  if(announce && skin === 'vfdclub') flash('CLUB  ' + c.toUpperCase(), 900);
+  if(announce) flash('COLOR  ' + (c === 'std' ? 'STANDARD' : c.toUpperCase()), 900);
 }
-document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setClubColor(b.dataset.clubc, true)));
-setClubColor(clubColor, false);
+document.querySelectorAll('#clubChips .chip').forEach(b => b.addEventListener('click', () => setDColor(b.dataset.clubc, true)));
+setDColor(dcolor, false);
 
 /* CLUB: a neon 3D spectrum. The bars stand on a slanted grid that narrows into the distance; the grid lines glow magenta,
    lit segments blue, the peaks white and they hang a moment before falling. On a kick the whole frame flashes. */
