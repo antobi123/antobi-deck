@@ -1670,58 +1670,75 @@ function drawVFDTurntable(dt){
   const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); };
   const line = (x0, y0, x1, y1, c) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); for(let i=0;i<=n;i++) dot(x0 + (x1 - x0)*i/(n || 1), y0 + (y1 - y0)*i/(n || 1), c); };
   vbg.fillStyle = K; vbg.fillRect(0, 0, VB_C, VB_R);
-  // the window on the left: night outside with the moon, stars and a sleeping town
-  const wx0 = 6, wx1 = 56, wy0 = 3, wy1 = 30;
-  [[13,7],[22,5],[36,10],[28,12],[18,13]].forEach(([x, y], i) => { if(Math.sin(ttT*1.2 + i*1.9) > .1) dot(x, y, G); });
-  for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) dot(47 + x, 8 + y, A);
-  [[7,24,5],[12,21,6],[18,25,4],[23,20,5],[29,23,6],[36,19,5],[42,24,6],[49,22,6]].forEach(([x, top, w], j) => {
+  // the window: night outside with the moon, stars and a sleeping town
+  const wx0 = 8, wx1 = 70, wy0 = 3, wy1 = 30;
+  [[16,7],[27,5],[45,9],[33,12],[52,6]].forEach(([x, y], i) => { if(Math.sin(ttT*1.2 + i*1.9) > .1) dot(x, y, G); });
+  for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) dot(60 + x, 8 + y, A);
+  [[9,24,6],[16,21,7],[24,25,5],[30,20,6],[37,23,8],[46,19,6],[53,24,7],[61,22,8]].forEach(([x, top, w], j) => {
     for(let y=top;y<=wy1;y++){ dot(x, y, G); dot(x + w - 1, y, G); }
     for(let i=0;i<w;i++) dot(x + i, top, G);
-    for(let y=top+2;y<wy1;y+=2) for(let i=2;i<w-1;i+=2){ const s = Math.sin((x + i)*12.9 + y*7.3 + Math.floor(ttT*.25 + j)*3.1)*43758.5; if(s - Math.floor(s) > .55) dot(x + i, y, A); }
+    for(let y=top+2;y<wy1;y+=2) for(let i=2;i<w-1;i+=2){ const s = Math.sin((x + i)*12.9 + y*7.3 + Math.floor(ttT*.25 + j)*3.1)*43758.5; if(s - Math.floor(s) > .6) dot(x + i, y, A); }
   });
   for(let x=wx0;x<=wx1;x++){ dot(x, wy0, G); dot(x, wy1, G); dot(x, 16, G); }   // frame and mullions
-  for(let y=wy0;y<=wy1;y++){ dot(wx0, y, G); dot(wx1, y, G); dot(31, y, G); }
-  // the sill
-  for(let x=0;x<=68;x++) dot(x, 33, G);
-  for(let x=0;x<=68;x+=3) dot(x, 35, G);
+  for(let y=wy0;y<=wy1;y++){ dot(wx0, y, G); dot(wx1, y, G); dot(39, y, G); }
+  // the sill / table top
+  for(let x=0;x<VB_C;x++) dot(x, 33, G);
+  for(let x=0;x<VB_C;x+=3) dot(x, 35, G);
   // curtains on a rod, lifting and swaying with the breeze
-  for(let x=0;x<=64;x++) dot(x, 1, A);
+  for(let x=2;x<=76;x++) dot(x, 1, A);
   const br = ttBreeze(ttT);
-  const curtain = (x0, folds, ph) => {
-    for(let f=0;f<folds;f++) for(let y=2;y<=31;y++){
-      const k = (y - 2)/29;
-      dot(x0 + f*2.3 + Math.sin(y*.28 + ttT*2.1 + f*1.3 + ph)*(.5 + k*1.4) + br*k*k*7, y, G);
+  const curtain = (x0, folds, dir, ph) => {
+    for(let f=0;f<folds;f++){
+      for(let y=2;y<=31;y++){
+        const k = (y - 2)/29;
+        const x = x0 + f*2.4 + Math.sin(y*.28 + ttT*2.1 + f*1.3 + ph)*(.5 + k*1.4) + dir*br*k*k*7;
+        dot(x, y, G);
+      }
     }
   };
-  curtain(1, 5, 0); curtain(51, 5, 2.2);
-  // a mug with steam on the sill
-  for(let y=29;y<=32;y++){ dot(60, y, A); dot(65, y, A); } for(let x=60;x<=65;x++){ dot(x, 32, A); dot(x, 29, A); } dot(66, 30, A); dot(67, 31, A); dot(66, 32, A);
-  ttSteam.forEach(([ph, dx], i) => { const t = (ph + ttT*.22) % 1; if(t < .85 && Math.sin(ttT*5 + i) > -.4) dot(62.5 + dx + Math.sin(ttT*1.5 + i*2)*t*2.5, 28 - t*12, G); });
-  // the turntable, seen from a little above: top surface, front face, platter, record, tonearm
-  const cx = 99, cy = 25;
-  line(76, 14, 124, 14, G); line(76, 14, 70, 33, G); line(124, 14, 130, 33, G); line(70, 33, 130, 33, G);
-  for(let y=33;y<=41;y++){ dot(70, y, G); dot(130, y, G); }
-  line(70, 41, 130, 41, G);
-  const ell = (rx, ry, c, step, gap) => { for(let a=0;a<Math.PI*2;a+=step){ if(gap && !gap(a)) continue; dot(cx + Math.cos(a)*rx, cy + Math.sin(a)*ry, c); } };
-  ell(24, 7, G, .05);                                              // platter rim
+  curtain(3, 5, 1, 0); curtain(63, 5, 1, 2.2);
+  // a small plant and a mug with steam on the sill
+  for(let y=28;y<=32;y++){ dot(76, y, G); dot(81, y, G); } for(let x=76;x<=81;x++) dot(x, 32, G);
+  [[-1.2,-6],[0,-8],[1.3,-6],[-.6,-4],[.8,-4]].forEach(([a, l], i) => { const sw = Math.sin(ttT*1.4 + i)*.6 + br*.8; line(78.5, 28, 78.5 + a*2.2 + sw, 28 + l, G); });
+  for(let y=29;y<=32;y++){ dot(85, y, A); dot(90, y, A); } for(let x=85;x<=90;x++){ dot(x, 32, A); dot(x, 29, A); } dot(91, 30, A); dot(92, 31, A); dot(91, 32, A);
+  ttSteam.forEach(([ph, dx], i) => { const t = (ph + ttT*.22) % 1; if(t < .85 && Math.sin(ttT*5 + i) > -.4) dot(87.5 + dx + Math.sin(ttT*1.5 + i*2)*t*2.5, 28 - t*12, G); });
+  // records hung on the wall behind the turntable, a slow gleam passing over them
+  const gleam = (ttT*.12) % 1.6 - .3;
+  [[78, 4, 0], [95, 2, 1], [112, 5, 2]].forEach(([fx, fy, j]) => {
+    const s = 13, rcx = fx + 6, rcy = fy + 6;
+    for(let i=0;i<s;i++){ dot(fx + i, fy, G); dot(fx + i, fy + s - 1, G); dot(fx, fy + i, G); dot(fx + s - 1, fy + i, G); }   // frame
+    dot(rcx, fy - 2, A); line(fx + 2, fy, rcx, fy - 2, A); line(fx + s - 3, fy, rcx, fy - 2, A);   // the hanging wire and nail
+    for(let a=0;a<Math.PI*2;a+=.25) dot(rcx + Math.cos(a)*5, rcy + Math.sin(a)*5, G);           // the record
+    for(let a=0;a<Math.PI*2;a+=.45) if(Math.sin(a*2 + j) > -.3) dot(rcx + Math.cos(a)*3.4, rcy + Math.sin(a)*3.4, G);   // a groove
+    for(let y=-1;y<=1;y++) for(let x=-1;x<=1;x++) dot(rcx + x, rcy + y, A);                    // the label
+    dot(rcx, rcy, K);
+    const gx = fx + gleam*s*1.4;                                   // gleam sweeping across the glass
+    for(let k=0;k<s-2;k++){ const x = gx + k*.35; if(x > fx && x < fx + s - 1) dot(x, fy + 1 + k, G); }
+  });
+  // the turntable: plinth, platter, the spinning record and the tonearm
+  const cx = 112, cy = 27;
+  for(let x=95;x<=130;x++){ dot(x, 31, G); dot(x, 38, G); }
+  for(let y=31;y<=38;y++){ dot(95, y, G); dot(130, y, G); }
+  const ell = (rx, ry, c, step = .12, gap) => { for(let a=0;a<Math.PI*2;a+=step){ if(gap && !gap(a)) continue; dot(cx + Math.cos(a)*rx, cy + Math.sin(a)*ry, c); } };
+  ell(16, 4.6, G, .08);                                            // platter edge
+  for(let x=96;x<=128;x++) dot(x, Math.round(cy + 4.6) + 1, G);
   const rot = -ttT*Math.PI*2*.55;                                  // 33⅓ rpm, never stops
-  [21, 18, 15, 12, 9].forEach((r, i) => ell(r, r*.29, G, .07, a => Math.sin(a*3 + rot + i*.8) > -.1));   // grooves shimmering as it turns
-  for(let y=-2;y<=2;y++) for(let x=-6;x<=6;x++) if(x*x/36 + y*y/4 <= 1) dot(cx + x, cy + y, A);   // the label
-  dot(cx, cy, K);
-  for(let k=0;k<2;k++){ const a = rot + k*Math.PI; for(let r=7.5;r<=21;r+=1.5) dot(cx + Math.cos(a)*r, cy + Math.sin(a)*r*.29, A); }   // light catching the vinyl
-  const wob = Math.sin(ttT*3.3)*.3;
-  for(let y=-1;y<=1;y++) for(let x=-1;x<=1;x++) dot(124 + x, 18 + y, A);   // tonearm pivot
-  line(124, 18, 121, 13 + wob, G); line(121, 13 + wob, 113, 25 + wob, G); dot(112, 26, A); dot(113, 26, A);   // arm, headshell on the record
-  for(let x=74;x<=80;x++) dot(x, 30, A);                           // the start/stop button glowing
-  // the LED meter on the front face = spectrum
-  for(let i=0;i<16;i++){ const lv = Math.round(st.v[i]*5); for(let k=0;k<5;k++) if(k < lv) dot(76 + i*3, 39 - k, k >= 4 ? A : G); }
+  [12.5, 10.5, 8.5, 6.5].forEach((r, i) => ell(r, r*.29, G, .1, a => Math.sin(a*3 + rot + i) > -.2));   // grooves shimmering as it turns
+  ell(3.2, 1.1, A, .3);                                            // the label
+  for(let k=0;k<2;k++){ const a = rot + k*Math.PI; for(let r=4;r<=12;r+=1.5) dot(cx + Math.cos(a)*r, cy + Math.sin(a)*r*.29, A); }   // light catching the vinyl
+  dot(cx, cy, G);
+  const wob = Math.sin(ttT*3.3)*.25;
+  dot(127, 22, A); dot(127, 23, A); dot(126, 22, A);               // tonearm pivot
+  line(127, 22, 122, 18 + wob, G); line(122, 18 + wob, 116, 24 + wob, G); dot(115, 25, A);   // arm and headshell on the record
+  // the LED meter on the front panel = spectrum
+  for(let i=0;i<16;i++){ const lv = Math.round(st.v[i]*3); for(let k=0;k<3;k++) if(k < lv) dot(97 + i*2, 37 - k, k === 2 ? A : G); }
   // music notes drifting up from the record while something is playing
-  if(isActive() && ttT > ttNextNote){ ttNotes.push({x: 88 + Math.random()*20, y: 18, t: 0, s: Math.random() < .5 ? 1 : -1}); ttNextNote = ttT + .9 - ttPulse*.5; }
+  if(isActive() && ttT > ttNextNote){ ttNotes.push({x: 104 + Math.random()*14, y: 22, t: 0, s: Math.random() < .5 ? 1 : -1}); ttNextNote = ttT + .9 - ttPulse*.5; }
   ttNotes.forEach(n => {
     n.t += dt; const x = n.x + Math.sin(n.t*2)*2*n.s, y = n.y - n.t*5;
-    if(y > 1 && Math.sin(n.t*20) > -.7){ dot(x, y, A); dot(x + 1, y, A); dot(x + 1, y - 1, A); dot(x + 1, y - 2, A); dot(x + 1, y - 3, A); dot(x + 2, y - 3, A); }
+    if(n.t < 2.6 && Math.sin(n.t*20) > -.7){ dot(x, y, A); dot(x + 1, y - 1, A); dot(x + 1, y - 2, A); dot(x + 1, y - 3, A); dot(x + 2, y - 3, A); }
   });
-  ttNotes = ttNotes.filter(n => n.t < 3.4);
+  ttNotes = ttNotes.filter(n => n.t < 2.6);
   // ---- light the tubes ----
   const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
   vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
