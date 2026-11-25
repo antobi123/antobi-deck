@@ -2213,9 +2213,9 @@ function drawVFDClub(dt){
   g.save(); g.shadowBlur = 9; g.shadowColor = C.glow; g.drawImage(vbLit, 0, 0, W, H); g.restore();
 }
 
-/* NIGHT DRIVE: a coupe cruising along an elevated highway at night, seen from the side. The city skyline drifts by
-   slowly far behind (its lit windows follow the spectrum), street lamps and the guard rail rush past, the wheels turn,
-   the headlights light the road ahead. Quiet, it slows to an easy cruise. */
+/* NIGHT DRIVE: the view from an elevated highway at night. The city skyline drifts by
+   slowly far behind (its lit windows follow the spectrum), street lamps, the guard rail and the lane marks rush past.
+   Quiet, it slows to an easy cruise. */
 let drT = 0, drPulse = 0, drSpeed = .6, drFar = 0, drNear = 0, drWheel = 0;
 function drawVFDDrive(dt){
   drT += dt;
@@ -2237,7 +2237,7 @@ function drawVFDDrive(dt){
   const playing = isActive();
   drSpeed += ((playing ? 1 + drPulse*.25 : .55) - drSpeed)*Math.min(1, dt*1.5);
   drFar += dt*3.2*drSpeed; drNear += dt*46*drSpeed; drWheel += dt*14*drSpeed;
-  const RAIL = 25, ROAD = 38;
+  const RAIL = 33, ROAD = 38;
   // the sky: a few stars and a crescent moon
   [[8,3],[21,6],[37,2],[52,5],[71,3],[88,7],[97,2],[124,9]].forEach(([x, y], i) => { if(Math.sin(drT*1.1 + i*2.3) > -.3) dot(x, y, G); });
   for(let y=-3;y<=3;y++) for(let x=-3;x<=3;x++) if(x*x + y*y <= 9 && (x - 1.6)*(x - 1.6) + (y + 1)*(y + 1) > 7) dot(113 + x, 6 + y, A);
@@ -2245,7 +2245,7 @@ function drawVFDDrive(dt){
   for(let x=0;x<VB_C;x++){
     const wx = x + Math.floor(drFar), c = Math.floor(wx/8), lx = wx - c*8;
     if(lx === 7) continue;
-    const tall = hash(c*3.7) > .82, hgt = Math.round(4 + hash(c)*9 + (tall ? 5 : 0)), top = RAIL - 1 - hgt;
+    const tall = hash(c*3.7) > .82, hgt = Math.round(7 + hash(c)*12 + (tall ? 6 : 0)), top = RAIL - 1 - hgt;
     vbg.fillStyle = K; vbg.fillRect(x, top, 1, RAIL - top);
     if(lx === 0 || lx === 6) for(let y=top;y<RAIL;y++) dot(x, y, G);
     else dot(x, top, G);
@@ -2266,32 +2266,6 @@ function drawVFDDrive(dt){
   // the guard rail, its posts flicking by
   vbg.fillStyle = K; vbg.fillRect(0, RAIL, VB_C, ROAD - RAIL);
   for(let x=0;x<VB_C;x++){ dot(x, RAIL, G); if((x + Math.floor(drNear)) % 6 === 0){ dot(x, RAIL + 1, G); dot(x, RAIL + 2, G); } }
-  // the car (a long, low coupe about 44 dots long), riding a little on the bass
-  const X = 42, Y = 23 - (playing && drPulse > .45 && Math.sin(drT*20) > 0 ? 1 : 0);
-  vbg.fillStyle = K; vbg.fillRect(X, Y + 5, 44, 6);
-  for(let y=0;y<5;y++){ vbg.fillRect(X + 15 - Math.round(y*1.4), Y + y, 14 + Math.round(y*1.4) + Math.round(y*1.2), 1); }
-  line(X + 15, Y, X + 28, Y, G);                                                // roof
-  line(X + 15, Y, X + 8, Y + 5, G); line(X + 28, Y, X + 34, Y + 5, G);          // rear window and windshield
-  line(X + 22, Y, X + 22, Y + 5, G);                                            // pillar
-  line(X + 2, Y + 5, X + 41, Y + 5, G);                                         // waist line
-  for(let y=6;y<=9;y++){ dot(X, Y + y, G); dot(X + 43, Y + y, G); }
-  dot(X + 1, Y + 5, G); dot(X + 42, Y + 5, G); dot(X + 1, Y + 10, G); dot(X + 42, Y + 10, G);
-  for(let x=2;x<=41;x++) if((x < 4 || x > 14) && (x < 29 || x > 39)) dot(X + x, Y + 10, G);   // sill, gaps for the wheels
-  [9, 34].forEach(cx => { for(let a=Math.PI;a<=Math.PI*2;a+=.3) dot(X + cx + Math.cos(a)*5, Y + 10 + Math.sin(a)*4.5, G); });   // wheel arches
-  for(let x=6;x<=38;x+=2) if(x < 13 || x > 15) dot(X + x, Y + 7, G);           // a crease along the side
-  dot(X + 25, Y + 6, G); dot(X + 26, Y + 6, G);                                 // door handle
-  dot(X + 32, Y + 4, G); dot(X + 33, Y + 4, G);                                 // side mirror
-  dot(X, Y + 6, A); dot(X, Y + 7, A); dot(X - 1, Y + 6, A); dot(X - 1, Y + 7, A);   // tail lights
-  dot(X + 43, Y + 6, A); dot(X + 44, Y + 6, A);                                 // headlight
-  for(let k=1;k<=18;k++){ const s = k*.2; for(let y=-s;y<=s;y+=2) if((k + Math.floor(drNear*.5)) % 2 || k < 4) dot(X + 45 + k*2, Y + 7 + y + k*.32, A); }   // the beam on the road
-  [9, 34].forEach(cx => {                                                       // wheels with turning spokes
-    const x = X + cx, y = Y + 11;
-    vbg.fillStyle = K; vbg.fillRect(x - 4, y - 3, 9, 7);
-    for(let a=0;a<Math.PI*2;a+=.35) dot(x + Math.cos(a)*3.6, y + Math.sin(a)*3.2, G);
-    for(let k=0;k<5;k++){ const a = drWheel + k*Math.PI*2/5; dot(x + Math.cos(a)*1.8, y + Math.sin(a)*1.6, G); }
-    dot(x, y, A);
-  });
-  for(let i=0;i<4;i++){ const y = Y + 3 + i*2, len = 3 + ((i*5 + Math.floor(drT*12)) % 4); for(let k=0;k<len;k++) if(k % 2 === 0) dot(X - 4 - k*2 - i, y, G); }   // speed lines
   // the road: its edge, lane dashes rushing by, the lamps' glow on the asphalt
   for(let x=0;x<VB_C;x++) dot(x, ROAD, G);
   for(let x=0;x<VB_C;x++) if((x + Math.floor(drNear)) % 14 < 6) dot(x, 41, G);
