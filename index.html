@@ -1920,7 +1920,7 @@ function drawVFDCassette(dt){
    The window and the wall clock follow the real time; the boombox's LEDs are the spectrum. (An original character.) */
 const RM_HEAD = [".##.....##.", "#..#####..#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."];
 let rmT = 0, rmPulse = 0, rmX = 60, rmTarget = 60, rmState = 'idle', rmUntil = 2, rmFace = 0, rmZ = [];
-const RM_SPOTS = { bed: 19, bowl: 72, window: 26, boombox: 92, clock: 54 };
+const RM_SPOTS = { bed: 19, bowl: 60, window: 26, boombox: 78, clock: 54 };   // it dances beside the boombox table, not in front of it
 function rmPick(playing, night){
   const r = Math.random();
   if(night && !playing) return ['bed', 'sleep', 30];
@@ -1961,7 +1961,7 @@ function drawVFDRoom(dt){
   for(let x=0;x<VB_C;x+=6) for(let y=40;y<44;y+=2) dot(x + (y % 4 ? 3 : 0), y, G);   // floorboards
   // furniture: cushion, food bowl, boombox on a low table, a plant
   for(let x=8;x<=30;x++){ dot(x, 37, A); if(x % 3 === 0) dot(x, 36, A); } dot(7, 36, A); dot(31, 36, A);
-  for(let x=68;x<=76;x++) dot(x, 37, G); dot(67, 36, G); dot(77, 36, G); for(let x=69;x<=75;x+=2) dot(x, 35, A);
+  for(let x=56;x<=64;x++) dot(x, 37, G); dot(55, 36, G); dot(65, 36, G); for(let x=57;x<=63;x+=2) dot(x, 35, A);
   for(let x=84;x<=116;x++) dot(x, 30, G); for(let y=30;y<=37;y++){ dot(85, y, G); dot(115, y, G); }
   for(let x=88;x<=112;x++){ dot(x, 20, G); dot(x, 29, G); } for(let y=20;y<=29;y++){ dot(88, y, G); dot(112, y, G); } line(92, 20, 95, 17, G); line(95, 17, 105, 17, G); line(105, 17, 108, 20, G);   // boombox + handle
   [[94, 25], [106, 25]].forEach(([x, y]) => { const r = 2.6 + rmPulse*1.4; for(let a=0;a<Math.PI*2;a+=.4) dot(x + Math.cos(a)*r, y + Math.sin(a)*r*.9, G); dot(x, y, A); });   // speakers thump
