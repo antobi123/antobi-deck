@@ -393,7 +393,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
       </section>
       <section data-tab="look">
-        <h3>天気（ビーチ・ターンテーブルの窓）</h3>
+        <h3>天気（ターンテーブルの窓）</h3>
         <div class="chips" id="wxChips">
           <button class="chip" data-wx="auto"><span class="sw sp-fall"></span>自動<small>今いる場所の天気</small></button>
           <button class="chip" data-wx="clear"><span class="sw vfdb"></span>晴れ<small>いつも晴れ</small></button>
@@ -1439,10 +1439,10 @@ document.querySelectorAll('#wxChips .chip').forEach(b => b.addEventListener('cli
 // shared rain helpers (dot-matrix): falling streaks and a band of heavy clouds
 const rainDrops = Array.from({length: 70}, (_, i) => [(i*53 + 7) % 132, (i*29 + 3) % 44, .75 + (i % 5)*.12]);
 function drawRain(dot, x0, x1, y0, y1, amount, t, c){
-  const n = Math.round(rainDrops.length*amount), w = x1 - x0, hgt = y1 - y0;
+  const n = Math.round(rainDrops.length*amount*.45), w = x1 - x0, hgt = y1 - y0;   // a soft drizzle: few, slow, nearly straight drops
   for(let i=0;i<n;i++){
-    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*28) % hgt, x = x0 + (((rx - (y - y0)*.35) % w) + w) % w;
-    dot(x, y, c); if(y - 1 >= y0) dot(x + .35, y - 1, c);
+    const [rx, ry, sp] = rainDrops[i], y = y0 + (ry + t*sp*9) % hgt, x = x0 + (((rx - (y - y0)*.1) % w) + w) % w;
+    if(Math.sin(t*2.3 + i*1.7) > -.6) dot(x, y, c);
   }
 }
 function drawRainClouds(dot, x0, x1, y0, rows, t, c){
@@ -1506,15 +1506,13 @@ function drawVFDBeach(dt){
   const day = h >= rise && h < set;
   const p = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*p);
   const sx = Math.round(46 + p*52), sy = hz - 1 - el*(hz - 9), low = day && el < .32;   // path stays in the open sky between the palms
-  wxUpdate(); const rain = isRaining(), starsOn = rain ? 0 : day ? Math.max(0, 1 - el*3.5) : 1;
+  const starsOn = day ? Math.max(0, 1 - el*3.5) : 1;
   vbg.fillStyle = '#000'; vbg.fillRect(0, 0, VB_C, VB_R);
   vbg.fillStyle = '#0f0';
   vbStars.slice(0, Math.round(vbStars.length*starsOn)).forEach(([x, y, q]) => { if(Math.sin(vbT*1.3 + q) > .2) vbg.fillRect(x, y, 1, 1); });
   if(!day) vbStarsX.forEach(([x, y, q]) => { if(Math.sin(vbT*.9 + q) > .45) vbg.fillRect(x, y, 1, 1); });
   vbg.save(); vbg.beginPath(); vbg.rect(0, 0, VB_C, hz); vbg.clip();
-  const dot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.round(y), 1, 1); }, G = '#0f0', A = '#f00';
-  if(rain){ drawRainClouds(dot, 0, VB_C, 0, 9, vbT, G); }        // a rainy day: heavy clouds, no sun or moon
-  else if(low){                                         // big striped sun near the horizon (sunrise / sunset)
+  if(low){                                         // big striped sun near the horizon (sunrise / sunset)
     const r = 12.5 + vbPulse*1.5;
     vbg.fillStyle = '#f00'; vbg.beginPath(); vbg.arc(sx, sy, r, 0, Math.PI*2); vbg.fill();
     vbg.fillStyle = '#000';
@@ -1538,7 +1536,7 @@ function drawVFDBeach(dt){
   }
   vbg.restore();
   // gulls fly by day
-  if(day && !rain){
+  if(day){
     vbg.fillStyle = '#f00';
     [[0, 6, 0], [9, 9, 1.4]].forEach(([o, y0, q]) => {
       const x = Math.round(((vbT*2.2 + o + 40) % (VB_C + 10)) - 5), y = y0 + Math.round(Math.sin(vbT*.8 + q)), up = Math.sin(vbT*5 + q) > 0;
@@ -1554,7 +1552,7 @@ function drawVFDBeach(dt){
     for(let x=0;x<VB_C;x++) if(Math.sin(x*(.55 - k*.07) + vbT*(1.2 + k*.35) + k*2) > .45) vbg.fillRect(x, y, 1, 1);
   });
   // sun / moon reflection = spectrum (slimmer under a high sun, slimmest under the moon)
-  const rw = rain ? .4 : low ? 1 : day ? .6 : .45;
+  const rw = low ? 1 : day ? .6 : .45;
   vbg.fillStyle = '#f00';
   for(let j=0;j<VB_R - hz - 1;j++){
     const v = st.v[Math.max(0, 15 - j)], w = Math.max(1, Math.round((2 + j*.5)*(.35 + v*1.4)*rw)), jx = Math.round(Math.sin(vbT*2.5 + j*1.9)*(1 + j*.08));
@@ -1572,7 +1570,6 @@ function drawVFDBeach(dt){
   vbPalm(12, VB_R + 2, 34, .3, 0, 1);
   vbPalm(36, VB_R + 2, 22, .05, 1.7, .75);
   vbPalm(122, VB_R + 2, 30, -.28, 3.1, .9);
-  if(rain){ drawRain(dot, 0, VB_C, 0, 40, rainAmount(), vbT, G); if(isStorm() && (vbT % 7) < .14){ let x = 40 + Math.floor(vbT/7)*17 % 50, y = 2; while(y < 22){ dot(x, y, A); x += (Math.sin(y*3 + vbT) > 0 ? 1 : -1); y++; } } }   // rain sweeping in, lightning in a storm
   // ---- light the tubes ----
   const px = vbg.getImageData(0, 0, VB_C, VB_R).data;
   vbl.setTransform(DPR,0,0,DPR,0,0); vbl.clearRect(0, 0, W, H);
@@ -1763,7 +1760,7 @@ function drawVFDTurntable(dt){
   for(let x=wx0;x<=wx1;x++){ dot(x, wy0, G); dot(x, wy1, G); dot(x, 16, G); }   // frame and mullions
   for(let y=wy0;y<=wy1;y++){ dot(wx0, y, G); dot(wx1, y, G); dot(39, y, G); }
   if(rain) [[14, 0], [33, 2.1], [50, 4.3], [63, 1.2]].forEach(([gx, ph]) => {        // drops sliding down the window glass
-    const y = wy0 + 2 + ((ttT*1.6 + ph*6) % (wy1 - wy0 - 3)); dot(gx, y, G); if(Math.sin(ttT*3 + ph) > 0) dot(gx, y - 2, G);
+    const y = wy0 + 2 + ((ttT*.7 + ph*6) % (wy1 - wy0 - 3)); dot(gx, y, G); if(Math.sin(ttT*3 + ph) > 0) dot(gx, y - 2, G);
   });
   // the sill / table top
   for(let x=0;x<VB_C;x++) dot(x, 33, G);
