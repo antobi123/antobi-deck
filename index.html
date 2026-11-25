@@ -101,16 +101,20 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
   --b1:#ffffff; --b2:#d9dadf; --b3:#f4f4f6; --btext:#1a1b20; --ring:#f2f2f5; --r1:#b9bbc2; --r2:#ffffff; --r3:#e4e5ea; --r4:#a8aab1; --rtext:#26272c;
   --ltext:#2a2b31; --lshadow:rgba(255,255,255,.8) }
 :root[data-panel="blue"]{ --p1:#9cc1ee; --p2:#4f7fc6; --p3:#2a5197; --p4:#3d68b0; --p5:#14295a; --w1:#cfe0f7; --w2:#6690cf; --w3:#30579b; --w4:#132857;
+  --b1:#d6e5f9; --b2:#3d68b0; --b3:#9cc1ee; --btext:#f2f7ff; --ring:#cfe0f7; --r1:#14295a; --r2:#d6e5f9; --r3:#6690cf; --r4:#132857; --rtext:#0d1f45;
   --ltext:#eef4ff; --lshadow:rgba(0,0,0,.45) }
 :root[data-panel="carbon"]{ --p1:#3a3b40; --p2:#1d1e22; --p3:#0e0f11; --p4:#1a1b1e; --p5:#050506; --w1:#55565c; --w2:#2a2b30; --w3:#16171a; --w4:#070708;
   --b1:#55565d; --b2:#1c1d22; --b3:#3c3d44; --btext:#e8e9ee;
   --ring:#2c2d33; --r1:#1a1b1f; --r2:#5d5e65; --r3:#34353b; --r4:#141518; --rtext:#d8dae0; --ltext:#c4c6cd; --lshadow:rgba(0,0,0,.6) }
 :root[data-panel="carbon"] .plate{background:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 3px,transparent 3px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.45) 0 3px,transparent 3px 6px),linear-gradient(180deg,var(--p1) 0%,var(--p2) 20%,var(--p3) 48%,var(--p4) 76%,var(--p5) 100%)}
 :root[data-panel="pink"]{ --p1:#ffd3e6; --p2:#f39cc2; --p3:#d9679c; --p4:#e985b3; --p5:#9e3a6c; --w1:#ffe8f2; --w2:#f5a9cb; --w3:#d46797; --w4:#933862;
+  --b1:#fff0f6; --b2:#e985b3; --b3:#ffd3e6; --btext:#3a1027; --ring:#ffe8f2; --r1:#9e3a6c; --r2:#fff0f6; --r3:#f39cc2; --r4:#933862; --rtext:#3a1027;
   --ltext:#3a1027; --lshadow:rgba(255,255,255,.5) }
 :root[data-panel="turq"]{ --p1:#b9f3ee; --p2:#5fd6cc; --p3:#22a99f; --p4:#3cc0b5; --p5:#0f6b66; --w1:#dcfbf8; --w2:#74ddd4; --w3:#25a69c; --w4:#0e5f5a;
+  --b1:#e3fcf9; --b2:#3cc0b5; --b3:#b9f3ee; --btext:#06302d; --ring:#dcfbf8; --r1:#0f6b66; --r2:#e3fcf9; --r3:#5fd6cc; --r4:#0e5f5a; --rtext:#06302d;
   --ltext:#06302d; --lshadow:rgba(255,255,255,.45) }
 :root[data-panel="red"]{ --p1:#e0787c; --p2:#b8333a; --p3:#8c1a21; --p4:#a8282f; --p5:#5a0d12; --w1:#f2a3a6; --w2:#c43e45; --w3:#8a1a20; --w4:#560b10;
+  --b1:#f6b3b6; --b2:#b8333a; --b3:#e0787c; --btext:#fff4f4; --ring:#f2a3a6; --r1:#5a0d12; --r2:#f8c2c4; --r3:#c84a51; --r4:#560b10; --rtext:#3a0a0e;
   --ltext:#fbe9ea; --lshadow:rgba(0,0,0,.45) }
 /* ---------- body ---------- */
 .plate{inset:0; border-radius:30px 30px 36px 36px;
@@ -2681,7 +2685,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125163116';                                 // stamped by build.ps1
+const APP_VER = '20261125163446';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
