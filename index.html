@@ -119,6 +119,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 
 /* printed labels on the metal */
 .lbl{font:700 9px/1 var(--font-print); letter-spacing:.08em; color:#1e1f24; text-shadow:0 1px 0 rgba(255,255,255,.55); white-space:nowrap}
+.lbl.c{transform:translateX(-50%); text-align:center; text-indent:.08em}   /* centered over keys 1-6 (indent balances the letter-spacing) */
 .model{left:156px; top:46px; font:italic 700 14px/1 Georgia,'Times New Roman',serif; color:#17181c; letter-spacing:.02em; text-shadow:0 1px 0 rgba(255,255,255,.5)}
 .dsp{right:156px; top:47px; font:700 8px/1 var(--font-print); letter-spacing:.12em; color:#1e1f24; display:flex; align-items:center; gap:6px}
 .dsp b{font:italic 800 14px/1 var(--font-logo); color:#2a5fb8; letter-spacing:0}
@@ -305,12 +306,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <button class="k" id="listBtn" style="right:28px;top:374px;width:56px;height:28px">LIST</button>
 
       <!-- bottom: function presets -->
-      <span class="lbl" style="left:160px;top:420px">SCROLL</span>
-      <span class="lbl" style="left:242px;top:420px">SCN</span>
-      <span class="lbl" style="left:310px;top:420px">RDM</span>
-      <span class="lbl" style="left:382px;top:420px">REP</span>
-      <span class="lbl" style="left:446px;top:420px">LOUD</span>
-      <span class="lbl" style="left:518px;top:420px">DEMO</span>
+      <span class="lbl c" style="left:181px;top:420px">SCROLL</span>
+      <span class="lbl c" style="left:253px;top:420px">SCN</span>
+      <span class="lbl c" style="left:325px;top:420px">RDM</span>
+      <span class="lbl c" style="left:397px;top:420px">REP</span>
+      <span class="lbl c" style="left:469px;top:420px">LOUD</span>
+      <span class="lbl c" style="left:541px;top:420px">DEMO</span>
       <button class="k" id="p1" style="left:150px;top:434px;width:62px;height:26px">1</button>
       <button class="k" id="p2" style="left:222px;top:434px;width:62px;height:26px">2</button>
       <button class="k" id="p3" style="left:294px;top:434px;width:62px;height:26px">3</button>
@@ -446,7 +447,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>SRC・ラジオ</h3>
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
-            <dt>RADIO</dt><dd>ネットラジオ。1〜6 のボタンが放送局になる。右上の時間表示は今の時刻になる</dd>
+            <dt>RADIO</dt><dd>ネットラジオ。1〜6 のボタンが放送局になる。右上の時間表示は今の時刻に。曲名を公開している局は ♪ 曲名 が流れる</dd>
             <dt>DEMO</dt><dd>内蔵のデモ曲</dd>
           </dl>
           <h3 style="margin-top:16px">局を入れ替えるには</h3>
@@ -975,7 +976,7 @@ function playStation(st, label){
   $('#srcl').textContent = 'RADIO'; $('#trk').textContent = label;
   setTitle(`${st.name} ── ${st.genre}`);
   flash(`${label}  ${st.short}`, 1200);
-  mediaMeta(); updateUI();
+  mediaMeta(); updateUI(); startMeta();
 }
 function tune(ch){
   radioCh = (ch + STATIONS.length) % STATIONS.length; store.set('radioCh', radioCh);
@@ -984,7 +985,7 @@ function tune(ch){
 function leaveRadio(){
   if(mode !== 'radio') return;
   audio.pause(); audio.removeAttribute('src'); audio.load(); plain.pause(); plain.removeAttribute('src');
-  radioPlain = false; mode = 'idle'; presetLabels(false);
+  radioPlain = false; mode = 'idle'; presetLabels(false); stopMeta();
 }
 function savePreset(i, st){
   STATIONS[i] = { short: (st.short || shortName(st.name)).slice(0, 6), name: st.name, genre: st.genre || '', url: st.url };
@@ -1012,6 +1013,71 @@ plain.addEventListener('pause', () => { updateUI(); });
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => el.addEventListener(ev, () => clearTimeout(t)));
   el.addEventListener('click', e => { if(held){ e.stopImmediatePropagation(); held = false; } }, true);
 });
+
+/* Now playing on RADIO: try the station's public API (radio.co, AzuraCast) or the title inside the stream (ICY), every 20 s */
+const metaKind = {};                               // which method worked for each stream URL
+async function icyTitle(url){
+  const ac = new AbortController(), to = setTimeout(() => ac.abort(), 8000);
+  try{
+    const r = await fetch(url, { headers: {'Icy-MetaData': '1'}, signal: ac.signal, cache: 'no-store' });
+    const mi = parseInt(r.headers.get('icy-metaint'), 10);
+    if(!mi || !r.body){ ac.abort(); return null; }
+    const rd = r.body.getReader(); let buf = new Uint8Array(0);
+    while(buf.length < mi + 4100){
+      const {value, done} = await rd.read(); if(done) break;
+      const n = new Uint8Array(buf.length + value.length); n.set(buf); n.set(value, buf.length); buf = n;
+      if(buf.length > mi){
+        const len = buf[mi]*16;
+        if(buf.length >= mi + 1 + len){
+          ac.abort();
+          const raw = buf.subarray(mi + 1, mi + 1 + len);
+          let meta; try{ meta = new TextDecoder('utf-8', {fatal: true}).decode(raw); }catch(e){ meta = new TextDecoder('windows-1252').decode(raw); }
+          const m = meta.match(/StreamTitle='(.*?)';/);
+          return m ? m[1].trim() : '';
+        }
+      }
+    }
+    ac.abort(); return null;
+  }catch(e){ return null; } finally { clearTimeout(to); }
+}
+async function metaVia(kind, u){
+  try{
+    if(kind === 'radioco'){
+      const m = u.match(/radio\.co\/(s[0-9a-z]+)\//i); if(!m) return null;
+      const j = await (await fetch(`https://public.radio.co/stations/${m[1]}/status`, {cache: 'no-store'})).json();
+      return (j.current_track && j.current_track.title) || '';
+    }
+    if(kind === 'azura'){
+      const m = u.match(/^(https:\/\/[^/]+)\/listen\/([^/]+)\//); if(!m) return null;
+      const j = await (await fetch(`${m[1]}/api/nowplaying/${m[2]}`, {cache: 'no-store'})).json();
+      const s = j.now_playing && j.now_playing.song;
+      return s ? (s.artist && s.title ? `${s.artist} - ${s.title}` : (s.text || '')) : '';
+    }
+    if(kind === 'icy') return await icyTitle(u);
+  }catch(e){}
+  return null;
+}
+async function nowPlaying(st){
+  const k = metaKind[st.url];
+  if(k === 'none') return null;
+  for(const kind of (k ? [k] : ['radioco', 'azura', 'icy'])){
+    const t = await metaVia(kind, st.url);
+    if(t !== null){ metaKind[st.url] = kind; return t; }
+  }
+  if(!k) metaKind[st.url] = 'none';
+  return null;
+}
+let metaTimer = 0;
+async function pollMeta(){
+  if(mode !== 'radio' || !radioNow || document.hidden) return;
+  const st = radioNow, t = await nowPlaying(st);
+  if(mode !== 'radio' || radioNow !== st || !t || t === st.nowTitle) return;
+  st.nowTitle = t;
+  setTitle(`♪ ${t} ── ${st.name}`);
+  mediaMeta();
+}
+function startMeta(){ clearInterval(metaTimer); if(radioNow) radioNow.nowTitle = ''; setTimeout(pollMeta, 1500); metaTimer = setInterval(pollMeta, 20000); }
+function stopMeta(){ clearInterval(metaTimer); metaTimer = 0; }
 
 /* preset editor + station search in the ⚙ panel */
 function renderPresets(){
@@ -1186,7 +1252,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:' || location.ho
 function mediaMeta(){
   if(!('mediaSession' in navigator) || (idx < 0 && mode !== 'radio')) return;
   try{
-    const t = mode === 'radio' && radioNow ? { title: radioNow.name, artist: radioNow.genre || 'RADIO', album: 'ANTOBi Deck RADIO' } : tracks[idx];
+    const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO' } : tracks[idx];
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => audio.play());
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
