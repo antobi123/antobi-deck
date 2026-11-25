@@ -1702,16 +1702,14 @@ function drawVFDTurntable(dt){
   [[-1.2,-6],[0,-8],[1.3,-6],[-.6,-4],[.8,-4]].forEach(([a, l], i) => { const sw = Math.sin(ttT*1.4 + i)*.6 + br*.8; line(78.5, 28, 78.5 + a*2.2 + sw, 28 + l, G); });
   for(let y=29;y<=32;y++){ dot(85, y, A); dot(90, y, A); } for(let x=85;x<=90;x++){ dot(x, 32, A); dot(x, 29, A); } dot(91, 30, A); dot(92, 31, A); dot(91, 32, A);
   ttSteam.forEach(([ph, dx], i) => { const t = (ph + ttT*.22) % 1; if(t < .85 && Math.sin(ttT*5 + i) > -.4) dot(87.5 + dx + Math.sin(ttT*1.5 + i*2)*t*2.5, 28 - t*12, G); });
-  // one poster on the wall: a retro sunset gig poster, its lower corner lifting a little in the breeze
-  const PF = { A:[2,5,7,5,5], N:[6,5,5,5,5], T:[7,2,2,2,2], O:[2,5,5,5,2], B:[6,5,6,5,6], I:[7,2,2,2,7] };
+  // one poster on the wall: a retro sunset, its lower corner lifting a little in the breeze
   const px0 = 84, px1 = 116, py0 = 2, py1 = 20;
   const lift = x => x > px1 - 8 ? -Math.round(br*((x - (px1 - 8))/8)*2.2) : 0;
   for(let x=px0;x<=px1;x++){ dot(x, py0, G); dot(x, py1 + lift(x), G); }
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  let tx = 89; for(const c of 'ANTOBI'){ const gl = PF[c]; for(let r=0;r<5;r++) for(let k=0;k<3;k++) if(gl[r] & (4 >> k)) dot(tx + k, py0 + 3 + r, A); tx += 4; }
-  for(let y=-5;y<=5;y++) for(let x=-5;x<=5;x++) if(x*x + y*y <= 25 && y <= 3 && y !== 1 && y !== 3) dot(100 + x, 14 + y, A);   // striped sun
+  for(let y=-7;y<=7;y++) for(let x=-7;x<=7;x++) if(x*x + y*y <= 49 && y <= 5 && y !== 1 && y !== 3 && y !== 5) dot(100 + x, 12 + y, A);   // a big striped sun, no lettering
   for(let x=px0+2;x<=px1-2;x++) if(x % 2 === 0 || Math.sin(x + ttT*2) > .2) dot(x, 18, G);               // sea line
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
