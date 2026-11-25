@@ -1709,18 +1709,20 @@ function drawVFDTurntable(dt){
   for(let y=py0;y<=py1;y++) dot(px0, y, G);
   for(let y=py0;y<=py1 + lift(px1);y++) dot(px1, y, G);
   dot(px0 + 1, py0 + 1, A); dot(px1 - 1, py0 + 1, A);                        // pins
-  // a botanical print: a potted monstera, leaves with their split edges
-  for(let y=16;y<=19;y++) for(let x=96 - (19 - y)*.5;x<=104 + (19 - y)*.5;x++) if(y === 16 || y === 19 || x < 97 - (19 - y)*.5 || x > 103 + (19 - y)*.5) dot(x, y, A);   // pot
-  const leaf = (cx, cy, rx, ry, ang, sx, sy) => {
-    const c = Math.cos(ang), s = Math.sin(ang), P = (u, v) => [cx + u*c - v*s, cy + u*s + v*c];
-    for(let a=0;a<Math.PI*2;a+=.12){ const [x, y] = P(Math.cos(a)*rx, Math.sin(a)*ry); dot(x, y, G); }
-    for(let u=-rx;u<=rx;u+=1){ const [x, y] = P(u, 0); dot(x, y, G); }                  // midrib
-    [-.55, 0, .55].forEach(f => { for(let v=ry*.55;v<=ry;v+=.5){ const [x, y] = P(rx*f, v); dot(x, y, K); const [x2, y2] = P(rx*f + .8, -v); dot(x2, y2, K); } });   // the splits
-    line(sx, sy, ...P(-rx, 0), G);                                // stem down to the pot
-  };
-  leaf(94, 8, 7, 4.5, -.35, 99, 16);
-  leaf(107, 7, 5, 3.2, .4, 101, 16);
-  leaf(101, 12, 3.5, 2.2, -.1, 100, 16);
+  // a poster of a girl listening with headphones, eyes closed; the tips of her bob stir in the breeze
+  const fx = 100, fy = 11;
+  for(let a=0;a<Math.PI*2;a+=.16) dot(fx + Math.cos(a)*4.2, fy + Math.sin(a)*5.2, G);         // face
+  for(let a=Math.PI*1.05;a<=Math.PI*1.95;a+=.1) dot(fx + Math.cos(a)*6.5, fy - .5 + Math.sin(a)*6.2, G);   // top of the hair
+  for(let x=fx-4;x<=fx+4;x++) if(x % 2 === 0) dot(x, fy - 3, G);                              // bangs
+  const flick = Math.round(br*1.5);
+  for(let y=fy-3;y<=fy+5;y++){ dot(fx - 6.5, y, G); dot(fx + 6.5, y, G); }                     // the bob falling to her jaw
+  dot(fx - 6 - flick, fy + 6, G); dot(fx + 7 + flick, fy + 6, G);
+  for(let a=Math.PI*1.08;a<=Math.PI*1.92;a+=.12) dot(fx + Math.cos(a)*7.5, fy + 1 + Math.sin(a)*8.6, A);   // headphone band
+  for(let y=fy-1;y<=fy+2;y++){ dot(fx - 7.5, y, A); dot(fx - 8.5, y, A); dot(fx + 7.5, y, A); dot(fx + 8.5, y, A); }   // ear cups
+  dot(fx - 2, fy, G); dot(fx - 1, fy + .6, G); dot(fx + 1, fy + .6, G); dot(fx + 2, fy, G);   // closed eyes
+  dot(fx - .5, fy + 3, A); dot(fx + .5, fy + 3, A);                                            // lips
+  for(let y=fy+5;y<=18;y++){ dot(fx - 1.5, y, G); dot(fx + 1.5, y, G); }                       // neck
+  for(let x=fx-9;x<=fx+9;x++) dot(x, 19 - Math.round(Math.max(0, 1 - Math.abs(x - fx)/9)*1.5), G);   // shoulders
   // the turntable: plinth, platter, the spinning record and the tonearm
   const cx = 112, cy = 27;
   for(let x=95;x<=130;x++){ dot(x, 31, G); dot(x, 38, G); }
