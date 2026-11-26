@@ -381,6 +381,18 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 .pltools .mini[aria-pressed="true"]{color:#06221f; background:#5ff6e6; border-color:#5ff6e6}
 .sharebox{margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
 .sharebox code{font:12px var(--font-ui); color:var(--fg); background:#0c0d11; border:1px solid var(--line); border-radius:6px; padding:7px 9px; user-select:all; word-break:break-all}
+#stat{left:815px; top:86px; width:30px; height:136px; border-radius:6px; background:var(--screen); box-shadow:0 0 0 1px #3a3f4b, inset 0 0 8px rgba(0,0,0,.8); overflow:hidden; transition:background .5s}
+#stat svg{display:block; width:30px; height:132px; margin-top:2px}
+#stat text{font:8px/1 var(--font-seg); fill:var(--dimt); text-anchor:middle; letter-spacing:.02em}
+#stat .sb, #stat .sg, #stat .sbn, #stat .swd{fill:var(--dimt)}
+#stat .sw, #stat .sbo{stroke:var(--dimt)}
+#stat #sChg{fill:none; stroke:none}
+#stat .on{fill:var(--lit); filter:drop-shadow(0 0 2px var(--glow))}
+#stat .sw.on, #stat .sbo.on{fill:none; stroke:var(--lit)}
+#stat text.on{fill:var(--lit)}
+#stat #sChg.on{fill:var(--lit2); stroke:var(--screen); stroke-width:1; filter:drop-shadow(0 0 3px var(--lit2))}
+#stat .low{animation:sLow 1.2s steps(2) infinite}
+@keyframes sLow{50%{opacity:.15}}
 </style>
 
 <div class="stage" id="stage">
@@ -408,6 +420,17 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 
       <div class="wing l"></div>
       <div class="wing r"></div>
+      <div id="stat" aria-label="通信と電池">
+        <svg viewBox="0 0 30 132" aria-hidden="true">
+          <g id="sCell"><rect class="sb" data-b="1" x="5" y="17" width="4" height="4"/><rect class="sb" data-b="2" x="10" y="13" width="4" height="8"/><rect class="sb" data-b="3" x="15" y="9" width="4" height="12"/><rect class="sb" data-b="4" x="20" y="5" width="4" height="16"/></g>
+          <text id="sNet" x="15" y="32">--</text>
+          <g id="sWifi" fill="none" stroke-width="2.2" stroke-linecap="round"><path class="sw" data-b="3" d="M4 50a15 15 0 0 1 22 0"/><path class="sw" data-b="2" d="M8 54a9.5 9.5 0 0 1 14 0"/><path class="sw" data-b="1" d="M12 58a4 4 0 0 1 6 0"/><circle class="swd" cx="15" cy="62" r="1.8"/></g>
+          <g id="sBat"><rect class="sbo" x="7" y="78" width="16" height="38" rx="2" fill="none" stroke-width="1.6"/><rect class="sbn" x="11" y="75" width="8" height="3"/>
+            <rect class="sg" data-b="4" x="10" y="81" width="10" height="7"/><rect class="sg" data-b="3" x="10" y="90" width="10" height="7"/><rect class="sg" data-b="2" x="10" y="99" width="10" height="7"/><rect class="sg" data-b="1" x="10" y="108" width="10" height="5"/>
+            <path id="sChg" d="M17 84l-6 12h5l-2 10 7-13h-5z"/></g>
+          <text id="sPct" x="15" y="127">--</text>
+        </svg>
+      </div>
 
       <div class="model">ATB-900MJ</div>
       <div class="dsp">DIGITAL SIGNAL PROCESSOR <b>DSP</b></div>
@@ -847,7 +870,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>右上</dt><dd>今の時刻。その下に日付（2026/11/26 のように年から）・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
             <dt>1段目</dt><dd>左から DISC／RADIO、曲名（ラジオは局名）、曲の番号（ラジオは FM1-3 など）、時刻。長い曲名は流れて表示されます（1 ボタンの SCROLL で切り替え）</dd>
-            <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
+            <dt>右はしの小窓</dt><dd>上から<b>電波</b>（棒の数が回線の速さ、下に 4G など）、<b>Wi-Fi</b>、<b>電池</b>（下に残り％、充電中は ⚡ マーク、15％以下で点滅）。使っているほうが光ります<br><small>Android（Chrome）はすべて表示。iPhone はネットにつながっているかだけ（NET／OFF）で、電池はスマホが教えてくれないため「--」のまま。Bluetooth の接続はアプリからは調べられないので出ません</small></dd><dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
           <dl class="help">
@@ -3102,6 +3125,39 @@ $('#instLater').addEventListener('click', () => { store.set('instLater', Date.no
 window.addEventListener('beforeinstallprompt', () => setTimeout(maybeInstBar, 1500));
 window.addEventListener('appinstalled', () => { instBarShow(false); installState(); });
 setTimeout(maybeInstBar, 5000);
+
+/* ---------------- 通信と電池の小窓: to the right of the display. The bars / Wi-Fi follow the phone's connection,
+   the battery its charge. Only what the browser tells is shown (iPhone: online or not; no battery). ---------------- */
+function statLight(sel, n){ document.querySelectorAll(sel).forEach(e => e.classList.toggle('on', +e.dataset.b <= n)); }
+function statNet(){
+  const c = navigator.connection, on = navigator.onLine, type = c && c.type, dl = c && c.downlink, eff = c && c.effectiveType;
+  const lvl = !on ? 0 : dl > 0 ? (dl >= 10 ? 4 : dl >= 3 ? 3 : dl >= 1 ? 2 : 1) : eff ? ({'slow-2g': 1, '2g': 1, '3g': 2, '4g': 4})[eff] || 3 : 4;
+  const wifi = on && (type === 'wifi' || type === 'ethernet'), cell = on && !wifi;
+  statLight('#sCell .sb', cell ? lvl : 0);
+  statLight('#sWifi .sw', wifi ? Math.max(1, lvl - 1) : 0);
+  $('#sWifi .swd').classList.toggle('on', wifi);
+  const t = $('#sNet');
+  t.textContent = !on ? 'OFF' : wifi ? (type === 'ethernet' ? 'LAN' : 'WiFi') : type === 'cellular' && eff ? eff.replace('slow-', '').toUpperCase() : 'NET';
+  t.classList.toggle('on', on);
+}
+['online', 'offline'].forEach(ev => window.addEventListener(ev, statNet));
+navigator.connection && navigator.connection.addEventListener && navigator.connection.addEventListener('change', statNet);
+setInterval(statNet, 30000); statNet();
+(function(){
+  const pct = $('#sPct');
+  if(!navigator.getBattery){ pct.textContent = '--'; return; }             // iPhone: the battery is not told to web pages
+  navigator.getBattery().then(b => {
+    const draw = () => {
+      const lv = b.level, seg = Math.max(lv > 0 ? 1 : 0, Math.ceil(lv * 4)), low = lv <= .15 && !b.charging;
+      statLight('#sBat .sg', seg);
+      document.querySelectorAll('#sBat .sbo, #sBat .sbn').forEach(e => { e.classList.add('on'); e.classList.toggle('low', low); });
+      document.querySelectorAll('#sBat .sg').forEach(e => e.classList.toggle('low', low));
+      $('#sChg').classList.toggle('on', b.charging);
+      pct.textContent = Math.round(lv * 100) + (lv < 1 ? '%' : ''); pct.classList.add('on'); pct.classList.toggle('low', low);
+    };
+    ['levelchange', 'chargingchange'].forEach(ev => b.addEventListener(ev, draw)); draw();
+  }).catch(() => {});
+})();
 // only for someone new: nothing saved on this phone yet (people already using the app are not interrupted)
 if(FIRST_RUN && !store.get('tour1', false)) setTimeout(showTour, 900);
 
@@ -3139,7 +3195,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126115431';                                 // stamped by build.ps1
+const APP_VER = '20261126131137';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
