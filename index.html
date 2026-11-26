@@ -221,9 +221,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .pbody h3{margin:0 0 10px; font:700 12px var(--font-print); letter-spacing:.18em; color:var(--muted)}
 .ptop{position:sticky; top:0; z-index:2; background:var(--panel); border-bottom:1px solid var(--line)}
 .ptop .phead{position:static; border-bottom:0; padding-bottom:8px}
-.ptabs{display:flex; gap:6px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none}
+.ptabs{display:flex; gap:5px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none}
 .ptabs button, .hnav button{flex:none; border:1px solid var(--line); background:#14151a; color:var(--muted); border-radius:999px; padding:7px 15px; font:700 12px var(--font-ui)}
 .ptabs button[aria-pressed="true"]{color:#06070a; background:var(--illum); border-color:transparent; box-shadow:0 0 12px var(--illumglow)}
+.ptabs button{padding:7px 12px}
 .hnav{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px}
 .hnav button{padding:6px 12px; font-size:11.5px}
 .hnav button[aria-pressed="true"]{color:var(--fg); border-color:var(--illum); background:#22242b}
@@ -450,7 +451,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
     <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
-    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="fx" aria-pressed="false">ディマー・演出</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
+    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="fx" aria-pressed="false">ディマー・OP演出</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
     </div>
     <div class="pbody">
       <section data-tab="look">
@@ -742,12 +743,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
             <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・ROOM のキャラクター</dd>
-            <dt>ディマー・演出</dt><dd>夜のディマー・オープニング演出</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリスト・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音・自動で再開</dd>
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし</dd>
+            <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
             <dt>使い方</dt><dd>このページ</dd>
             <dt>アプリ</dt><dd>インストール・友達に教える・設定のバックアップ・更新のお知らせ</dd>
           </dl>
@@ -819,7 +820,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
           </dl>
-          <h3 style="margin-top:16px">ディマー・演出（⚙「ディマー・演出」）</h3>
+          <h3 style="margin-top:16px">ディマー・OP演出（⚙「ディマー・OP演出」）</h3>
           <dl class="help">
             <dt>夜のディマー</dt><dd>はじめは OFF。AUTO にすると日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます</dd>
             <dt>オープニング演出</dt><dd>アプリを開いたときの起動演出（約3秒）。タップで飛ばせます。OFF にもできます</dd>
@@ -2921,7 +2922,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126101510';                                 // stamped by build.ps1
+const APP_VER = '20261126101729';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
