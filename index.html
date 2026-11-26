@@ -3460,7 +3460,8 @@ function bpmShow(){
   if(performance.now() - bpmAt < 1000) return; bpmAt = performance.now();
   const el = $('#pbpm'); if(!el) return;
   let txt = '---', on = false;
-  if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = String(Math.round(dnShown)); on = true; rememberBpm(Math.round(dnShown)); }
+  if(DEMO){ txt = '120'; on = true; }
+  else   if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = String(Math.round(dnShown)); on = true; rememberBpm(Math.round(dnShown)); }
   else if(!dnState.playing){ dnShown = 0; dnIv.length = 0; }
   if(el.firstChild.nodeValue !== txt) el.firstChild.nodeValue = txt; el.classList.toggle('off', !on);
 }
@@ -3516,9 +3517,10 @@ function dnHit(auto){
   if(dnBeat % 8 === 0){ dnMove = dnPick(dnMovesNow(), dnMove); dnDj = dnPick(DN_DJ, dnDj); }
   if(dnBeat % 16 === 0) dnForm = dnPick(DN_FORMS, dnForm);
 }
+var DEMO = new URLSearchParams(location.search).has('demo');   // ?demo: the animals dance and BPM shows without sound (for screenshots)
 function dnTick(dt){
   dnT += dt;
-  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3, playing = isActive();
+  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3, playing = isActive() || DEMO;
   dnPulse += (bass - dnPulse)*.25;
   if(playing){
     // the beat = a kick in the bass: its energy (from its own unsmoothed meter) jumping well above the last second's average
@@ -4186,7 +4188,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126152456';                                 // stamped by build.ps1
+const APP_VER = '20261126152638';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
