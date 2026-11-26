@@ -157,10 +157,12 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 #trk,#time{flex:none; font-variant-numeric:tabular-nums}
 .inds{position:relative; z-index:1; display:flex; gap:12px; padding:2px 18px 0; height:20px; font:12px/1 var(--font-seg); letter-spacing:.1em}
 #dateLine{margin-left:auto; color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.08em; white-space:nowrap; font-family:var(--font-seg), "Segoe UI Symbol", "Apple Symbols", sans-serif}
-#ptime{position:absolute; z-index:4; right:74px; bottom:4px; height:16px; line-height:16px; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none}
-#pbpm{position:absolute; z-index:4; right:16px; bottom:4px; width:52px; height:16px; text-align:right; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.04em; pointer-events:none; white-space:nowrap}
-#pbpm.off{color:var(--dimt); text-shadow:none}
-#pnow{position:absolute; z-index:4; left:16px; right:128px; bottom:4px; height:16px; overflow:hidden; white-space:nowrap; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.04em; pointer-events:none; display:none;
+#ptime{position:absolute; z-index:4; right:82px; bottom:4px; height:16px; line-height:16px; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none}
+#pbpm{position:absolute; z-index:4; right:14px; bottom:3px; height:16px; box-sizing:border-box; padding:0 5px; border:1px solid rgba(255,162,74,.38); border-radius:3px; font:12px/14px var(--font-seg); color:#ffa24a; text-shadow:0 0 6px rgba(255,162,74,.6); font-variant-numeric:tabular-nums; letter-spacing:.04em; pointer-events:none; white-space:nowrap; transition:border-color .12s, box-shadow .12s}
+#pbpm small{font-size:8px; letter-spacing:.06em; margin-left:3px}
+#pbpm.hit{border-color:#ffa24a; box-shadow:0 0 8px rgba(255,162,74,.75), inset 0 0 6px rgba(255,162,74,.35); transition:none}   /* the frame flashes on each beat */
+#pbpm.off{color:rgba(255,162,74,.35); text-shadow:none; border-color:rgba(255,162,74,.18)}
+#pnow{position:absolute; z-index:4; left:16px; right:136px; bottom:4px; height:16px; overflow:hidden; white-space:nowrap; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.04em; pointer-events:none; display:none;
   -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent); mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
 #pnowT{display:inline-block}
 #pnowT.run{animation:mq var(--dur,14s) linear infinite}
@@ -173,7 +175,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .ind{color:var(--dimt)}
 .ind.on{color:var(--lit2); text-shadow:0 0 7px var(--lit2)}
 #viz{position:relative; z-index:1; display:block; width:664px; height:244px}
-#seek{position:absolute; z-index:4; left:16px; right:128px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
+#seek{position:absolute; z-index:4; left:16px; right:136px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
 #seek::-webkit-slider-runnable-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p)); box-shadow:0 0 6px var(--glow)}
 #seek::-moz-range-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p))}
 #seek::-webkit-slider-thumb{-webkit-appearance:none; width:10px; height:12px; margin-top:-4.5px; background:var(--lit); box-shadow:0 0 8px var(--lit)}
@@ -464,7 +466,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
         <span id="ptime">0:00</span>
-        <span id="pbpm" class="off">--- BPM</span>
+        <span id="pbpm" class="off">---<small>BPM</small></span>
         <div id="pnow"><span id="pnowT"></span></div>
       </div>
 
@@ -939,7 +941,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
             <dt>VOLUME ∧∨</dt><dd>音量（0〜40）。長押しで連続して変わる。40 がほかの音楽アプリと同じ大きさで、30 前後でもほぼ同じくらい、下のほうほど小さくなります（はじめは 30）。もっと大きくしたいときは ⚙「サウンド」のブースト</dd>
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
-            <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。その右の数字が再生時間、右端が曲のテンポ（「128 BPM」のように、低音から読み取ります。読み取れないときや止まっているときは ---）<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます<br>電池が 10％を切ると、充電するまでここに「⚠ BATT 9%　そろそろ充電を」がオレンジで出ます（DISC 中は再生位置のバーの代わりに出るので、早送り・巻き戻しは SEEK で）</dd>
+            <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。その右の数字が再生時間、右端のオレンジの枠が曲のテンポ（「128 BPM」のように。枠は拍に合わせて点滅、低音から読み取ります。読み取れないときや止まっているときは ---）<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます<br>電池が 10％を切ると、充電するまでここに「⚠ BATT 9%　そろそろ充電を」がオレンジで出ます（DISC 中は再生位置のバーの代わりに出るので、早送り・巻き戻しは SEEK で）</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すか、VOLUME を押すと戻る）</dd>
             <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに（ラジオのときは、いま流れている曲を履歴の ★ に）</dd>
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
@@ -3129,13 +3131,17 @@ function dnText(s, x, y, c){ [...s].forEach((ch, i) => { const f = DN_FONT[ch] |
 const BPM_DBG = new URLSearchParams(location.search).has('bpmdebug');
 var dnState = { st: { v: new Array(16).fill(0) }, playing: false, ph: 0 }, bpmAt = 0;
 // the tempo at the right end of the bottom row (--- while nothing plays or the bass gives no beat)
+function bpmBlink(auto){                                 // the BPM frame flashes on a beat heard in the music
+  const el = $('#pbpm'); if(!el || auto || el.classList.contains('off')) return;
+  el.classList.add('hit'); clearTimeout(bpmBlink.t); bpmBlink.t = setTimeout(() => el.classList.remove('hit'), 110);
+}
 function bpmShow(){
   if(performance.now() - bpmAt < 1000) return; bpmAt = performance.now();
   const el = $('#pbpm'); if(!el) return;
-  let txt = '--- BPM', on = false;
-  if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = Math.round(dnShown) + ' BPM'; on = true; rememberBpm(Math.round(dnShown)); }
+  let txt = '---', on = false;
+  if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = String(Math.round(dnShown)); on = true; rememberBpm(Math.round(dnShown)); }
   else if(!dnState.playing){ dnShown = 0; dnIv.length = 0; }
-  if(el.textContent !== txt) el.textContent = txt; el.classList.toggle('off', !on);
+  if(el.firstChild.nodeValue !== txt) el.firstChild.nodeValue = txt; el.classList.toggle('off', !on);
 }
 function dnBpm(x, y){
   let s = '--';
@@ -3185,7 +3191,7 @@ function dnHit(auto){
     if(dnIv.length >= 4){ const m = [...dnIv].sort((a, b) => a - b)[dnIv.length >> 1]; dnPeriod += (m - dnPeriod)*.5; }   // the median of the last beats, so a missed or extra kick does not throw it
     dnReal = dnT;
   }
-  dnLast = dnT; dnBeat++; beatPulse();
+  dnLast = dnT; dnBeat++; beatPulse(); bpmBlink(auto);
   if(dnBeat % 8 === 0){ dnMove = dnPick(DN_MOVES, dnMove); dnDj = dnPick(DN_DJ, dnDj); }
   if(dnBeat % 16 === 0) dnForm = dnPick(DN_FORMS, dnForm);
 }
@@ -3851,7 +3857,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126143030';                                 // stamped by build.ps1
+const APP_VER = '20261126145045';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
