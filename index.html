@@ -381,9 +381,15 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 .pltools .mini[aria-pressed="true"]{color:#06221f; background:#5ff6e6; border-color:#5ff6e6}
 .sharebox{margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
 .sharebox code{font:12px var(--font-ui); color:var(--fg); background:#0c0d11; border:1px solid var(--line); border-radius:6px; padding:7px 9px; user-select:all; word-break:break-all}
-#stat{left:815px; top:86px; width:30px; height:136px; border-radius:6px; background:var(--screen); box-shadow:0 0 0 1px #3a3f4b, inset 0 0 8px rgba(0,0,0,.8); overflow:hidden; transition:background .5s}
+#stat, #stat2{left:815px; top:86px; width:30px; height:136px; border-radius:6px; background:var(--screen); box-shadow:0 0 0 1px #3a3f4b, inset 0 0 8px rgba(0,0,0,.8); overflow:hidden; transition:background .5s}
 #stat.left{left:115px}
 #stat.off{display:none}
+#stat.sig{height:72px}
+#stat.sig svg{height:68px}
+#stat2{display:none; height:66px}
+#stat2.show{display:block}
+#stat2.left{left:115px}
+#stat2 svg{display:block; width:30px; height:62px; margin-top:2px}
 #stat svg{display:block; width:30px; height:132px; margin-top:2px}
 .stv text{font:8px/1 var(--font-seg); fill:var(--dimt); text-anchor:middle; letter-spacing:.02em}
 .stv .sb, .stv .sg, .stv .sbn, .stv .swd{fill:var(--dimt)}
@@ -429,6 +435,17 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <div class="wing r"></div>
       <div id="stat" aria-label="通信と電池">
         <svg class="stv" viewBox="0 0 30 132" aria-hidden="true">
+          <g class="sCell"><rect class="sb" data-b="1" x="5" y="17" width="4" height="4"/><rect class="sb" data-b="2" x="10" y="13" width="4" height="8"/><rect class="sb" data-b="3" x="15" y="9" width="4" height="12"/><rect class="sb" data-b="4" x="20" y="5" width="4" height="16"/></g>
+          <text class="sNet" x="15" y="32">--</text>
+          <g class="sWifi" fill="none" stroke-width="2.2" stroke-linecap="round"><path class="sw" data-b="3" d="M4 50a15 15 0 0 1 22 0"/><path class="sw" data-b="2" d="M8 54a9.5 9.5 0 0 1 14 0"/><path class="sw" data-b="1" d="M12 58a4 4 0 0 1 6 0"/><circle class="swd" cx="15" cy="62" r="1.8"/></g>
+          <g class="sBat"><rect class="sbo" x="7" y="78" width="16" height="38" rx="2" fill="none" stroke-width="1.6"/><rect class="sbn" x="11" y="75" width="8" height="3"/>
+            <rect class="sg" data-b="4" x="10" y="81" width="10" height="7"/><rect class="sg" data-b="3" x="10" y="90" width="10" height="7"/><rect class="sg" data-b="2" x="10" y="99" width="10" height="7"/><rect class="sg" data-b="1" x="10" y="108" width="10" height="5"/>
+            <path class="sChg" d="M17 84l-6 12h5l-2 10 7-13h-5z"/></g>
+          <text class="sPct" x="15" y="127">--</text>
+        </svg>
+      </div>
+      <div id="stat2" aria-hidden="true">
+        <svg class="stv" viewBox="0 70 30 62" aria-hidden="true">
           <g class="sCell"><rect class="sb" data-b="1" x="5" y="17" width="4" height="4"/><rect class="sb" data-b="2" x="10" y="13" width="4" height="8"/><rect class="sb" data-b="3" x="15" y="9" width="4" height="12"/><rect class="sb" data-b="4" x="20" y="5" width="4" height="16"/></g>
           <text class="sNet" x="15" y="32">--</text>
           <g class="sWifi" fill="none" stroke-width="2.2" stroke-linecap="round"><path class="sw" data-b="3" d="M4 50a15 15 0 0 1 22 0"/><path class="sw" data-b="2" d="M8 54a9.5 9.5 0 0 1 14 0"/><path class="sw" data-b="1" d="M12 58a4 4 0 0 1 6 0"/><circle class="swd" cx="15" cy="62" r="1.8"/></g>
@@ -590,6 +607,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="chips" id="statChips">
           <button class="chip" data-sp="r">右</button>
           <button class="chip" data-sp="l">左</button>
+          <button class="chip" data-sp="sl">電波は左・電池は右</button>
+          <button class="chip" data-sp="sr">電波は右・電池は左</button>
           <button class="chip" data-sp="in">画面の中</button>
           <button class="chip" data-sp="off">表示しない</button>
         </div>
@@ -886,7 +905,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>右上</dt><dd>今の時刻。その下に日付（2026/11/26 のように年から）・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
             <dt>1段目</dt><dd>左から DISC／RADIO、曲名（ラジオは局名）、曲の番号（ラジオは FM1-3 など）、時刻。長い曲名は流れて表示されます（1 ボタンの SCROLL で切り替え）</dd>
-            <dt>通信・電池の小窓</dt><dd>上から<b>電波</b>（棒の数が回線の速さ、下に 4G など）、<b>Wi-Fi</b>、<b>電池</b>（下に残り％、充電中は ⚡ マーク、15％以下で点滅）。使っているほうが光ります。⚙「表示」の「通信・電池の小窓」で、画面の右・左・画面の中（2段目の日付の左に小さく）・表示しないを選べます<br><small>Android（Chrome）はすべて表示。iPhone はネットにつながっているかだけ（NET／OFF）で、電池はスマホが教えてくれないため「--」のまま。Bluetooth の接続はアプリからは調べられないので出ません</small></dd><dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
+            <dt>通信・電池の小窓</dt><dd>上から<b>電波</b>（棒の数が回線の速さ、下に 4G など）、<b>Wi-Fi</b>、<b>電池</b>（下に残り％、充電中は ⚡ マーク、15％以下で点滅）。使っているほうが光ります。⚙「表示」の「通信・電池の小窓」で、画面の右・左・電波と電池を左右に分ける・画面の中（2段目の日付の左に小さく）・表示しないを選べます<br><small>Android（Chrome）はすべて表示。iPhone はネットにつながっているかだけ（NET／OFF）で、電池はスマホが教えてくれないため「--」のまま。Bluetooth の接続はアプリからは調べられないので出ません</small></dd><dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
           <dl class="help">
@@ -3159,10 +3178,13 @@ function statNet(){
 navigator.connection && navigator.connection.addEventListener && navigator.connection.addEventListener('change', statNet);
 setInterval(statNet, 30000); statNet();
 function setStatPos(v, announce){
-  if(!['r', 'l', 'in', 'off'].includes(v)) v = 'r';
-  const el = $('#stat'); el.classList.toggle('left', v === 'l'); el.classList.toggle('off', v === 'off' || v === 'in'); $('#statIn').classList.toggle('show', v === 'in');
+  if(!['r', 'l', 'sl', 'sr', 'in', 'off'].includes(v)) v = 'r';
+  const el = $('#stat'), el2 = $('#stat2'), split = v === 'sl' || v === 'sr';      // sl: bars on the left, battery on the right; sr: the other way
+  el.classList.toggle('left', v === 'l' || v === 'sl'); el.classList.toggle('sig', split);
+  el.querySelector('svg').setAttribute('viewBox', split ? '0 0 30 68' : '0 0 30 132');
+  el2.classList.toggle('show', split); el2.classList.toggle('left', v === 'sr'); el.classList.toggle('off', v === 'off' || v === 'in'); $('#statIn').classList.toggle('show', v === 'in');
   document.querySelectorAll('#statChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.sp === v));
-  if(announce){ store.set('statPos', v); flash(v === 'off' ? 'STATUS  OFF' : v === 'l' ? 'STATUS  LEFT' : v === 'in' ? 'STATUS  IN DISPLAY' : 'STATUS  RIGHT', 900); }
+  if(announce){ store.set('statPos', v); flash(v === 'off' ? 'STATUS  OFF' : v === 'l' ? 'STATUS  LEFT' : v === 'in' ? 'STATUS  IN DISPLAY' : v === 'sl' ? 'SIGNAL L  BATT R' : v === 'sr' ? 'SIGNAL R  BATT L' : 'STATUS  RIGHT', 900); }
 }
 document.querySelectorAll('#statChips .chip').forEach(b => b.addEventListener('click', () => setStatPos(b.dataset.sp, true)));
 setStatPos(store.get('statPos', 'r'), false);
@@ -3218,7 +3240,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126131358';                                 // stamped by build.ps1
+const APP_VER = '20261126131437';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
