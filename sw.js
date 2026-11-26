@@ -37,7 +37,7 @@ self.addEventListener('fetch', e => {
       .catch(() => caches.match('./index.html')));
     return;
   }
-  // everything else (icons, the shop logos): from the cache, fetched and kept the first time it is needed
+  // everything else (icons): from the cache, fetched and kept the first time it is needed
   e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
     if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
     return r;
