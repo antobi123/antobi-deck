@@ -340,6 +340,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 .hrow .hs{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--fg)}
 .hrow .hs small{display:block; color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis}
 .hrow .mini{font:700 10px var(--font-print); letter-spacing:.06em; color:var(--fg); background:#15171d; border:1px solid var(--line); border-radius:6px; padding:6px 8px; text-decoration:none; white-space:nowrap}
+#instBar{position:fixed; z-index:940; left:50%; bottom:12px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; max-width:calc(100% - 24px); padding:8px 8px 8px 16px; border-radius:999px; background:#14151a; border:1px solid var(--line); color:var(--fg); font:600 12px var(--font-ui); box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#instBar[hidden]{display:none}
+#instBar span{min-width:0}
+#instBar button{flex:none; border:0; border-radius:999px; padding:6px 12px; font:700 12px var(--font-ui); background:var(--illum); color:#06070a}
+#instBar #instLater{background:transparent; color:var(--muted); padding:6px 8px}
+#tour small{display:block; color:var(--muted); font-size:12px; line-height:1.6; margin:4px 0 6px}
 #updBar{position:fixed; z-index:950; left:50%; top:10px; transform:translateX(-50%); display:flex; align-items:center; gap:10px; padding:8px 10px 8px 16px; border-radius:999px; background:#14151a; border:1px solid var(--illum); box-shadow:0 0 18px var(--illumglow); color:var(--fg); font:700 13px var(--font-ui); white-space:nowrap}
 #updBar button{border:0; border-radius:999px; padding:6px 12px; font:700 12px var(--font-ui); background:var(--illum); color:#06070a}
 #updBar #updLater{background:transparent; color:var(--muted); padding:6px 8px}
@@ -763,9 +769,10 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">アプリとして使う（ホーム画面に追加）</h3>
           <ol class="hsteps">
             <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><small>⚙「その他」の「ホーム画面にインストール」ボタンが出ていれば、それを押すだけでもOK</small></li>
-            <li>iPhone（Safari）：画面下の共有ボタン（□↑）→「ホーム画面に追加」</li>
+            <li>iPhone（Safari）：画面下の共有ボタン（□↑）→「ホーム画面に追加」<br><small>共有ボタンが見当たらないときは、画面下の「⋯」の中にあります。「はじめての案内」の1枚目に、押す場所の絵があります</small></li>
             <li>ホーム画面のアイコンから開くと、全画面・横向きのアプリとして起動します。入れた曲や設定も、次に開いたときそのまま残ります</li>
           </ol>
+          <p class="rnote" style="margin:4px 0 0">ブラウザで開いているときは、画面の下に「ホーム画面に追加すると、全画面のアプリとして使えます」というお知らせが出ます。「追加する」で Android はそのまま追加の画面へ、iPhone は押す場所の絵が出ます。「あとで」を押すと1週間出ません。</p>
           <h3 style="margin-top:16px">覚えておくと便利</h3>
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
@@ -3021,28 +3028,81 @@ const TOUR = [
   ['SRC', 'ネットラジオを聴く', '右上の <b>SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3</b> と切り替わります。<b>1〜6</b> のボタンで局を選べて、全部で18局。曲が入っていなくてもすぐ聴けます。'],
   ['SETUP ⚙', '自分好みにする', '上の <b>SETUP ⚙</b> で、ディスプレイの柄・パネルの色・イコライザー・おやすみタイマー・目覚ましなどを設定できます。わからないときは ⚙ の「<b>使い方</b>」へ。']
 ];
-// the first card, only while the app is still opened in the browser: how to put it on the home screen
-const TOUR_APP = ['ホーム画面に追加', 'アプリとして使う', '<b>Android（Chrome）</b>：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><b>iPhone（Safari）</b>：共有ボタン（□↑）→「ホーム画面に追加」<br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
-function showTour(){
-  let k = 0; const cards = standalone() ? TOUR : [TOUR_APP].concat(TOUR);   // in the browser, putting it on the home screen comes first
-  const ov = document.createElement('div'); ov.id = 'tour';
+// iPhone: a picture of where to tap. ① the share button in Safari's bar, ② 「ホーム画面に追加」 in the menu that opens
+const IOS_PIC = `<svg viewBox="0 0 320 128" role="img" aria-label="Safari の共有ボタンを押して、ホーム画面に追加を選ぶ" style="display:block; width:100%; height:auto; margin:10px 0 4px">
+  <g font-family="sans-serif" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <text x="8" y="14" font-size="11" font-weight="700" fill="#5ff6e6" stroke="none">① 共有ボタン</text>
+    <rect x="8" y="22" width="140" height="96" rx="12" fill="#1a1d24" stroke="#3a3f4b"/>
+    <rect x="16" y="32" width="124" height="16" rx="8" fill="#2a2e38" stroke="none"/>
+    <text x="78" y="44" font-size="8" fill="#9aa0ad" stroke="none" text-anchor="middle">antobi123.github.io</text>
+    <line x1="8" y1="92" x2="148" y2="92" stroke="#3a3f4b"/>
+    <path d="M24 105l-5-5 5-5" stroke="#9aa0ad" stroke-width="2"/>
+    <path d="M44 95l5 5-5 5" stroke="#9aa0ad" stroke-width="2"/>
+    <circle cx="78" cy="102" r="12" fill="rgba(95,246,230,.18)" stroke="#5ff6e6" stroke-width="2"/>
+    <path d="M73 101v7h10v-7M78 96v9M75 99l3-3 3 3" stroke="#5ff6e6" stroke-width="2"/>
+    <path d="M104 97h10v10h-10z M106 99h6" stroke="#9aa0ad" stroke-width="1.6"/>
+    <path d="M126 97h9v9h-9z M129 94h9v9" stroke="#9aa0ad" stroke-width="1.6"/>
+    <path d="M78 62v20" stroke="#5ff6e6" stroke-width="2"/><path d="M73 77l5 6 5-6" stroke="#5ff6e6" stroke-width="2"/>
+    <text x="172" y="14" font-size="11" font-weight="700" fill="#5ff6e6" stroke="none">② ホーム画面に追加</text>
+    <rect x="172" y="22" width="140" height="96" rx="12" fill="#1a1d24" stroke="#3a3f4b"/>
+    <text x="184" y="44" font-size="10" fill="#c9ccd6" stroke="none">コピー</text>
+    <line x1="180" y1="53" x2="304" y2="53" stroke="#2a2e38"/>
+    <text x="184" y="68" font-size="10" fill="#c9ccd6" stroke="none">ブックマークを追加</text>
+    <line x1="180" y1="77" x2="304" y2="77" stroke="#2a2e38"/>
+    <rect x="176" y="82" width="132" height="26" rx="7" fill="rgba(95,246,230,.18)" stroke="#5ff6e6" stroke-width="1.5"/>
+    <text x="184" y="99" font-size="10" font-weight="700" fill="#ffffff" stroke="none">ホーム画面に追加</text>
+    <path d="M287 89h12v12h-12z M293 92v6M290 95h6" stroke="#ffffff" stroke-width="1.5"/>
+  </g></svg>`;
+// the first card, only while the app is still opened in the browser: how to put it on the home screen (iPhone gets the picture)
+function tourAppCard(){
+  if(IOS) return ['ホーム画面に追加', 'アプリとして使う',
+    'Safari の画面下にある<b>共有ボタン（□↑）</b>を押して、出てきたメニューから<b>「ホーム画面に追加」</b>を選びます。' + IOS_PIC
+    + '<small>共有ボタンが見当たらないときは、画面下の「⋯」の中にあります。メニューに無いときは、下にスクロールすると出てきます。</small><br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
+  return ['ホーム画面に追加', 'アプリとして使う', installEvt
+    ? '下の<b>「ホーム画面にインストール」</b>を押して、出てきた画面で「インストール」を選ぶだけです。ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'
+    : '<b>Android（Chrome）</b>：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><b>iPhone（Safari）</b>：共有ボタン（□↑）→「ホーム画面に追加」<br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
+}
+function showTour(only){                                      // only = 'app': just the home-screen card (from the banner)
+  if($('#tour')) return;
+  let k = 0; const app = tourAppCard();
+  const cards = only === 'app' ? [app] : standalone() ? TOUR : [app].concat(TOUR);   // in the browser, putting it on the home screen comes first
+  const ov = document.createElement('div'); ov.id = 'tour'; instBarShow(false);
+  const last = () => k >= cards.length - 1;
   const draw = () => {
     const [key, title, body] = cards[k];
-    ov.innerHTML = `<div class="tcard"><div class="tstep">${k + 1} / ${cards.length}</div><div class="tkey">${key}</div><h3>${title}</h3><p>${body}</p>`
-      + (cards[k] === TOUR_APP && installEvt ? '<div style="margin-top:12px"><button class="pbtn pri" data-t="install">ホーム画面にインストール</button></div>' : '')
-      + `<div class="tbtns"><button class="pbtn" data-t="skip">${k < cards.length - 1 ? 'スキップ' : ''}</button><button class="pbtn pri" data-t="next">${k < cards.length - 1 ? '次へ' : 'はじめる'}</button></div></div>`;
-    ov.querySelector('[data-t="skip"]').style.visibility = k < cards.length - 1 ? 'visible' : 'hidden';
+    ov.innerHTML = `<div class="tcard"><div class="tstep">${cards.length > 1 ? (k + 1) + ' / ' + cards.length : ''}</div><div class="tkey">${key}</div><h3>${title}</h3><p>${body}</p>`
+      + (cards[k] === app && installEvt ? '<div style="margin-top:12px"><button class="pbtn pri" data-t="install">ホーム画面にインストール</button></div>' : '')
+      + `<div class="tbtns"><button class="pbtn" data-t="skip">スキップ</button><button class="pbtn pri" data-t="next">${last() ? (only ? '閉じる' : 'はじめる') : '次へ'}</button></div></div>`;
+    ov.querySelector('[data-t="skip"]').style.visibility = last() ? 'hidden' : 'visible';
   };
   ov.addEventListener('click', e => {
     const b = e.target.closest('[data-t]'); if(!b) return;
-    if(b.dataset.t === 'install'){ $('#installBtn').click(); return; }
-    if(b.dataset.t === 'next' && k < cards.length - 1){ k++; draw(); return; }
-    store.set('tour1', true); ov.remove();
+    if(b.dataset.t === 'install'){ $('#installBtn').click(); setTimeout(() => { if($('#tour')){ draw(); } }, 800); return; }
+    if(b.dataset.t === 'next' && !last()){ k++; draw(); return; }
+    if(!only) store.set('tour1', true);
+    ov.remove(); setTimeout(maybeInstBar, 4000);
   });
   draw(); document.body.appendChild(ov);
 }
 $('#tourAgain') && $('#tourAgain').addEventListener('click', () => { closeSheet(); showTour(); });
-// only for someone new: never opened SETUP before (people already using the app are not interrupted)
+
+/* ホーム画面に追加のお知らせ: a small bar at the bottom while the app is opened in the browser.
+   Android: 「追加する」 opens the phone's own install screen. iPhone: it shows the picture of where to tap.
+   「あとで」 hides it for a week. */
+const instBar = document.createElement('div'); instBar.id = 'instBar'; instBar.hidden = true;
+instBar.innerHTML = '<span>ホーム画面に追加すると、全画面のアプリとして使えます</span><button id="instAdd">追加する</button><button id="instLater" aria-label="あとで">あとで</button>';
+document.body.appendChild(instBar);
+function instBarShow(v){ instBar.hidden = !v; }
+function maybeInstBar(){
+  const ok = !standalone() && !$('#tour') && Date.now() > (+store.get('instLater', 0) || 0) && (installEvt || IOS);
+  instBarShow(!!ok);
+}
+$('#instAdd').addEventListener('click', () => { instBarShow(false); if(installEvt) $('#installBtn').click(); else showTour('app'); });
+$('#instLater').addEventListener('click', () => { store.set('instLater', Date.now() + 7*24*3600e3); instBarShow(false); });
+window.addEventListener('beforeinstallprompt', () => setTimeout(maybeInstBar, 1500));
+window.addEventListener('appinstalled', () => { instBarShow(false); installState(); });
+setTimeout(maybeInstBar, 5000);
+// only for someone new: nothing saved on this phone yet (people already using the app are not interrupted)
 if(FIRST_RUN && !store.get('tour1', false)) setTimeout(showTour, 900);
 
 /* ---------------- アプリ: 友達に教える (the phone's own share menu; otherwise copy the address) ---------------- */
@@ -3079,7 +3139,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126115138';                                 // stamped by build.ps1
+const APP_VER = '20261126115431';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
