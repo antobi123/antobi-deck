@@ -724,7 +724,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
@@ -820,11 +820,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
           </dl>
-          <h3 style="margin-top:16px">ディマー・OP演出（⚙「ディマー・OP演出」）</h3>
-          <dl class="help">
-            <dt>夜のディマー</dt><dd>はじめは OFF。AUTO にすると日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます</dd>
-            <dt>オープニング演出</dt><dd>アプリを開いたときの起動演出（約3秒）。タップで飛ばせます。OFF にもできます</dd>
-          </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
           <h3>ディスプレイの柄</h3>
@@ -888,6 +883,13 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li>アプリを<b>開いたまま</b>にしてください。閉じたり他のアプリに切り替えると鳴らないことがあります</li>
             <li>目覚ましON の間は画面が消えないようにします（「鳴る前は画面を暗く」なら鳴る8時間前から暗め、鳴ったあとは元の明るさ。「暗くしない」なら明るいまま）。夜通し点いたままになるので、<b>充電しながら</b>がおすすめです</li>
           </ol>
+        </div>
+        <div class="hpage" data-h="fx" hidden>
+          <h3>ディマー・OP演出（⚙「ディマー・OP演出」）</h3>
+          <dl class="help">
+            <dt>夜のディマー</dt><dd>はじめは OFF。AUTO にすると日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます。日没・日の出の時刻は季節に合わせて変わります</dd>
+            <dt>オープニング演出</dt><dd>アプリを開いたときの起動演出（約3秒）。タップで飛ばせます。OFF にもできます。ON を押すと、その場でもう一度見られます</dd>
+          </dl>
         </div>
         <div class="hpage" data-h="lock" hidden>
           <h3>キーロック</h3>
@@ -2922,7 +2924,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126101729';                                 // stamped by build.ps1
+const APP_VER = '20261126101853';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
