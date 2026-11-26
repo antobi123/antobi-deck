@@ -975,7 +975,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>並べ替え</dt><dd>「入れた順」「曲名順」「アーティスト順」（同じアーティストはアルバムごと）「テンポ順」（ゆっくりな曲から。テンポが分からない曲は最後）。並べた順番がそのまま再生の順番になります</dd>
             <dt>曲のテンポ</dt><dd>曲を20秒ほど流すと、右下の BPM がその曲のテンポとして覚えられ、一覧の曲名の右に「120」のように出ます。もう一度流すと少しずつ正確に</dd>
             <dt>次の曲：テンポが近い曲</dt><dd>⚙「曲」の「次の曲：テンポが近い曲」にすると、今の曲とテンポの近い曲を次に選んで、ノリを途切れさせずにつなぎます（最近流した曲は続けて選ばれません。テンポがまだ分からない曲もときどき混ぜて、覚えていきます）。「いつもどおり」で元の順番に</dd>
-            <dt>曲が終わったら</dt><dd>自動で次の曲へ（REP が全曲なら最後の曲のあと最初に戻り、オフなら最後の曲で止まります）。スマホが次の曲へ進めなかったときも、数秒で自動で次の曲へ進みます</dd>
+            <dt>曲が終わったら</dt><dd>自動で次の曲へ（REP が全曲なら最後の曲のあと最初に戻り、オフなら最後の曲で止まります。止まったときは画面に「DISC END」と出て、▶ を押すと1曲目から再生します）。スマホが次の曲へ進めなかったときも、数秒で自動で次の曲へ進みます</dd>
             <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
             <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
           </dl>
@@ -4157,7 +4157,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126181132';                                 // stamped by build.ps1
+const APP_VER = '20261126181242';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
