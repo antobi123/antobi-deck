@@ -747,6 +747,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
             <li>他のアプリを開いても、画面を消しても音楽は流れ続けます。ロック画面やイヤホン・車のボタンで ⏯ ⏭ ⏮ を操作でき、ラジオは局のロゴも出ます。電話などで止まっても、終わると自動で続きから再生します</li>
+            <li>音が小さいと感じたら、まず VOLUME を 40 まで。それでも足りなければ ⚙「サウンド」の<b>ブースト</b>（+3dB・+6dB）で、ほかのアプリより大きくできます</li>
             <li>ホーム画面に追加すると全画面のアプリとして使えます。設定のバックアップや更新のお知らせは「アプリ」のページへ</li>
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
@@ -766,10 +767,10 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>再生</h3>
           <dl class="help">
             <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
-            <dt>VOLUME ∧∨</dt><dd>音量（0〜40）。長押しで連続して変わる。40 がほかの音楽アプリと同じ大きさで、30 前後でもほぼ同じくらい、下のほうほど小さくなります（はじめは 30）</dd>
+            <dt>VOLUME ∧∨</dt><dd>音量（0〜40）。長押しで連続して変わる。40 がほかの音楽アプリと同じ大きさで、30 前後でもほぼ同じくらい、下のほうほど小さくなります（はじめは 30）。もっと大きくしたいときは ⚙「サウンド」のブースト</dd>
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
             <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます</dd>
-            <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
+            <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すか、VOLUME を押すと戻る）</dd>
             <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに</dd>
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
             <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入り」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。その間は画面の FAV が光ります。「すべての曲」で元に戻ります</dd>
@@ -2937,7 +2938,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126113257';                                 // stamped by build.ps1
+const APP_VER = '20261126113403';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
