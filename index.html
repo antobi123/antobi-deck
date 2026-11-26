@@ -239,6 +239,17 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 :root.pulse .bar{filter:brightness(calc(1 + var(--pulse)*.4))}
 #plist .bt{flex:none; min-width:30px; text-align:right; font:12px/1 var(--font-seg); color:var(--illum); font-variant-numeric:tabular-nums; opacity:.85}
 .avrow{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0}
+.psearch{position:relative; padding:0 14px 10px}
+#setSearch{width:100%; box-sizing:border-box; background:#0c0d11; color:var(--fg); border:1px solid var(--line); border-radius:999px; padding:8px 14px; font:13px var(--font-ui)}
+#setSearch:focus{outline:none; border-color:var(--illum); box-shadow:0 0 8px var(--illumglow)}
+#setResults{position:absolute; left:14px; right:14px; top:calc(100% - 6px); z-index:6; background:#14151a; border:1px solid var(--line); border-radius:10px; max-height:280px; overflow:auto; box-shadow:0 10px 24px rgba(0,0,0,.6)}
+#setResults .sr{display:flex; justify-content:space-between; gap:10px; width:100%; text-align:left; padding:10px 14px; border:0; border-bottom:1px solid var(--line); background:none; color:var(--fg); font:13px var(--font-ui); cursor:pointer}
+#setResults .sr:hover, #setResults .sr:focus-visible{background:#1d1f26}
+#setResults .sr small{color:var(--muted); flex:none}
+#setResults .none{color:var(--muted); cursor:default}
+.found{outline:2px solid var(--illum); outline-offset:6px; border-radius:6px; box-shadow:0 0 14px var(--illumglow)}
+.resetsec{border-top:1px dashed var(--line); padding-top:14px; margin-top:6px}
+.resetsec .pbtn.arm{background:#a3262b; border-color:#ff6b6b; color:#fff}
 .bondv{display:flex; flex-direction:column; gap:4px; margin:4px 0 6px; font:700 13px var(--font-ui)}
 .bondv .hearts{color:#ff5fb0; font-size:20px; letter-spacing:3px; text-shadow:0 0 8px rgba(255,95,176,.6)}
 .bondv .hearts i{color:#3a3c43; font-style:normal; text-shadow:none}
@@ -578,6 +589,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
     <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
+    <div class="psearch"><input type="search" id="setSearch" placeholder="設定をさがす（例：時報・リング・BPM）" aria-label="設定をさがす" autocomplete="off"><div id="setResults" hidden></div></div>
     <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="chara" aria-pressed="false">キャラクター</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="fx" aria-pressed="false">ディマー・OP演出</button><button data-tab="app" aria-pressed="false">その他</button><button data-tab="help" aria-pressed="false">使い方</button></nav>
     </div>
     <div class="pbody">
@@ -708,6 +720,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="penguin"><span class="pet">🐧</span>ペンギン</button>
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
+        <div class="avrow"><input type="text" id="petName" maxlength="10" placeholder="名前を付ける（例：ミケ）" aria-label="動物の名前"></div>
         <h3 style="margin-top:14px">なつき度</h3>
         <div id="bondView" class="bondv"></div>
         <h3 style="margin-top:14px">季節の衣装と飾り</h3>
@@ -964,6 +977,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
             <li>他のアプリを開いても、画面を消しても音楽は流れ続けます。ロック画面やイヤホン・車のボタンで ⏯ ⏭ ⏮ を操作でき、ラジオは局のロゴも出ます。電話などで止まっても、終わると自動で続きから再生します</li>
             <li>音が小さいと感じたら、まず VOLUME を 40 まで。それでも足りなければ ⚙「サウンド」の<b>ブースト</b>（+3dB・+6dB）で、ほかのアプリより大きくできます</li>
+            <li>設定が見つからないときは、⚙ SETUP の一番上の<b>検索欄</b>に「時報」「リング」などと入れると、その設定（または使い方の説明）に飛べます</li>
+            <li>いろいろ触って分からなくなったら、各タブの一番下の「<b>このタブを最初の設定に戻す</b>」（2回押し）。そのタブの設定だけが元に戻り、曲・プレイリスト・写真・ラジオの局・誕生日・なつき度・記録は消えません</li>
             <li>インストール・今日の音楽（聴いた時間と1週間のグラフ）・ラジオの通信量の目安・友達に教える・設定のバックアップ・更新のお知らせは ⚙「その他」のタブへ</li>
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
@@ -1080,6 +1095,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます</dd>
             <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
             <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
+            <dt>名前</dt><dd>⚙「キャラクター」の動物の下の欄で、動物に名前（10文字まで）を付けられます。名前は、なつき度の欄（「ミケ のなつき度」）、レベルアップのお知らせ、なでたとき（「ミケ ♥」）に出ます</dd>
             <dt>なつき度</dt><dd>曲を一緒に聴いた時間（1分で1pt）と、なでた回数（1回3pt）で、ハートが1〜5個に増えます（30・120・300・600pt で次へ）。♥3 でブレイクダンス、♥4 で側転、♥5 で両手のハートのポーズを、STAGE・LINE DANCE で踊るようになります。レベルが上がると1段目に「♥ LEVEL UP」<br><small>先に見たいときは、アドレスの最後に ?bond=5</small></dd>
             <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面を長押しすると、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回なでると、くるくる回ります（スマホが少しブルッと震えます）</dd>
             <dt>天気で着替える</dt><dd>はじめから ON。右上の天気マークと同じ天気で、雨の日は傘、雪の日はマフラー、30℃以上の日はうちわを持ちます。季節の衣装や誕生日の帽子と一緒に着られます。天気は位置情報を許可していると分かります<br><small>先に見たいときは、アドレスの最後に ?wxwear=rain（ほかに snow・hot）</small></dd>
@@ -2998,13 +3014,14 @@ function bondLevel(){ const p = bondPts(); let l = 1; BOND_LV.forEach((v, i) => 
 function bondAdd(k, v){
   const before = bondLevel(); bond[k] = (bond[k] || 0) + v; if(!BOND_FAKE) store.set('bond', bond);
   const after = bondLevel();
-  if(after > before) flash('♥ LEVEL UP  ' + '♥'.repeat(after) + (after >= 3 ? '  NEW MOVE' : ''), 3500);
+  if(after > before) flash('♥ LEVEL UP  ' + (petName ? petName + ' ' : '') + '♥'.repeat(after) + (after >= 3 ? '  NEW MOVE' : ''), 3500);
   renderBond();
 }
+function escHtml(s){ return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]); }
 function renderBond(){
   const el = $('#bondView'); if(!el) return;
   const l = bondLevel(), p = bondPts(), next = BOND_LV[l];
-  el.innerHTML = `<span class="hearts">${'♥'.repeat(l)}<i>${'♥'.repeat(5 - l)}</i></span> なつき度 ${l}` + (next ? `<small>次まで あと ${next - p} pt（曲を一緒に聴くと1分1pt、なでると3pt）</small>` : '<small>いちばん仲よし！</small>');
+  el.innerHTML = `<span class="hearts">${'♥'.repeat(l)}<i>${'♥'.repeat(5 - l)}</i></span> ${petName ? escHtml(petName) + ' の' : ''}なつき度 ${l}` + (next ? `<small>次まで あと ${next - p} pt（曲を一緒に聴くと1分1pt、なでると3pt）</small>` : '<small>いちばん仲よし！</small>');
 }
 function dnMovesNow(){
   const l = bondLevel(), m = DN_MOVES.slice();
@@ -3028,7 +3045,7 @@ function statTick(){
   Object.keys(stats.days).sort().slice(0, -7).forEach(x => delete stats.days[x]);   // keep a week
   store.set('stats', stats);
   bond.min += sec/60; if(!BOND_FAKE) store.set('bond', bond);
-  const l = bondLevel(); if(l > (statTick.lv || l)) flash('♥ LEVEL UP  ' + '♥'.repeat(l) + (l >= 3 ? '  NEW MOVE' : ''), 3500); statTick.lv = l;
+  const l = bondLevel(); if(l > (statTick.lv || l)) flash('♥ LEVEL UP  ' + (petName ? petName + ' ' : '') + '♥'.repeat(l) + (l >= 3 ? '  NEW MOVE' : ''), 3500); statTick.lv = l;
   renderStats(); renderBond();
 }
 const fmtSec = s => { const m = Math.round(s/60); return m >= 60 ? Math.floor(m/60) + '時間' + (m % 60) + '分' : m + '分'; };
@@ -3076,6 +3093,84 @@ function setChime(v, announce){
 document.querySelectorAll('#chimeChips .chip').forEach(b => b.addEventListener('click', () => setChime(b.dataset.ch === '1', true)));
 setChime(chimeOn, false);
 
+/* ---------------- 動物の名前: shown with the bond, on level-ups and when you pet it ---------------- */
+var petName = String(store.get('petName', '') || '').slice(0, 10);
+(() => {
+  renderBond();                                            // the bond line was drawn before the name was known
+  const el = $('#petName'); if(!el) return;
+  el.value = petName;
+  el.addEventListener('change', () => { petName = el.value.trim().slice(0, 10); store.set('petName', petName); renderBond(); if(petName) flash('♥  ' + petName, 1200); });
+})();
+
+/* ---------------- SETUP の検索: type a word, jump to the setting (or the how-to entry) that has it ---------------- */
+(() => {
+  const box = $('#setSearch'), out = $('#setResults'); if(!box) return;
+  const tabName = t => { const b = document.querySelector(`#ptabs [data-tab="${t}"]`); return b ? b.textContent : ''; };
+  function index(){
+    const items = [];
+    document.querySelectorAll('.pbody > section[data-tab]').forEach(sec => {
+      const tab = sec.dataset.tab; if(tab === 'help') return;
+      let cur = null;
+      [...sec.children].forEach(el => {
+        if(el.tagName === 'H3'){ cur = { tab, el, title: el.textContent.trim(), text: el.textContent }; items.push(cur); }
+        else if(cur) cur.text += ' ' + el.textContent;
+      });
+    });
+    document.querySelectorAll('.hpage').forEach(pg => pg.querySelectorAll('dt').forEach(dt => {
+      const dd = dt.nextElementSibling;
+      items.push({ tab: 'help', h: pg.dataset.h, el: dt, title: dt.textContent.trim(), text: dt.textContent + ' ' + (dd ? dd.textContent : ''), help: true });
+    }));
+    return items;
+  }
+  function go(it){
+    out.hidden = true; box.value = '';
+    showTab(it.tab);
+    if(it.help){ const b = document.querySelector(`#hnav [data-h="${it.h}"]`); if(b) b.click(); }
+    setTimeout(() => { it.el.scrollIntoView({ block: 'center', behavior: 'smooth' }); it.el.classList.add('found'); setTimeout(() => it.el.classList.remove('found'), 1800); }, 60);
+  }
+  let hits = [];
+  box.addEventListener('input', () => {
+    const q = box.value.trim().toLowerCase();
+    if(!q){ out.hidden = true; return; }
+    const all = index();
+    const set = all.filter(it => !it.help && it.text.toLowerCase().includes(q)), help = all.filter(it => it.help && it.text.toLowerCase().includes(q));
+    hits = set.slice(0, 8).concat(help.slice(0, Math.max(3, 8 - set.length)));
+    out.innerHTML = hits.length ? '' : '<div class="sr none">見つかりませんでした。別の言葉でも試してみてね</div>';
+    hits.forEach((it, i) => {
+      const b = document.createElement('button'); b.className = 'sr'; b.type = 'button';
+      b.innerHTML = `<b></b><small></small>`; b.querySelector('b').textContent = it.title;
+      b.querySelector('small').textContent = it.help ? '使い方' : tabName(it.tab);
+      b.addEventListener('click', () => go(it)); out.append(b);
+    });
+    out.hidden = false;
+  });
+  box.addEventListener('keydown', e => { if(e.key === 'Enter' && hits[0]){ e.preventDefault(); go(hits[0]); } if(e.key === 'Escape'){ box.value = ''; out.hidden = true; } });
+})();
+
+/* ---------------- このタブを最初の設定に戻す: each settings tab gets a reset (two taps). Songs, playlists, photos, radio presets,
+   birthdays, the bond and the records are kept; only that tab's settings go back to how they came. ---------------- */
+const RESET_KEYS = {
+  look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos'],
+  chara: ['pet', 'costume', 'wxwear', 'petName'],
+  sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'loud'],
+  night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
+  fx: ['dimmer2', 'boot2'],
+  music: ['sort', 'nextTempo', 'plSel']
+};
+Object.keys(RESET_KEYS).forEach(tab => {
+  const secs = document.querySelectorAll(`.pbody > section[data-tab="${tab}"]`); if(!secs.length) return;
+  const s = document.createElement('section'); s.dataset.tab = tab; s.className = 'resetsec'; s.hidden = secs[0].hidden;
+  s.innerHTML = '<button class="pbtn" type="button">このタブを最初の設定に戻す</button><p class="rnote">このタブの設定だけを、はじめの状態に戻します。' + (tab === 'chara' ? '誕生日・記念日となつき度はそのまま残ります。' : tab === 'music' ? '入れた曲・★・プレイリストはそのまま残ります。' : '') + '</p>';
+  const b = s.querySelector('button');
+  b.addEventListener('click', () => {
+    if(!b.classList.contains('arm')){ b.classList.add('arm'); b.textContent = 'もう一度押すと戻します'; setTimeout(() => { b.classList.remove('arm'); b.textContent = 'このタブを最初の設定に戻す'; }, 3500); return; }
+    RESET_KEYS[tab].forEach(k => { try{ localStorage.removeItem('mdeck.' + k); }catch(e){} });
+    store.set('resetMsg', tab); location.reload();
+  });
+  secs[secs.length - 1].after(s);
+});
+(() => { const t = store.get('resetMsg', ''); if(t){ try{ localStorage.removeItem('mdeck.resetMsg'); }catch(e){} setTimeout(() => flash('SETTINGS RESET', 1800), 1200); } })();
+
 /* ---------------- 天気で着替える: an umbrella on a rainy day, a scarf when it snows, a fan when it is 30 °C or more ----------------
    From the weather the app already reads (右上の天気マーク). ?wxwear=rain / snow / hot previews one. */
 var wearOn = store.get('wxwear', true) !== false, wxTemp = null;
@@ -3119,7 +3214,7 @@ function petLove(){
   petN = now - petAt < 4 ? petN + 1 : 1; petAt = now;
   try{ navigator.vibrate && navigator.vibrate(15); }catch(e){}
   if(skin === 'vfdroom'){ try{ rmState = 'greet'; rmUntil = rmT + 3; rmFace = 0; }catch(e){} }
-  bondAdd('pets', 1);
+  bondAdd('pets', 1); if(petName) flash(petName + '  ♥', 900);
 }
 function petting(){ return performance.now()/1000 - petAt < 2.5; }
 function petPose(i){
@@ -4091,7 +4186,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126151219';                                 // stamped by build.ps1
+const APP_VER = '20261126152352';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4861,8 +4956,10 @@ function drawVFDDrive(dt){
 
 /* ---------------- loop ---------------- */
 let last = performance.now();
+const PERF = new URLSearchParams(location.search).has('perf');   // ?perf writes the average time a frame takes into <html data-perf>
 function frame(now){
   if(now - last < 1000/(ecoNow() ? 15 : 30) - 4){ requestAnimationFrame(frame); return; }   // 30 frames a second is plenty for the dot matrix (and keeps the phone cool)
+  const pf0 = PERF ? performance.now() : 0;
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   try{ dnState = dnTick(dt); bpmShow(); pulseTick(dt); }catch(e){}
@@ -4877,11 +4974,12 @@ function frame(now){
   // top right: always the clock (colon blinking like a car stereo), with the date, weekday and weather under it;
   // the playing time sits at the right end of the seek bar (none on the radio)
   const d = new Date();
-  $('#time').textContent = clockText(d);
+  const tt = clockText(d); if(tt !== frame.tt){ frame.tt = tt; $('#time').textContent = tt; }   // write only when it changes (a DOM write every frame costs a layout)
   const pt = mode === 'radio' ? '' : fmt(cur); if(pt !== frame.pt){ frame.pt = pt; $('#ptime').textContent = pt; root.classList.toggle('radio', mode === 'radio'); }
   const dk = d.getDate() + ':' + wxCode + ':' + (d.getHours() >= 6 && d.getHours() < 18); if(dk !== frame.dk){ frame.dk = dk; dateLine(d); }
   if(d.getSeconds() % 30 === 0) wxUpdate();
-  if(!seeking){ const pr = dur ? cur/dur*1000 : 0; seek.value = pr; seek.style.setProperty('--p', pr/10 + '%'); }
+  if(!seeking){ const pr = Math.round(dur ? cur/dur*1000 : 0); if(pr !== frame.pr){ frame.pr = pr; seek.value = pr; seek.style.setProperty('--p', pr/10 + '%'); } }
+  if(PERF){ frame.pa = (frame.pa || 0) + performance.now() - pf0; frame.pn = (frame.pn || 0) + 1; if(frame.pn >= 8){ root.dataset.perf = skin + ' ' + (frame.pa/frame.pn).toFixed(2) + 'ms'; frame.pa = frame.pn = 0; } }
   requestAnimationFrame(frame);
 }
 
