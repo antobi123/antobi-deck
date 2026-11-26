@@ -323,7 +323,19 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 .eqs input{width:100%; accent-color:var(--illum)}
 .eqs b{color:var(--fg); text-align:right; font-variant-numeric:tabular-nums}
 .hist{display:flex; flex-direction:column; gap:6px; margin-top:10px; max-height:380px; overflow:auto}
-.hrow{display:grid; grid-template-columns:auto 1fr auto auto; gap:8px; align-items:center; font-size:13px; padding:7px 9px; border:1px solid var(--line); border-radius:8px; background:#0c0d11}
+.hrow{display:grid; grid-template-columns:auto auto 1fr auto auto; gap:8px; align-items:center; font-size:13px; padding:7px 9px; border:1px solid var(--line); border-radius:8px; background:#0c0d11}
+.hrow .hfav{border:1px solid var(--line); border-radius:6px; background:#15171d; color:var(--muted); font:700 14px/1 var(--font-ui); padding:5px 7px}
+.hrow .hfav.on{color:#ffd23a; border-color:#ffd23a; text-shadow:0 0 8px rgba(255,210,58,.6)}
+#plist .drag{flex:none; width:26px; text-align:center; color:var(--muted); font:700 18px/1 var(--font-ui); cursor:grab; touch-action:none; user-select:none; padding:8px 0}
+#plist li.dragging{opacity:.75; outline:1px solid #5ff6e6; border-radius:8px; background:#10161a}
+.stsel{width:100%; margin-top:8px; background:#0c0d11; border:1px solid var(--line); border-radius:8px; color:var(--fg); padding:9px 10px; font:13px var(--font-ui)}
+#tour{position:fixed; inset:0; z-index:1000; display:grid; place-items:center; background:rgba(0,0,0,.72); padding:16px}
+#tour .tcard{width:min(420px, 100%); background:#111318; border:1px solid var(--line); border-radius:16px; padding:22px 20px 18px; color:var(--fg); font:14px/1.7 var(--font-ui); box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#tour .tstep{font:700 11px var(--font-print); letter-spacing:.12em; color:var(--muted)}
+#tour .tkey{display:inline-block; margin:10px 0 4px; padding:5px 12px; border-radius:999px; font:700 13px var(--font-print); letter-spacing:.08em; color:#06070a; background:var(--illum); box-shadow:0 0 14px var(--illumglow)}
+#tour h3{margin:6px 0 6px; font-size:18px}
+#tour p{margin:0; color:#c9ccd6}
+#tour .tbtns{display:flex; justify-content:space-between; gap:10px; margin-top:18px}
 .hrow .ht{color:var(--muted); font-size:10px; line-height:1.3; font-variant-numeric:tabular-nums; text-align:center}
 .hrow .hs{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--fg)}
 .hrow .hs small{display:block; color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis}
@@ -592,6 +604,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-sleep="90">90分</button>
           <button class="chip" data-sleep="end">この曲が終わったら</button>
         </div>
+        <div style="margin-top:10px"><span style="font:600 12px var(--font-ui); color:var(--muted)">おやすみに流すラジオ</span><select id="sleepSt" class="stsel" aria-label="おやすみに流すラジオ"></select></div>
         <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップするか、もう一度再生すると明るく戻ります。</p>
       </section>
       <section data-tab="night">
@@ -605,6 +618,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-asrc="radio">ラジオ（最後の局）</button>
           <button class="chip" data-asrc="disc">曲（プレイリスト）</button>
         </div>
+        <div style="margin-top:10px"><span style="font:600 12px var(--font-ui); color:var(--muted)">目覚ましのラジオ局</span><select id="alarmSt" class="stsel" aria-label="目覚ましのラジオ局"></select></div>
         <div class="chips" id="alarmDimChips" style="margin-top:8px">
           <button class="chip" data-adim="1">鳴る前は画面を暗く</button>
           <button class="chip" data-adim="0">暗くしない</button>
@@ -712,8 +726,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="radio">
         <h3>聴いた曲の履歴 <button class="mini" id="histClear">消す</button></h3>
+        <div class="chips" id="histChips"><button class="chip" data-hf="0">すべて</button><button class="chip" data-hf="1">★ だけ</button></div>
         <div class="hist" id="histList"></div>
-        <p class="rnote">曲名を公開している局で流れた曲を、新しい順に100曲まで残します。「コピー」で曲名をコピー、「検索」で YouTube を開きます。</p>
+        <p class="rnote">曲名を公開している局で流れた曲を、新しい順に100曲まで残します。左の ☆ をタップすると ★ になり、★ の曲は消えずに残ります。ラジオを聴きながら LIST を長押しすると、いま流れている曲が ★ になります。「コピー」で曲名をコピー、「検索」で YouTube を開きます。</p>
       </section>
       <section data-tab="app">
         <h3>アプリとして使う</h3>
@@ -743,6 +758,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li><b class="kb">DISP</b> か画面タップで、ディスプレイの柄を切り替え</li>
             <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
           </ol>
+          <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
           <h3 style="margin-top:16px">覚えておくと便利</h3>
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
@@ -771,7 +787,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
             <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すか、VOLUME を押すと戻る）</dd>
-            <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに</dd>
+            <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに（ラジオのときは、いま流れている曲を履歴の ★ に）</dd>
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
             <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入り」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。その間は画面の FAV が光ります。「すべての曲」で元に戻ります</dd>
             <dt>プレイリスト</dt><dd>「＋ 新しいリスト」で名前（「ドライブ用」「おやすみ用」など）を付けて作り、曲の右の <b>＋</b> をタップして入れます（✓ をもう一度で外す）。終わったら「選び終わり」。リストの名前を選ぶとその曲だけを再生し、画面の LIST が光ります。「曲を選ぶ」でいつでも出し入れ、「名前を変える」「このリストを消す」も（曲そのものは消えません）。10個まで</dd>
@@ -790,7 +806,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
             <dt>局のロゴ</dt><dd>ラジオを聴いているとき、ロック画面や車のディスプレイに局のロゴが出ます（ロゴの無い局は局名の画像）</dd>
-            <dt>聴いた曲の履歴</dt><dd>流れた曲名は ⚙「ラジオ」タブの「聴いた曲の履歴」に100曲まで残ります。「コピー」で曲名をコピー、「検索」で YouTube を開けます</dd>
+            <dt>聴いた曲の履歴</dt><dd>流れた曲名は ⚙「ラジオ」タブの「聴いた曲の履歴」に100曲まで残ります。「コピー」で曲名をコピー、「検索」で YouTube を開けます。左の ☆ をタップすると ★ になり、★ の曲は100曲を超えても消えません。「★ だけ」で見返せます。ラジオを聴きながら <b class="kb">LIST</b> を<b>長押し</b>すると、いま流れている曲を ★ にできます</dd>
           </dl>
           <h3 style="margin-top:16px">局を入れ替えるには</h3>
           <ol class="hsteps">
@@ -886,8 +902,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>時計の表示</dt><dd>右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に</dd>
-            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります</dd>
-            <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります。「鳴る前は画面を暗く」（はじめはこちら）か「暗くしない」も選べます</dd>
+            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります。「おやすみに流すラジオ」で局を選んでおくと、おやすみモードを始めたときにその局に切り替わります（「そのまま」なら今のまま）</dd>
+            <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります。「鳴る前は画面を暗く」（はじめはこちら）か「暗くしない」も選べます。「目覚ましのラジオ局」で鳴らす局を選べます（はじめは最後に聴いた局）</dd>
           </dl>
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
           <ol class="hsteps">
@@ -937,6 +953,8 @@ const store = {
   get(k, d){ try{ const v = localStorage.getItem('mdeck.'+k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem('mdeck.'+k, JSON.stringify(v)); }catch(e){} }
 };
+// nothing saved yet = the very first time this app is opened on this phone (for the first-run guide)
+const FIRST_RUN = (() => { try{ for(let i = 0; i < localStorage.length; i++) if((localStorage.key(i) || '').startsWith('mdeck.')) return false; return true; }catch(e){ return false; } })();
 
 /* ---------------- state ---------------- */
 const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdmine','vfdshuffle'], SKIN_NAME = {vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random'];
@@ -1253,8 +1271,10 @@ function renderList(){
   const ul = $('#plist'); ul.innerHTML = '';
   $('#empty').hidden = tracks.length > 0;
   $('#count').textContent = tracks.length + ' TRACKS';
-  tracks.forEach((t, i) => {
-    const li = document.createElement('li'); if(i === idx && mode === 'file') li.className = 'cur';
+  const dragOK = !!curList() && !plEditing && !lq;                  // a playlist plays in its own order, which ≡ drags to change
+  listOrder().forEach(i => {
+    const t = tracks[i];
+    const li = document.createElement('li'); if(i === idx && mode === 'file') li.className = 'cur'; li.dataset.key = t.key;
     const b = document.createElement('button');
     const n = document.createElement('span'); n.className = 'n'; n.textContent = String(i+1).padStart(2,'0');
     const cv = document.createElement('span'); cv.className = 'cv'; if(t.cover) cv.style.backgroundImage = `url("${t.cover}")`;
@@ -1271,6 +1291,7 @@ function renderList(){
       ib.setAttribute('aria-label', on ? 'リストから外す' : 'リストに入れる'); ib.addEventListener('click', e => { e.stopPropagation(); toggleInList(t.key); });
       li.append(b, ib);
     } else li.append(b, fv, del);
+    if(dragOK){ const h = document.createElement('span'); h.className = 'drag'; h.textContent = '≡'; h.setAttribute('aria-label', 'ドラッグで並べ替え'); h.addEventListener('pointerdown', e => dragRow(e, li)); li.prepend(h); }
     if((plEditing || inSel(t)) && matchQ(t)) ul.append(li);   // the chosen list (or all songs), narrowed by the search
   });
   plHint();
@@ -1568,6 +1589,7 @@ function stopMeta(){ clearInterval(metaTimer); metaTimer = 0; }
 
 /* preset editor + station search in the ⚙ panel */
 function renderPresets(){
+  try{ refreshStSelects(); }catch(e){}   // the first time, before the bands are ready, it is filled in later
   const ol = $('#presetList'); ol.innerHTML = '';
   STATIONS.forEach((s, i) => {
     const li = document.createElement('li');
@@ -2886,13 +2908,15 @@ var hist = store.get('hist', []); if(!Array.isArray(hist)) hist = [];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
 function addHist(title, station){
   if(hist[0] && hist[0].s === title) return;
-  hist.unshift({ t: Date.now(), s: title, n: station }); hist = hist.slice(0, 100); store.set('hist', hist); renderHist();
+  hist.unshift({ t: Date.now(), s: title, n: station }); trimHist(); store.set('hist', hist); renderHist();
 }
 function renderHist(){
   const box = $('#histList'); if(!box) return;
   if(!hist.length){ box.innerHTML = '<p class="rnote">まだありません。曲名を公開している局を聴くと、ここに残ります。</p>'; return; }
-  box.innerHTML = hist.map((h, i) => { const d = new Date(h.t);
-    return `<div class="hrow" data-i="${i}"><span class="ht">${d.getMonth() + 1}/${d.getDate()}<br>${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}</span>`
+  const rows = hist.map((h, i) => [h, i]).filter(([h]) => !histFavOnly || h.f);
+  if(!rows.length){ box.innerHTML = '<p class="rnote">★ の曲はまだありません。曲の左の ☆ をタップするか、ラジオを聴きながら LIST を長押しすると ★ になります。</p>'; return; }
+  box.innerHTML = rows.map(([h, i]) => { const d = new Date(h.t);
+    return `<div class="hrow" data-i="${i}"><button class="hfav${h.f ? ' on' : ''}" data-act="fav" aria-label="★">${h.f ? '★' : '☆'}</button><span class="ht">${d.getMonth() + 1}/${d.getDate()}<br>${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}</span>`
       + `<span class="hs">${esc(h.s)}<small>${esc(h.n)}</small></span><button class="mini" data-act="copy">コピー</button>`
       + `<a class="mini" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(h.s)}">検索</a></div>`; }).join('');
 }
@@ -2901,8 +2925,113 @@ $('#histList').addEventListener('click', e => {
   const h = hist[+b.closest('.hrow').dataset.i]; if(!h) return;
   (navigator.clipboard ? navigator.clipboard.writeText(h.s) : Promise.reject()).then(() => flash('COPIED', 800)).catch(() => flash('COPY NG', 800));
 });
-$('#histClear').addEventListener('click', () => { if(hist.length && confirm('聴いた曲の履歴を消しますか？')){ hist = []; store.set('hist', hist); renderHist(); } });
+$('#histClear').addEventListener('click', () => { if(hist.length && confirm('聴いた曲の履歴を消しますか？（★ の曲は残ります）')){ hist = hist.filter(h => h.f); store.set('hist', hist); renderHist(); } });
 renderHist();
+
+/* ---------------- プレイリストの曲順: a named list plays in its own order; ≡ drags a song up or down ---------------- */
+function listOrder(){
+  const p = curList();
+  if(!p || plEditing) return tracks.map((_, i) => i);
+  const at = new Map(tracks.map((t, i) => [t.key, i]));
+  return p.keys.map(k => at.get(k)).filter(i => i !== undefined);
+}
+function dragRow(e, li){
+  e.preventDefault(); e.stopPropagation();
+  const ul = $('#plist'), panel = $('.panel'), h = e.currentTarget; let moved = false;
+  try{ h.setPointerCapture(e.pointerId); }catch(err){}
+  li.classList.add('dragging');
+  const move = ev => {
+    const y = ev.clientY, pr = panel.getBoundingClientRect();
+    if(y < pr.top + 50) panel.scrollTop -= 10; else if(y > pr.bottom - 50) panel.scrollTop += 10;     // scroll along near the edges
+    let before = null;
+    for(const s of ul.children){ if(s === li) continue; const r = s.getBoundingClientRect(); if(y < r.top + r.height/2){ before = s; break; } }
+    if(li.nextSibling !== before){ ul.insertBefore(li, before); moved = true; }
+  };
+  const up = () => {
+    h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up);
+    li.classList.remove('dragging');
+    const p = curList(); if(!p || !moved) return;
+    const shown = [...ul.children].map(x => x.dataset.key);
+    p.keys = shown.concat(p.keys.filter(k => !shown.includes(k)));          // songs not loaded right now keep their place at the end
+    savePl(); renderList(); flash('ORDER SAVED', 800);
+  };
+  h.addEventListener('pointermove', move); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+}
+
+/* ---------------- ラジオの曲に ★: keep a song from the history; LIST held down on the radio stars the song on air ---------------- */
+var histFavOnly = false;
+function trimHist(){                                         // 100 songs, but ★ ones are never pushed out
+  let n = 0; hist = hist.filter(h => h.f || ++n <= 100);
+}
+function starOnAir(){
+  const t = radioNow && radioNow.nowTitle;
+  if(!t){ flash('NO SONG TITLE', 1200); return; }
+  let h = hist.find(x => x.s === t);
+  if(!h){ h = { t: Date.now(), s: t, n: radioNow.name }; hist.unshift(h); }
+  h.f = !h.f; trimHist(); store.set('hist', hist); renderHist();
+  flash(h.f ? '★  ' + t : '☆  REMOVED', 1600);
+}
+function setHistFav(v){
+  histFavOnly = v;
+  document.querySelectorAll('#histChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.hf === '1') === v));
+  renderHist();
+}
+document.querySelectorAll('#histChips .chip').forEach(b => b.addEventListener('click', () => setHistFav(b.dataset.hf === '1')));
+$('#histList').addEventListener('click', e => {
+  const b = e.target.closest('[data-act="fav"]'); if(!b) return;
+  const h = hist[+b.closest('.hrow').dataset.i]; if(!h) return;
+  h.f = !h.f; trimHist(); store.set('hist', hist); renderHist();
+});
+setHistFav(false);
+
+/* ---------------- おやすみ・目覚ましの局: a station chosen from FM1-FM3 ('' = as it is / the last one) ---------------- */
+var sleepSt = store.get('sleepSt', '') || '', alarmSt = store.get('alarmSt', '') || '';
+function refreshStSelects(){
+  [['#sleepSt', sleepSt, 'そのまま（聴いているもの）'], ['#alarmSt', alarmSt, '最後に聴いた局']].forEach(([id, val, first]) => {
+    const sel = $(id); if(!sel) return;
+    let html = `<option value="">${first}</option>`;
+    for(let b = 0; b < 3; b++) bandStations(b).forEach((s, i) => { if(s && s.url) html += `<option value="${b}:${i}">FM${b + 1}-${i + 1}　${String(s.name).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;"})[c])}</option>`; });
+    sel.innerHTML = html; sel.value = val || '';
+    if(sel.value !== (val || '')) sel.value = '';           // the station was taken off its button
+  });
+}
+function tuneChoice(v){                                      // true when it could tune the chosen station
+  if(!v) return false;
+  const [b, i] = v.split(':').map(Number), st = bandStations(b)[i];
+  if(!st || !st.url) return false;
+  if(band !== b) setBand(b);
+  tune(i); return true;
+}
+function sleepStation(){ if(sleepSt) tuneChoice(sleepSt); }
+$('#sleepSt') && $('#sleepSt').addEventListener('change', e => { sleepSt = e.target.value; store.set('sleepSt', sleepSt); });
+$('#alarmSt') && $('#alarmSt').addEventListener('change', e => { alarmSt = e.target.value; store.set('alarmSt', alarmSt); });
+setTimeout(refreshStSelects, 0);                          // after the bands are set up further down
+
+/* ---------------- はじめての案内: three cards the first time the app opens (and again from 使い方) ---------------- */
+const TOUR = [
+  ['▲ DISC LOAD', 'スマホの中の曲を入れる', 'デッキ左上の <b>▲ DISC LOAD</b> で、スマホに入っている曲（MP3・AAC など）を選びます。まとめて選べて、入れた曲は次に開いたときも残ります。<b>▶</b> で再生。'],
+  ['SRC', 'ネットラジオを聴く', '右上の <b>SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3</b> と切り替わります。<b>1〜6</b> のボタンで局を選べて、全部で18局。曲が入っていなくてもすぐ聴けます。'],
+  ['SETUP ⚙', '自分好みにする', '上の <b>SETUP ⚙</b> で、ディスプレイの柄・パネルの色・イコライザー・おやすみタイマー・目覚ましなどを設定できます。わからないときは ⚙ の「<b>使い方</b>」へ。']
+];
+function showTour(){
+  let k = 0;
+  const ov = document.createElement('div'); ov.id = 'tour';
+  const draw = () => {
+    const [key, title, body] = TOUR[k];
+    ov.innerHTML = `<div class="tcard"><div class="tstep">${k + 1} / ${TOUR.length}</div><div class="tkey">${key}</div><h3>${title}</h3><p>${body}</p>`
+      + `<div class="tbtns"><button class="pbtn" data-t="skip">${k < TOUR.length - 1 ? 'スキップ' : ''}</button><button class="pbtn pri" data-t="next">${k < TOUR.length - 1 ? '次へ' : 'はじめる'}</button></div></div>`;
+    ov.querySelector('[data-t="skip"]').style.visibility = k < TOUR.length - 1 ? 'visible' : 'hidden';
+  };
+  ov.addEventListener('click', e => {
+    const b = e.target.closest('[data-t]'); if(!b) return;
+    if(b.dataset.t === 'next' && k < TOUR.length - 1){ k++; draw(); return; }
+    store.set('tour1', true); ov.remove();
+  });
+  draw(); document.body.appendChild(ov);
+}
+$('#tourAgain') && $('#tourAgain').addEventListener('click', () => { closeSheet(); showTour(); });
+// only for someone new: never opened SETUP before (people already using the app are not interrupted)
+if(FIRST_RUN && !store.get('tour1', false)) setTimeout(showTour, 900);
 
 /* ---------------- アプリ: 友達に教える (the phone's own share menu; otherwise copy the address) ---------------- */
 const SHARE_URL = 'https://antobi123.github.io/antobi-deck/';
@@ -2938,7 +3067,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126113403';                                 // stamped by build.ps1
+const APP_VER = '20261126114059';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3093,6 +3222,13 @@ function pickNext(dir, auto){
   const fp = selPool(), pool = fp.length ? fp : tracks.map((_, i) => i), N = tracks.length;
   if(!N) return -1;
   if(shuffle && pool.length > 1){ let n; do{ n = pool[Math.floor(Math.random()*pool.length)]; } while(n === idx); return n; }
+  if(curList() && fp.length){                             // a named playlist: its own order
+    const ord = listOrder(), p = ord.indexOf(idx);
+    if(p < 0) return dir > 0 ? ord[0] : ord[ord.length - 1];
+    const q = p + dir;
+    if(q >= ord.length){ if(auto && repeat !== 'all') return -1; return ord[0]; }
+    return q < 0 ? ord[ord.length - 1] : ord[q];
+  }
   for(let k=1;k<=N;k++){
     const raw = idx + dir*k, n = ((raw % N) + N) % N;
     if(!pool.includes(n)) continue;
@@ -3104,7 +3240,7 @@ function pickNext(dir, auto){
 // hold LIST to ★ the song that is playing (a short press still opens the list)
 (() => {
   const lb = $('#listBtn'); let hold = 0, long = false;
-  lb.addEventListener('pointerdown', () => { long = false; clearTimeout(hold); hold = setTimeout(() => { long = true; if(mode === 'file' && tracks[idx]) toggleFav(idx); else flash('DISC ONLY', 900); }, 650); });
+  lb.addEventListener('pointerdown', () => { long = false; clearTimeout(hold); hold = setTimeout(() => { long = true; if(mode === 'file' && tracks[idx]) toggleFav(idx); else if(mode === 'radio') starOnAir(); else flash('DISC ONLY', 900); }, 650); });
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => lb.addEventListener(ev, () => clearTimeout(hold)));
   lb.addEventListener('click', e => { if(long){ e.stopImmediatePropagation(); e.preventDefault(); long = false; } }, true);
 })();
@@ -3453,6 +3589,7 @@ function setSleep(min, announce){
   $('#iSlp').classList.toggle('on', !!min); $('#sleepLeft').textContent = min ? '残り ' + min + '分' : '';
   setShade(); keepAwake();
   if(announce) flash(min ? 'SLEEP  ' + min + 'MIN' : 'SLEEP  OFF', 1200);
+  if(announce && min) sleepStation();             // おやすみ用の局, if one is chosen
 }
 document.querySelectorAll('#sleepChips .chip').forEach(b => b.addEventListener('click', () => b.dataset.sleep === 'end' ? setSleepEnd() : setSleep(+b.dataset.sleep, true)));
 sleepChipsOff();
@@ -3495,7 +3632,7 @@ function ringAlarm(){
   alarmRing = Date.now(); slept = false; sleepEnd = 0; sleepChipsOff();
   sleepFade = 0; applyVol(); setShade();
   if(alarmSrc === 'disc' && tracks.length){ leaveRadio(); playIndex(Math.max(0, idx)); }
-  else { if(!(STATIONS[radioCh] && STATIONS[radioCh].url)){ const i = firstFilled(); if(i >= 0) radioCh = i; else setBand(0); } tune(radioCh); }
+  else if(!tuneChoice(alarmSt)){ if(!(STATIONS[radioCh] && STATIONS[radioCh].url)){ const i = firstFilled(); if(i >= 0) radioCh = i; else setBand(0); } tune(radioCh); }   // 目覚まし用の局, else the last one
   showAlarmUI();
   flash('GOOD MORNING', 4000);
 }
