@@ -759,7 +759,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
           </ol>
           <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
-          <p class="rnote" style="margin:0 0 4px">初めて開いたときに出る案内です。曲を入れる・ラジオを聴く・自分好みにする・アプリとして使う（ブラウザで開いているときだけ）の順に出ます。</p>
+          <p class="rnote" style="margin:0 0 4px">初めて開いたときに出る案内です。アプリとして使う（ブラウザで開いているときだけ）・曲を入れる・ラジオを聴く・自分好みにする の順に出ます。</p>
           <h3 style="margin-top:16px">アプリとして使う（ホーム画面に追加）</h3>
           <ol class="hsteps">
             <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><small>⚙「その他」の「ホーム画面にインストール」ボタンが出ていれば、それを押すだけでもOK</small></li>
@@ -3021,10 +3021,10 @@ const TOUR = [
   ['SRC', 'ネットラジオを聴く', '右上の <b>SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3</b> と切り替わります。<b>1〜6</b> のボタンで局を選べて、全部で18局。曲が入っていなくてもすぐ聴けます。'],
   ['SETUP ⚙', '自分好みにする', '上の <b>SETUP ⚙</b> で、ディスプレイの柄・パネルの色・イコライザー・おやすみタイマー・目覚ましなどを設定できます。わからないときは ⚙ の「<b>使い方</b>」へ。']
 ];
-// the last card, only while the app is still opened in the browser: how to put it on the home screen
+// the first card, only while the app is still opened in the browser: how to put it on the home screen
 const TOUR_APP = ['ホーム画面に追加', 'アプリとして使う', '<b>Android（Chrome）</b>：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><b>iPhone（Safari）</b>：共有ボタン（□↑）→「ホーム画面に追加」<br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
 function showTour(){
-  let k = 0; const cards = standalone() ? TOUR : TOUR.concat([TOUR_APP]);
+  let k = 0; const cards = standalone() ? TOUR : [TOUR_APP].concat(TOUR);   // in the browser, putting it on the home screen comes first
   const ov = document.createElement('div'); ov.id = 'tour';
   const draw = () => {
     const [key, title, body] = cards[k];
@@ -3079,7 +3079,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126114954';                                 // stamped by build.ps1
+const APP_VER = '20261126115138';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
