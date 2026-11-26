@@ -155,7 +155,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 #pnowT.run{animation:mq var(--dur,14s) linear infinite}
 :root.radio #pnow{display:block}
 :root.radio #seek{visibility:hidden}
-#eqSliders.locked{opacity:.45; pointer-events:none}
+#eqSliders.locked, #beepSliders.locked{opacity:.45; pointer-events:none}
 .ind{color:var(--dimt)}
 .ind.on{color:var(--lit2); text-shadow:0 0 7px var(--lit2)}
 #viz{position:relative; z-index:1; display:block; width:664px; height:244px}
@@ -662,8 +662,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-beep="vib">振動</button>
           <button class="chip" data-beep="both">ピッ＋振動</button>
         </div>
-        <div class="eqs"><label>VOLUME<input type="range" id="beepVol" min="5" max="100" step="5" value="45"><b id="beepVolV">45</b></label></div>
-        <p class="rnote">デッキのボタンを押したときに、高級カーオーディオのような、やわらかく澄んだ「ピッ」という音や短い振動を返します。はじめは「ピッ」（振動は Android のみ）。</p>
+        <div class="pltools" style="margin-top:10px"><button class="mini" id="beepLock" aria-pressed="false">🔒 つまみをロック中 ─ タップで調整</button></div>
+        <div class="eqs locked" id="beepSliders"><label>VOLUME<input type="range" id="beepVol" disabled min="5" max="100" step="5" value="45"><b id="beepVolV">45</b></label></div>
+        <p class="rnote">デッキのボタンを押したときに、高級カーオーディオのような、やわらかく澄んだ「ピッ」という音や短い振動を返します。はじめは「ピッ」（振動は Android のみ）。VOLUME のつまみは触ってずれないようにロックしてあり、「タップで調整」で動かせます。</p>
       </section>
       <section data-tab="sound">
         <h3>自動で再開</h3>
@@ -853,7 +854,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です。BASS・MID・TREBLE のつまみは触ってずれないようにロックしてあり、「タップで調整」を押すと動かせます（15秒触らないと自動でロック）</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
             <dt>音量をそろえる</dt><dd>はじめは OFF（ON にすると使えます）。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。小さい曲は大きく、大きすぎる曲だけ少し下げるので、全体の音量はほとんど下がりません。初めての曲は20秒ほどで調整</dd>
-            <dt>操作音</dt><dd>デッキのボタンを押したときの、やわらかく澄んだ「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整</dd>
+            <dt>操作音</dt><dd>デッキのボタンを押したときの、やわらかく澄んだ「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整（つまみはロックしてあり、「タップで調整」で動かせます。15秒触らないと自動でロック）</dd>
             <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
@@ -2914,7 +2915,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126100607';                                 // stamped by build.ps1
+const APP_VER = '20261126100714';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3196,6 +3197,16 @@ setBeep(['off', 'beep', 'vib', 'both'].includes(beepMode) ? beepMode : 'beep', f
 $('#beepVol').value = beepVol; $('#beepVolV').textContent = beepVol;
 $('#beepVol').addEventListener('input', e => { beepVol = +e.target.value; store.set('beepVol', beepVol); $('#beepVolV').textContent = beepVol; });
 $('#beepVol').addEventListener('change', () => { if(beepMode === 'beep' || beepMode === 'both') keyFeedback(); });   // a sample beep at the new level
+// the same lock as the EQ knobs, so scrolling the panel cannot move the volume
+let beepUnlockT = 0;
+function beepLock(v){
+  clearTimeout(beepUnlockT); $('#beepSliders').classList.toggle('locked', v); $('#beepLock').setAttribute('aria-pressed', !v); $('#beepVol').disabled = v;
+  $('#beepLock').textContent = v ? '🔒 つまみをロック中 ─ タップで調整' : '🔓 調整中 ─ タップでロック';
+  if(!v) beepUnlockT = setTimeout(() => beepLock(true), 15000);
+}
+$('#beepLock').addEventListener('click', () => beepLock(!$('#beepSliders').classList.contains('locked')));
+$('#beepVol').addEventListener('input', () => { clearTimeout(beepUnlockT); beepUnlockT = setTimeout(() => beepLock(true), 15000); });
+beepLock(true);
 
 /* ---------------- 音量をそろえる: learn each song's (and station's) loudness and even it out ---------------- */
 let normOn = store.get('norm2', false), normMap = store.get('normMap2', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
