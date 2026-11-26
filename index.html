@@ -564,7 +564,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-boot="1">ON</button>
           <button class="chip" data-boot="0">OFF</button>
         </div>
-        <p class="rnote">アプリを開いたとき、蛍光管が温まって「ANTOBi」が光り、スペアナが走る起動演出（約3秒）。画面をタップすると飛ばせます。ON を押すとその場でもう一度見られます。</p>
+        <p class="rnote">アプリを開いたとき、蛍光管が温まって「ANTOBi」が光り、スペアナが走る起動演出（約3秒）。はじめは OFF。画面をタップすると飛ばせます。ON を押すとその場でもう一度見られます。</p>
       </section>
       <section data-tab="night">
         <h3>時計の表示</h3>
@@ -888,7 +888,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>ディマー・OP演出（⚙「ディマー・OP演出」）</h3>
           <dl class="help">
             <dt>夜のディマー</dt><dd>はじめは OFF。AUTO にすると日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます。日没・日の出の時刻は季節に合わせて変わります</dd>
-            <dt>オープニング演出</dt><dd>アプリを開いたときの起動演出（約3秒）。タップで飛ばせます。OFF にもできます。ON を押すと、その場でもう一度見られます</dd>
+            <dt>オープニング演出</dt><dd>はじめは OFF。ON にすると、アプリを開いたときに起動演出（約3秒）が出ます。タップで飛ばせます。ON を押すと、その場でもう一度見られます</dd>
           </dl>
         </div>
         <div class="hpage" data-h="lock" hidden>
@@ -2924,7 +2924,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126101853';                                 // stamped by build.ps1
+const APP_VER = '20261126103130';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3310,7 +3310,8 @@ for(let i=0;i<MY_N;i++) mineSync(i);
 renderMine();
 // the MY PHOTO display: nothing set → the spectrum and a hint; one → that picture; several → SHUFFLE among them
 /* ---------------- power-on opening: the tubes warm up, ANTOBi lights, the model name, a spectrum sweep (tap to skip) ---------------- */
-var bootOn = store.get('boot', true) !== false, bootT = bootOn ? 0 : 99, bootStart = performance.now();   // timed by the clock, so it takes 3 s on any phone
+var bootOn = store.get('boot2', false) === true,   // off unless you turned it on (a new key, so the old automatic "on" does not count)
+    bootT = bootOn ? 0 : 99, bootStart = performance.now();   // timed by the clock, so it takes 3 s on any phone
 const BOOT_LEN = 3.2;
 const bootTxt = document.createElement('canvas'); bootTxt.width = VB_C; bootTxt.height = VB_R;
 function bootText(){                                       // the words, drawn once at the matrix's own resolution
@@ -3362,7 +3363,7 @@ function drawBoot(dt){
 function bootSkip(){ if(bootT < BOOT_LEN){ bootT = BOOT_LEN; vbKey = ''; } }
 document.querySelector('.deck').addEventListener('pointerdown', bootSkip, { capture: true });
 function setBoot(v, announce){
-  bootOn = v; store.set('boot', v);
+  bootOn = v; if(announce) store.set('boot2', v);
   document.querySelectorAll('#bootChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.boot === '1') === v));
   if(announce){ if(v){ bootT = 0; bootStart = performance.now(); bootPx = null; vbKey = ''; } flash(v ? 'OPENING  ON' : 'OPENING  OFF', 900); }
 }
