@@ -463,7 +463,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
     <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
-    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="fx" aria-pressed="false">ディマー・OP演出</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">アプリ</button></nav>
+    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="fx" aria-pressed="false">ディマー・OP演出</button><button data-tab="help" aria-pressed="false">使い方</button><button data-tab="app" aria-pressed="false">その他</button></nav>
     </div>
     <div class="pbody">
       <section data-tab="look">
@@ -748,7 +748,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
@@ -759,12 +759,18 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
           </ol>
           <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
+          <h3 style="margin-top:16px">アプリとして使う（ホーム画面に追加）</h3>
+          <ol class="hsteps">
+            <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><small>⚙「その他」の「ホーム画面にインストール」ボタンが出ていれば、それを押すだけでもOK</small></li>
+            <li>iPhone（Safari）：画面下の共有ボタン（□↑）→「ホーム画面に追加」</li>
+            <li>ホーム画面のアイコンから開くと、全画面・横向きのアプリとして起動します。入れた曲や設定も、次に開いたときそのまま残ります</li>
+          </ol>
           <h3 style="margin-top:16px">覚えておくと便利</h3>
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
             <li>他のアプリを開いても、画面を消しても音楽は流れ続けます。ロック画面やイヤホン・車のボタンで ⏯ ⏭ ⏮ を操作でき、ラジオは局のロゴも出ます。電話などで止まっても、終わると自動で続きから再生します</li>
             <li>音が小さいと感じたら、まず VOLUME を 40 まで。それでも足りなければ ⚙「サウンド」の<b>ブースト</b>（+3dB・+6dB）で、ほかのアプリより大きくできます</li>
-            <li>ホーム画面に追加すると全画面のアプリとして使えます。設定のバックアップや更新のお知らせは「アプリ」のページへ</li>
+            <li>インストール・友達に教える・設定のバックアップ・更新のお知らせは ⚙「その他」のタブへ</li>
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
@@ -776,7 +782,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
             <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
             <dt>使い方</dt><dd>このページ（「はじめての案内をもう一度見る」もここ）</dd>
-            <dt>アプリ</dt><dd>インストール・友達に教える・設定のバックアップ・更新のお知らせ</dd>
+            <dt>その他</dt><dd>アプリとして使う（インストール）・友達に教える・設定のバックアップ・更新のお知らせ</dd>
           </dl>
         </div>
         <div class="hpage" data-h="play" hidden>
@@ -889,7 +895,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </dl>
         </div>
         <div class="hpage" data-h="appx" hidden>
-          <h3>アプリ（⚙「アプリ」）</h3>
+          <h3>その他（⚙「その他」）</h3>
           <dl class="help">
             <dt>インストール</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます</dd>
             <dt>設定のバックアップ</dt><dd>「設定を書き出す」で、ラジオのプリセット・表示や音の設定・聴いた曲の履歴を1つのファイルに保存。「設定を読み込む」で元に戻せます。機種変更のときや、友達に同じ設定を渡すときに。入れた曲は含まれません</dd>
@@ -3013,18 +3019,22 @@ const TOUR = [
   ['SRC', 'ネットラジオを聴く', '右上の <b>SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3</b> と切り替わります。<b>1〜6</b> のボタンで局を選べて、全部で18局。曲が入っていなくてもすぐ聴けます。'],
   ['SETUP ⚙', '自分好みにする', '上の <b>SETUP ⚙</b> で、ディスプレイの柄・パネルの色・イコライザー・おやすみタイマー・目覚ましなどを設定できます。わからないときは ⚙ の「<b>使い方</b>」へ。']
 ];
+// the last card, only while the app is still opened in the browser: how to put it on the home screen
+const TOUR_APP = ['ホーム画面に追加', 'アプリとして使う', '<b>Android（Chrome）</b>：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><b>iPhone（Safari）</b>：共有ボタン（□↑）→「ホーム画面に追加」<br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
 function showTour(){
-  let k = 0;
+  let k = 0; const cards = standalone() ? TOUR : TOUR.concat([TOUR_APP]);
   const ov = document.createElement('div'); ov.id = 'tour';
   const draw = () => {
-    const [key, title, body] = TOUR[k];
-    ov.innerHTML = `<div class="tcard"><div class="tstep">${k + 1} / ${TOUR.length}</div><div class="tkey">${key}</div><h3>${title}</h3><p>${body}</p>`
-      + `<div class="tbtns"><button class="pbtn" data-t="skip">${k < TOUR.length - 1 ? 'スキップ' : ''}</button><button class="pbtn pri" data-t="next">${k < TOUR.length - 1 ? '次へ' : 'はじめる'}</button></div></div>`;
-    ov.querySelector('[data-t="skip"]').style.visibility = k < TOUR.length - 1 ? 'visible' : 'hidden';
+    const [key, title, body] = cards[k];
+    ov.innerHTML = `<div class="tcard"><div class="tstep">${k + 1} / ${cards.length}</div><div class="tkey">${key}</div><h3>${title}</h3><p>${body}</p>`
+      + (cards[k] === TOUR_APP && installEvt ? '<div style="margin-top:12px"><button class="pbtn pri" data-t="install">ホーム画面にインストール</button></div>' : '')
+      + `<div class="tbtns"><button class="pbtn" data-t="skip">${k < cards.length - 1 ? 'スキップ' : ''}</button><button class="pbtn pri" data-t="next">${k < cards.length - 1 ? '次へ' : 'はじめる'}</button></div></div>`;
+    ov.querySelector('[data-t="skip"]').style.visibility = k < cards.length - 1 ? 'visible' : 'hidden';
   };
   ov.addEventListener('click', e => {
     const b = e.target.closest('[data-t]'); if(!b) return;
-    if(b.dataset.t === 'next' && k < TOUR.length - 1){ k++; draw(); return; }
+    if(b.dataset.t === 'install'){ $('#installBtn').click(); return; }
+    if(b.dataset.t === 'next' && k < cards.length - 1){ k++; draw(); return; }
     store.set('tour1', true); ov.remove();
   });
   draw(); document.body.appendChild(ov);
@@ -3067,7 +3077,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126114453';                                 // stamped by build.ps1
+const APP_VER = '20261126114905';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
