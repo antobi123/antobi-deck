@@ -149,6 +149,13 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .inds{position:relative; z-index:1; display:flex; gap:12px; padding:2px 18px 0; height:20px; font:12px/1 var(--font-seg); letter-spacing:.1em}
 #dateLine{margin-left:auto; color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.08em; white-space:nowrap; font-family:var(--font-seg), "Segoe UI Symbol", "Apple Symbols", sans-serif}
 #ptime{position:absolute; z-index:4; right:16px; bottom:4px; height:16px; line-height:16px; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none}
+#pnow{position:absolute; z-index:4; left:16px; right:70px; bottom:4px; height:16px; overflow:hidden; white-space:nowrap; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.04em; pointer-events:none; display:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent); mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
+#pnowT{display:inline-block}
+#pnowT.run{animation:mq var(--dur,14s) linear infinite}
+:root.radio #pnow{display:block}
+:root.radio #seek{visibility:hidden}
+#eqSliders.locked{opacity:.45; pointer-events:none}
 .ind{color:var(--dimt)}
 .ind.on{color:var(--lit2); text-shadow:0 0 7px var(--lit2)}
 #viz{position:relative; z-index:1; display:block; width:664px; height:244px}
@@ -348,6 +355,13 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 .mi .ops button.arm{background:#a3262b; border-color:#ff6b6b; color:#fff}
 #plist button.fav{flex:none; width:auto; display:block; padding:7px 9px; border:1px solid var(--line); border-radius:8px; background:#0c0d11; color:var(--muted); font:700 15px/1 var(--font-ui)}
 #plist button.fav.on{color:#ffd23a; border-color:#ffd23a; text-shadow:0 0 8px rgba(255,210,58,.6)}
+#plist button.inl{flex:none; width:auto; display:block; min-width:38px; padding:7px 9px; border:1px solid var(--line); border-radius:8px; background:#0c0d11; color:var(--muted); font:700 15px/1 var(--font-ui)}
+#plist button.inl.on{color:#5ff6e6; border-color:#5ff6e6; text-shadow:0 0 8px rgba(95,246,230,.6)}
+.pltools{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px}
+.pltools .mini{font:700 11px var(--font-ui); color:var(--fg); background:#15171d; border:1px solid var(--line); border-radius:6px; padding:6px 10px}
+.pltools .mini[aria-pressed="true"]{color:#06221f; background:#5ff6e6; border-color:#5ff6e6}
+.sharebox{margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.sharebox code{font:12px var(--font-ui); color:var(--fg); background:#0c0d11; border:1px solid var(--line); border-radius:6px; padding:7px 9px; user-select:all; word-break:break-all}
 </style>
 
 <div class="stage" id="stage">
@@ -370,6 +384,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
         <span id="ptime">0:00</span>
+        <div id="pnow"><span id="pnowT"></span></div>
       </div>
 
       <div class="wing l"></div>
@@ -589,7 +604,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-asrc="radio">ラジオ（最後の局）</button>
           <button class="chip" data-asrc="disc">曲（プレイリスト）</button>
         </div>
-        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにして、暗く保ちます。アプリを開いたまま、できれば充電しながら使ってください。</p>
+        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにして、鳴る8時間前からは暗く保ちます（鳴ったあとは明るく戻ります）。アプリを開いたまま、できれば充電しながら使ってください。</p>
       </section>
       <section data-tab="photo">
         <h3>MY PHOTO（自分の画像） <span id="myCount" style="float:right; font:600 11px var(--font-ui); color:var(--muted)"></span></h3>
@@ -608,12 +623,13 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-eq="vocal">VOCAL</button>
           <button class="chip" data-eq="night">NIGHT</button>
         </div>
-        <div class="eqs">
+        <div class="pltools" style="margin-top:10px"><button class="mini" id="eqLock" aria-pressed="false">🔒 つまみをロック中 ─ タップで調整</button></div>
+        <div class="eqs" id="eqSliders">
           <label>BASS<input type="range" id="eqBass" min="-8" max="8" step="1" value="0"><b id="eqBassV">0</b></label>
           <label>MID<input type="range" id="eqMid" min="-8" max="8" step="1" value="0"><b id="eqMidV">0</b></label>
           <label>TREBLE<input type="range" id="eqTreble" min="-8" max="8" step="1" value="0"><b id="eqTrebleV">0</b></label>
         </div>
-        <p class="rnote">プリセットを選ぶか、低音・中音・高音を ±8 で調整します。NIGHT は夜に小さめの音で聴く用。LOUD（5 ボタン）と重ねて使えます。</p>
+        <p class="rnote">プリセットを選ぶか、低音・中音・高音を ±8 で調整します。つまみは触ってずれないようにロックしてあり、「タップで調整」で動かせます（触らないまま15秒で自動でロック）。NIGHT は夜に小さめの音で聴く用。LOUD（5 ボタン）と重ねて使えます。</p>
       </section>
       <section data-tab="sound">
         <h3>クロスフェード</h3>
@@ -632,7 +648,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-norm="0">OFF</button>
           <button class="chip" data-norm="1">ON</button>
         </div>
-        <p class="rnote">曲ごと（ラジオは局ごと）の音の大きさを覚えて、大きすぎる曲は下げ、小さい曲は上げます。初めての曲は流れ始めて20秒ほどで調整されます。</p>
+        <p class="rnote">曲ごと（ラジオは局ごと）の音の大きさを覚えて、小さい曲は上げ、大きすぎる曲だけ少し下げます。初めての曲は流れ始めて20秒ほどで調整されます。</p>
       </section>
       <section data-tab="sound">
         <h3>操作音</h3>
@@ -655,7 +671,11 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
-        <div class="chips" id="favChips" style="margin-bottom:10px"><button class="chip" data-fav="all">すべての曲</button><button class="chip" data-fav="fav">★ お気に入りだけ</button></div>
+        <div class="chips" id="favChips" style="margin-bottom:8px"></div>
+        <div class="pltools" id="plTools" hidden><button class="mini" id="plEdit">曲を選ぶ</button><button class="mini" id="plRen">名前を変える</button><button class="mini" id="plDel">このリストを消す</button></div>
+        <p class="rnote" id="plHint" hidden></p>
+        <div class="rsearch" style="margin-top:6px"><input id="lq" type="search" placeholder="曲名・アーティスト・アルバムで検索" enterkeyhint="search"></div>
+        <div class="chips" id="sortChips" style="margin:8px 0 10px"><button class="chip" data-sort="add">入れた順</button><button class="chip" data-sort="title">曲名順</button><button class="chip" data-sort="artist">アーティスト順</button></div>
         <div class="row">
           <label class="pbtn pri" for="file" style="cursor:pointer">曲を追加</label>
           <button class="pbtn warn" id="clearBtn">全部消す</button>
@@ -690,6 +710,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <li>ホーム画面のアイコンから開くと、全画面・横向きで起動します</li>
         </ol>
       </section>
+      <section data-tab="app">
+        <h3>友達に教える</h3>
+        <div class="row"><button class="pbtn pri" id="shareBtn">友達に教える（LINE など）</button></div>
+        <div class="sharebox"><code id="shareUrl">https://antobi123.github.io/antobi-deck/</code><button class="pbtn" id="shareCopy">URLをコピー</button></div>
+        <p class="rnote" id="shareMsg">スマホの共有メニューが開くので、LINE やメールなど送りたいアプリを選んでね。送られるのはアプリのURLだけで、入れた曲や設定は送られません。</p>
+      </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
           <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="appx" aria-pressed="false">アプリ</button><button data-h="lock" aria-pressed="false">ロック</button>
@@ -712,7 +738,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・ROOM のキャラクター・夜のディマー・オープニング演出</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
-            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・1曲ずつ外す・全部消す）</dd>
+            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリスト・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音・自動で再開</dd>
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし</dd>
@@ -726,11 +752,14 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
             <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
-            <dt>一番下のバー</dt><dd>曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間</dd>
+            <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間<br>ラジオ：いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
             <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに</dd>
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
-            <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入りだけ」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。ON の間は画面の FAV が光ります</dd>
+            <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入り」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。その間は画面の FAV が光ります。「すべての曲」で元に戻ります</dd>
+            <dt>プレイリスト</dt><dd>「＋ 新しいリスト」で名前（「ドライブ用」「おやすみ用」など）を付けて作り、曲の右の <b>＋</b> をタップして入れます（✓ をもう一度で外す）。終わったら「選び終わり」。リストの名前を選ぶとその曲だけを再生し、画面の LIST が光ります。「曲を選ぶ」でいつでも出し入れ、「名前を変える」「このリストを消す」も（曲そのものは消えません）。10個まで</dd>
+            <dt>検索</dt><dd>⚙「曲」の検索欄に曲名・アーティスト・アルバムの一部を入れると、一覧がしぼり込まれます。タップでその曲を再生</dd>
+            <dt>並べ替え</dt><dd>「入れた順」「曲名順」「アーティスト順」（同じアーティストはアルバムごと）。並べた順番がそのまま再生の順番になります</dd>
             <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
             <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
           </dl>
@@ -768,8 +797,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="look" hidden>
           <h3>画面の見かた</h3>
           <dl class="help">
-            <dt>右上</dt><dd>今の時刻。その下に日付・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
-            <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
+            <dt>右上</dt><dd>今の時刻。その下に日付（2026/11/26 のように年から）・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
+            <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
           <dl class="help">
@@ -817,9 +846,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="sound" hidden>
           <h3>サウンド（⚙「サウンド」）</h3>
           <dl class="help">
-            <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です</dd>
+            <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です。BASS・MID・TREBLE のつまみは触ってずれないようにロックしてあり、「タップで調整」を押すと動かせます（15秒触らないと自動でロック）</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
-            <dt>音量をそろえる</dt><dd>はじめから ON。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。初めての曲は20秒ほどで調整</dd>
+            <dt>音量をそろえる</dt><dd>はじめから ON。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。小さい曲は大きく、大きすぎる曲だけ少し下げるので、全体の音量はほとんど下がりません。初めての曲は20秒ほどで調整</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整</dd>
             <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
@@ -830,6 +859,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>インストール</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます</dd>
             <dt>設定のバックアップ</dt><dd>「設定を書き出す」で、ラジオのプリセット・表示や音の設定・聴いた曲の履歴を1つのファイルに保存。「設定を読み込む」で元に戻せます。機種変更のときや、友達に同じ設定を渡すときに。入れた曲は含まれません</dd>
+            <dt>友達に教える</dt><dd>「友達に教える」でスマホの共有メニューが開き、LINE やメールでアプリのURLを送れます。「URLをコピー」で貼り付け用にも。送られるのはURLだけです</dd>
             <dt>新しいバージョン</dt><dd>アプリが更新されると、画面の上に「新しいバージョンがあります」と出ます。「更新する」を押すと、今の再生状態のまま最新版になります</dd>
           </dl>
         </div>
@@ -844,7 +874,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
           <ol class="hsteps">
             <li>アプリを<b>開いたまま</b>にしてください。閉じたり他のアプリに切り替えると鳴らないことがあります</li>
-            <li>目覚ましON の間は画面が消えないように暗く点いたままになるので、<b>充電しながら</b>がおすすめです</li>
+            <li>目覚ましON の間は画面が消えないようにします（鳴る8時間前からは暗め、鳴ったあとは元の明るさ）。夜通し点いたままになるので、<b>充電しながら</b>がおすすめです</li>
           </ol>
         </div>
         <div class="hpage" data-h="lock" hidden>
@@ -932,7 +962,8 @@ function ensureAudio(){
   eqB = AC.createBiquadFilter(); eqB.type = 'lowshelf'; eqB.frequency.value = 120;      // the EQ (⚙ サウンド)
   eqM = AC.createBiquadFilter(); eqM.type = 'peaking'; eqM.frequency.value = 1200; eqM.Q.value = .8;
   eqT = AC.createBiquadFilter(); eqT.type = 'highshelf'; eqT.frequency.value = 7000;
-  lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); normG = AC.createGain(); normAn = AC.createAnalyser(); normAn.fftSize = 2048; eqT.connect(normG); normG.connect(master); eqT.connect(normAn);   // normG: 音量をそろえる
+  lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); normG = AC.createGain(); normAn = AC.createAnalyser(); normAn.fftSize = 2048; eqT.connect(normG); { const lim = AC.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .003; lim.release.value = .25; normG.connect(lim); lim.connect(master); }   // a limiter keeps boosted quiet songs from cracking
+  eqT.connect(normAn);   // normG: 音量をそろえる
   master.connect(analyser); analyser.connect(AC.destination);
   master.connect(split); split.connect(anL, 0); split.connect(anR, 1);
   mediaSrc = AC.createMediaElementSource(audio); fadeG = AC.createGain(); mediaSrc.connect(fadeG); fadeG.connect(lowS);   // fadeG: fades the new song in
@@ -1071,8 +1102,9 @@ async function readTags(blob){
 const isAudio = f => f.type.startsWith('audio') || /\.(mp3|m4a|aac|wav|ogg|flac|opus)$/i.test(f.name);
 const trackKey = (name, size) => name + '|' + size;          // same file name + same size = same song
 const known = new Set();
+let seqN = 0;
 function makeTrack(r){
-  return { id: r.id, name: r.name.replace(/\.[^.]+$/, ''), title: r.title || '', artist: r.artist || '', album: r.album || '',
+  return { seq: r.id != null ? r.id : 1e9 + (seqN++), id: r.id, name: r.name.replace(/\.[^.]+$/, ''), title: r.title || '', artist: r.artist || '', album: r.album || '',
            cover: r.pic ? URL.createObjectURL(r.pic) : '', url: URL.createObjectURL(r.blob), key: trackKey(r.name, r.blob.size) };
 }
 const trackLabel = t => t.title ? (t.artist ? `${t.title} ─ ${t.artist}` : t.title) : t.name;
@@ -1091,16 +1123,17 @@ async function addFiles(list){
     if(id === null) saved = false; else rec.id = id;
     tracks.push(makeTrack(rec)); added++;
   }
-  renderList();
+  const firstT = tracks[first]; sortTracks(); renderList();
   if(!added){ flash(`ALREADY LOADED (${skipped})`, 1600); return; }
   flash((saved ? `${added} TRACKS LOADED` : 'LOADED (NOT SAVED)') + (skipped ? ` / ${skipped} SKIP` : ''), 1600);
-  if(mode !== 'file' || audio.paused) playIndex(first);
+  if(mode !== 'file' || audio.paused) playIndex(tracks.indexOf(firstT));
 }
 async function loadLibrary(){
   await DB.open();
   const recs = await DB.all();
   if(recs && recs.length){
     recs.forEach(r => { tracks.push(makeTrack(r)); known.add(trackKey(r.name, r.blob.size)); });
+    sortTracks();
     const last = store.get('last', null), li = last ? tracks.findIndex(t => t.key === last.key) : -1;
     idx = Math.max(0, li); if(li >= 0){ resumeIdx = li; resumeAt = last.t || 0; }   // pick up the last song where it stopped
     if(mode !== 'radio'){ $('#trk').textContent = '-' + String(idx + 1).padStart(2, '0'); setTitle(trackLabel(tracks[idx])); }
@@ -1153,11 +1186,20 @@ audio.addEventListener('error', () => { if(mode === 'file') flash('READ ERROR', 
 
 /* ---------------- display text ---------------- */
 let titleText = 'INSERT DISC ── ▲ DISC LOAD で曲を入れてね ── SRC でラジオ', flashT = 0;
+// ラジオ: the song on the air, on the bottom line where the seek bar is for DISC (scrolls when it is long)
+function setPnow(t){
+  const el = $('#pnowT'); if(el.dataset.t === t) return; el.dataset.t = t;
+  el.classList.remove('run'); el.textContent = t;
+  requestAnimationFrame(() => { if(el.scrollWidth > $('#pnow').clientWidth){ el.textContent = t + '　　◆　　' + t + '　　◆　　'; el.style.setProperty('--dur', Math.max(8, t.length*.45 + 5) + 's'); el.classList.add('run'); } });
+}
 function setTitle(t){ titleText = t; if(!flashT) renderMarq(t); }
 function flash(msg, ms){ clearTimeout(flashT); renderMarq(msg, true); flashT = setTimeout(() => { flashT = 0; renderMarq(titleText); }, ms); }
 function renderMarq(t, still){
-  marq.classList.remove('run'); marq.textContent = t;
-  if(still || !scroll) return;
+  marq.classList.remove('run'); marq.textContent = t; marq.style.fontSize = '';
+  if(still || !scroll){                                   // not scrolling: a long text gets smaller letters so it fits (then …)
+    requestAnimationFrame(() => { const w = marqbox.clientWidth - 8, sw = marq.scrollWidth; if(sw > w) marq.style.fontSize = Math.max(.6, w/sw)*100 + '%'; });
+    return;
+  }
   requestAnimationFrame(() => {
     if(marq.scrollWidth > marqbox.clientWidth){
       const sep = '　　◆　　';
@@ -1170,6 +1212,7 @@ function renderMarq(t, still){
 const fmt = s => { s = Math.max(0, Math.floor(s||0)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
 function updateUI(){
   const on = isActive();
+  root.classList.toggle('radio', mode === 'radio'); if(mode === 'radio' && radioNow) setPnow(radioNow.nowTitle ? '♪ ' + radioNow.nowTitle : radioNow.name + (radioNow.genre ? ' ─ ' + radioNow.genre : ''));
   $('#playIcon').innerHTML = on ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4v16l13-8z"/>';
   const ind = (id, v) => $(id).classList.toggle('on', !!v);
   ind('#iSt', on); ind('#iLoud', loud); ind('#iAtt', att); ind('#iRdm', shuffle); ind('#iRep', repeat !== 'off'); ind('#iScn', scan);
@@ -1195,8 +1238,14 @@ function renderList(){
     fv.addEventListener('click', e => { e.stopPropagation(); toggleFav(i); });
     const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕'; del.setAttribute('aria-label', 'この曲を外す');
     del.addEventListener('click', e => { e.stopPropagation(); if(!del.classList.contains('arm')){ del.classList.add('arm'); del.textContent = '外す？'; setTimeout(() => { del.classList.remove('arm'); del.textContent = '✕'; }, 3000); return; } removeTrack(i); });
-    li.append(b, fv, del); if(!(favOnly && favPool().length && !favs.has(t.key))) ul.append(li);   // ★ only: the list shows just the ★ songs
+    if(plEditing && curList()){                                   // choosing songs for a playlist: ＋ / ✓ instead of ★ and ✕
+      const on = curList().keys.includes(t.key), ib = document.createElement('button'); ib.className = 'inl' + (on ? ' on' : ''); ib.textContent = on ? '✓' : '＋';
+      ib.setAttribute('aria-label', on ? 'リストから外す' : 'リストに入れる'); ib.addEventListener('click', e => { e.stopPropagation(); toggleInList(t.key); });
+      li.append(b, ib);
+    } else li.append(b, fv, del);
+    if((plEditing || inSel(t)) && matchQ(t)) ul.append(li);   // the chosen list (or all songs), narrowed by the search
   });
+  plHint();
   updateUI();
 }
 function setSkin(s, announce){
@@ -1483,10 +1532,11 @@ async function pollMeta(){
   const st = radioNow, t = await nowPlaying(st);
   if(mode !== 'radio' || radioNow !== st || !t || t === st.nowTitle) return;
   st.nowTitle = t; addHist(t, st.name);
+  setPnow('♪ ' + t);
   setTitle(`♪ ${t} ── ${st.name}`);
   mediaMeta();
 }
-function startMeta(){ clearInterval(metaTimer); if(radioNow) radioNow.nowTitle = ''; setTimeout(pollMeta, 1500); metaTimer = setInterval(pollMeta, 20000); }
+function startMeta(){ clearInterval(metaTimer); if(radioNow) radioNow.nowTitle = ''; updateUI(); setTimeout(pollMeta, 1500); metaTimer = setInterval(pollMeta, 20000); }
 function stopMeta(){ clearInterval(metaTimer); metaTimer = 0; }
 
 /* preset editor + station search in the ⚙ panel */
@@ -1987,7 +2037,7 @@ function wxMark(code, day){
 }
 function dateLine(d){
   const code = wxFake ? ({rain: 61, storm: 95, clear: 0})[wxFake] ?? wxCode : wxCode, m = wxMark(code, d.getHours() >= 6 && d.getHours() < 18);
-  $('#dateLine').textContent = (d.getMonth() + 1) + '/' + d.getDate() + ' ' + WDAY[d.getDay()] + (m ? '  ' + m + '\uFE0E' : '');
+  $('#dateLine').textContent = d.getFullYear() + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getDate()).padStart(2, '0') + ' ' + WDAY[d.getDay()] + (m ? '  ' + m + '\uFE0E' : '');
 }
 const wxFake = new URLSearchParams(location.search).get('weather');   // ?weather=rain / storm / clear to preview
 function isRaining(){ if(wxFake) return wxFake !== 'clear'; if(weatherMode === 'rain') return true; if(weatherMode === 'clear') return false; return wxRain > 0; }
@@ -2722,6 +2772,17 @@ function setEq(v, announce){
 }
 document.querySelectorAll('#eqChips .chip').forEach(b => b.addEventListener('click', () => setEq(EQ_PRESETS[b.dataset.eq], true)));
 ['eqBass', 'eqMid', 'eqTreble'].forEach((id, i) => $('#' + id).addEventListener('input', e => { const v = eq.slice(); v[i] = +e.target.value; setEq(v, false); }));
+// the three knobs stay locked so a scroll through the panel cannot move them; unlock to adjust, they lock again after 15 s untouched
+let eqUnlockT = 0;
+function eqLock(v){
+  clearTimeout(eqUnlockT); $('#eqSliders').classList.toggle('locked', v); $('#eqLock').setAttribute('aria-pressed', !v);
+  $('#eqLock').textContent = v ? '🔒 つまみをロック中 ─ タップで調整' : '🔓 調整中 ─ タップでロック';
+  ['eqBass', 'eqMid', 'eqTreble'].forEach(id => { $('#' + id).disabled = v; });
+  if(!v) eqUnlockT = setTimeout(() => eqLock(true), 15000);
+}
+$('#eqLock').addEventListener('click', () => eqLock(!$('#eqSliders').classList.contains('locked')));
+$('#eqSliders').addEventListener('input', () => { clearTimeout(eqUnlockT); eqUnlockT = setTimeout(() => eqLock(true), 15000); });
+eqLock(true);
 renderEq();
 
 // crossfade: near the end of a song a second player carries on with its last seconds, fading out, while the next song
@@ -2744,10 +2805,12 @@ audio.addEventListener('timeupdate', () => {
 function startXfade(){
   xfBusy = true;
   const done = () => { xaudio.pause(); xaudio.removeAttribute('src'); xaudio.load(); xfBusy = false; };
+  const guard = setTimeout(() => { if(xfBusy && !handed) done(); }, 6000); let handed = false;    // the tail player never got going: give up, the song ends normally
   xG.gain.cancelScheduledValues(AC.currentTime); xG.gain.value = 0;
   xaudio.src = audio.src;
   xaudio.play().then(() => {
     xaudio.addEventListener('seeked', () => {                // the tail player is now where the song is: hand over
+      if(handed || !xfBusy) return; handed = true; clearTimeout(guard);
       const now = AC.currentTime, len = Math.max(1, Math.min(xfade, (audio.duration || 0) - audio.currentTime));
       xG.gain.setValueAtTime(1, now); xG.gain.linearRampToValueAtTime(0, now + len);
       fadeG.gain.cancelScheduledValues(now); fadeG.gain.setValueAtTime(0, now); fadeG.gain.linearRampToValueAtTime(1, now + len);
@@ -2758,6 +2821,23 @@ function startXfade(){
   }).catch(done);
 }
 
+/* 次の曲へ (safety net): if a song has finished, or sits stuck in its last seconds, and nothing moved on to the next
+   one within a few seconds (a phone that slept through the hand-over, a file whose length is written wrong), move on. */
+let endWd = { key: '', t: -1, n: 0, at: 0, fired: false };
+setInterval(() => {
+  if(mode !== 'file' || bgHand || !tracks.length || scan || slept || alarmRing){ endWd.n = 0; return; }
+  const k = idx + '|' + audio.src, c = audio.currentTime, d = audio.duration;
+  if(k !== endWd.key){ endWd = { key: k, t: c, n: 0, at: Date.now(), fired: false }; return; }
+  const nearEnd = d && isFinite(d) && d - c < 1.5;
+  const stuck = audio.ended
+    || (nearEnd && !audio.paused && c === endWd.t)                              // "playing" but no longer moving at the very end
+    || (nearEnd && audio.paused && (audio._byApp || 0) < endWd.at);              // stopped at the end without anyone pressing pause
+  endWd.t = c;
+  if(!stuck || endWd.fired){ endWd.n = 0; return; }
+  if(++endWd.n < 2) return;
+  endWd.fired = true; xfBusy = false;
+  if(repeat === 'one'){ audio.currentTime = 0; audio.play().catch(() => {}); } else step(1, true);
+}, 2000);
 /* ---------------- おやすみ: stop after this song ---------------- */
 var sleepAtEnd = false;
 function setSleepEnd(){
@@ -2797,6 +2877,19 @@ $('#histList').addEventListener('click', e => {
 $('#histClear').addEventListener('click', () => { if(hist.length && confirm('聴いた曲の履歴を消しますか？')){ hist = []; store.set('hist', hist); renderHist(); } });
 renderHist();
 
+/* ---------------- アプリ: 友達に教える (the phone's own share menu; otherwise copy the address) ---------------- */
+const SHARE_URL = 'https://antobi123.github.io/antobi-deck/';
+function copyShare(){
+  (navigator.clipboard ? navigator.clipboard.writeText(SHARE_URL) : Promise.reject())
+    .then(() => { $('#shareMsg').textContent = 'URLをコピーしました。LINE などに貼り付けて送ってね。'; flash('COPIED', 800); })
+    .catch(() => { const r = document.createRange(); r.selectNodeContents($('#shareUrl')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('#shareMsg').textContent = 'URLを選択しました。長押しでコピーしてね。'; });
+}
+$('#shareBtn').addEventListener('click', () => {
+  if(navigator.share) navigator.share({ title: 'ANTOBi Deck', text: '90年代のカーステみたいな音楽プレーヤー「ANTOBi Deck」。ブラウザで開いてホーム画面に追加すると使えるよ', url: SHARE_URL }).catch(() => {});
+  else copyShare();
+});
+$('#shareCopy').addEventListener('click', copyShare);
+
 /* ---------------- アプリ: settings backup ---------------- */
 $('#bkExport').addEventListener('click', () => {
   const data = { app: 'ANTOBi Deck', v: 1, at: new Date().toISOString(), settings: {} };
@@ -2818,7 +2911,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261125173847';                                 // stamped by build.ps1
+const APP_VER = '20261126095049';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -2898,24 +2991,79 @@ function setAutoResume(v, announce){
 document.querySelectorAll('#resumeChips .chip').forEach(b => b.addEventListener('click', () => setAutoResume(b.dataset.ar === '1', true)));
 setAutoResume(autoResume, false);
 /* ---------------- お気に入り (★): mark songs, play only the ★ ones, LIST held down marks the playing song ---------------- */
-var favs = new Set(store.get('favs', []) || []), favOnly = !!store.get('favOnly', false);
+/* プレイリスト: besides ★, lists with their own names ("ドライブ用", "おやすみ用"…). Choosing one plays only its songs.
+   A list remembers songs by the same key as ★, so a song taken out and put back in finds its lists again. */
+var favs = new Set(store.get('favs', []) || []);
+var plists = (store.get('plists', []) || []).filter(p => p && typeof p.name === 'string' && Array.isArray(p.keys));
+var plSel = store.get('plSel', null); if(plSel === null) plSel = store.get('favOnly', false) ? 'fav' : 'all';
+var plEditing = false, lq = '', sortMode = store.get('sort', 'add');
 const favPool = () => tracks.map((t, i) => favs.has(t.key) ? i : -1).filter(i => i >= 0);
+function curList(){ return typeof plSel === 'number' ? plists[plSel] || null : null; }
+function inSel(t){ return plSel === 'fav' ? favs.has(t.key) : curList() ? curList().keys.includes(t.key) : true; }
+function selPool(){ return plSel === 'all' ? [] : tracks.map((t, i) => inSel(t) ? i : -1).filter(i => i >= 0); }
+function matchQ(t){ return !lq || [t.title, t.artist, t.album, t.name].join(' ').toLowerCase().includes(lq); }
 function toggleFav(i){
   const t = tracks[i]; if(!t) return;
   if(favs.has(t.key)) favs.delete(t.key); else favs.add(t.key);
   store.set('favs', [...favs]); renderList(); favInd();
   flash(favs.has(t.key) ? '★  FAVORITE' : '☆  REMOVED', 1000);
 }
-function setFavOnly(v, announce){
-  favOnly = v; store.set('favOnly', v);
-  document.querySelectorAll('#favChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.fav === 'fav') === v));
-  renderList(); favInd();
-  if(announce) flash(v ? (favPool().length ? '★ FAVORITES ONLY' : 'NO FAVORITE YET') : 'ALL SONGS', 1200);
+function savePl(){ store.set('plists', plists); }
+function renderPlChips(){
+  const box = $('#favChips'); box.innerHTML = '';
+  const mk = (label, sel) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = label; b.setAttribute('aria-pressed', plSel === sel); b.addEventListener('click', () => selectPl(sel, true)); box.append(b); };
+  mk('すべての曲', 'all'); mk('★ お気に入り', 'fav'); plists.forEach((p, i) => mk(p.name, i));
+  const add = document.createElement('button'); add.className = 'chip'; add.textContent = '＋ 新しいリスト'; add.addEventListener('click', newPl); box.append(add);
+  $('#plTools').hidden = !curList();
+  $('#plEdit').textContent = plEditing ? '選び終わり' : '曲を選ぶ'; $('#plEdit').setAttribute('aria-pressed', plEditing);
 }
-function favInd(){ const el = $('#iFav'); if(el) el.classList.toggle('on', favOnly && favPool().length > 0); }
+function plHint(){
+  const h = $('#plHint'), n = selPool().length;
+  h.hidden = !tracks.length || plSel === 'all' || (n > 0 && !plEditing);
+  h.textContent = plEditing ? '＋ をタップした曲がこのリストに入ります（✓ でもう一度タップすると外れます）。終わったら「選び終わり」。'
+    : plSel === 'fav' ? 'まだ ★ の曲がありません。曲の ☆ をタップするか、LIST ボタンを長押しすると ★ になります（今はすべての曲を再生します）。'
+    : 'このリストはまだ空です。「曲を選ぶ」で曲を入れてね（今はすべての曲を再生します）。';
+}
+function selectPl(sel, announce){
+  plSel = sel === 'fav' || (typeof sel === 'number' && plists[sel]) ? sel : 'all'; store.set('plSel', plSel); plEditing = false;
+  renderPlChips(); renderList(); favInd();
+  if(announce){ const n = selPool().length; flash(plSel === 'all' ? 'ALL SONGS' : plSel === 'fav' ? (n ? '★ FAVORITES ONLY' : 'NO FAVORITE YET') : (n ? `PLAYLIST ${plSel + 1}  ${n} SONGS` : 'EMPTY PLAYLIST'), 1200); }
+}
+function newPl(){
+  if(plists.length >= 10){ flash('MAX 10 PLAYLISTS', 1200); return; }
+  const name = (prompt('新しいプレイリストの名前', 'プレイリスト' + (plists.length + 1)) || '').trim().slice(0, 20); if(!name) return;
+  plists.push({ name, keys: [] }); savePl(); selectPl(plists.length - 1, false);
+  if(tracks.length){ plEditing = true; renderPlChips(); renderList(); }
+  flash('SELECT SONGS', 1200);
+}
+function toggleInList(key){
+  const p = curList(); if(!p) return; const k = p.keys.indexOf(key);
+  if(k >= 0) p.keys.splice(k, 1); else p.keys.push(key); savePl(); renderList(); favInd();
+}
+$('#plEdit').addEventListener('click', () => { plEditing = !plEditing; renderPlChips(); renderList(); favInd(); });
+$('#plRen').addEventListener('click', () => { const p = curList(); if(!p) return; const n = (prompt('プレイリストの名前', p.name) || '').trim().slice(0, 20); if(n){ p.name = n; savePl(); renderPlChips(); } });
+$('#plDel').addEventListener('click', () => { const p = curList(); if(!p || !confirm(`「${p.name}」を消しますか？（曲そのものは消えません）`)) return; plists.splice(plSel, 1); savePl(); selectPl('all', false); flash('PLAYLIST DELETED', 1000); });
+function favInd(){ const el = $('#iFav'); if(!el) return; el.textContent = plSel === 'fav' ? 'FAV' : 'LIST'; el.classList.toggle('on', plSel !== 'all' && selPool().length > 0); }
+/* 並べ替え: the songs in the order they were put in, by title or by artist. The order is the play order too. */
+function sortTracks(){
+  const cur = tracks[idx], rT = resumeIdx >= 0 ? tracks[resumeIdx] : null, cmp = (a, b) => a.localeCompare(b, 'ja', { numeric: true, sensitivity: 'base' });
+  const ttl = t => t.title || t.name;
+  tracks.sort(sortMode === 'title' ? (a, b) => cmp(ttl(a), ttl(b)) || a.seq - b.seq
+    : sortMode === 'artist' ? (a, b) => (!a.artist - !b.artist) || cmp(a.artist, b.artist) || cmp(a.album, b.album) || cmp(ttl(a), ttl(b)) || a.seq - b.seq
+    : (a, b) => a.seq - b.seq);
+  if(cur) idx = tracks.indexOf(cur); if(rT) resumeIdx = tracks.indexOf(rT);
+  if(mode === 'file' && cur) $('#trk').textContent = '-' + String(idx + 1).padStart(2, '0');
+}
+function setSort(m, announce){
+  sortMode = ['add', 'title', 'artist'].includes(m) ? m : 'add'; if(announce) store.set('sort', sortMode);
+  document.querySelectorAll('#sortChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.sort === sortMode));
+  if(announce){ sortTracks(); renderList(); flash('SORT  ' + ({ add: 'ADDED', title: 'TITLE', artist: 'ARTIST' })[sortMode], 900); }
+}
+document.querySelectorAll('#sortChips .chip').forEach(b => b.addEventListener('click', () => setSort(b.dataset.sort, true)));
+$('#lq').addEventListener('input', e => { lq = e.target.value.trim().toLowerCase(); renderList(); });
 // the next song to play: in order or shuffled, only ★ songs when that is on; -1 = the end of the list (repeat off)
 function pickNext(dir, auto){
-  const fp = favOnly ? favPool() : [], pool = fp.length ? fp : tracks.map((_, i) => i), N = tracks.length;
+  const fp = selPool(), pool = fp.length ? fp : tracks.map((_, i) => i), N = tracks.length;
   if(!N) return -1;
   if(shuffle && pool.length > 1){ let n; do{ n = pool[Math.floor(Math.random()*pool.length)]; } while(n === idx); return n; }
   for(let k=1;k<=N;k++){
@@ -2926,7 +3074,6 @@ function pickNext(dir, auto){
   }
   return pool[0];
 }
-document.querySelectorAll('#favChips .chip').forEach(b => b.addEventListener('click', () => setFavOnly(b.dataset.fav === 'fav', true)));
 // hold LIST to ★ the song that is playing (a short press still opens the list)
 (() => {
   const lb = $('#listBtn'); let hold = 0, long = false;
@@ -2934,7 +3081,7 @@ document.querySelectorAll('#favChips .chip').forEach(b => b.addEventListener('cl
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => lb.addEventListener(ev, () => clearTimeout(hold)));
   lb.addEventListener('click', e => { if(long){ e.stopImmediatePropagation(); e.preventDefault(); long = false; } }, true);
 })();
-setFavOnly(favOnly, false);
+setSort(sortMode, false); selectPl(plSel, false);
 /* ---------------- 曲: remove a single song (two taps on its ✕) ---------------- */
 async function removeTrack(i){
   const t = tracks[i]; if(!t) return;
@@ -3041,8 +3188,8 @@ $('#beepVol').addEventListener('input', e => { beepVol = +e.target.value; store.
 $('#beepVol').addEventListener('change', () => { if(beepMode === 'beep' || beepMode === 'both') keyFeedback(); });   // a sample beep at the new level
 
 /* ---------------- 音量をそろえる: learn each song's (and station's) loudness and even it out ---------------- */
-let normOn = store.get('norm2', true), normMap = store.get('normMap', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
-const NORM_TARGET = -19;                                // average loudness the songs are brought to (dBFS RMS)
+let normOn = store.get('norm2', true), normMap = store.get('normMap2', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
+const NORM_TARGET = -14;                                // average loudness the songs are brought to (dBFS RMS): about a normal modern song, so loud songs are only trimmed a little
 function setNorm(v, announce){
   normOn = v; if(announce) store.set('norm2', v);
   document.querySelectorAll('#normChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.norm === '1') === v));
@@ -3064,10 +3211,10 @@ setInterval(() => {                                      // listen for ~20 s of 
   if(db < -50) return;                                  // skip silence
   normAcc += Math.pow(10, db/10); normN++;
   if(normN >= 80){                                      // 80 × 250 ms
-    const avg = 10*Math.log10(normAcc/normN), gain = Math.max(-9, Math.min(9, NORM_TARGET - avg));
+    const avg = 10*Math.log10(normAcc/normN), gain = Math.max(-4, Math.min(9, NORM_TARGET - avg));
     normMap[normKey] = Math.round(gain*10)/10; normN = 0; normAcc = 0;
     const keys = Object.keys(normMap); if(keys.length > 400) delete normMap[keys[0]];
-    store.set('normMap', normMap); normApply();
+    store.set('normMap2', normMap); normApply();
   }
 }, 250);
 document.querySelectorAll('#normChips .chip').forEach(b => b.addEventListener('click', () => setNorm(b.dataset.norm === '1', true)));
@@ -3220,15 +3367,22 @@ function drawMine(dt){
    and fades the sound in over a minute; while armed it keeps the screen from switching off, dimmed. */
 let eco = !!store.get('eco2', true), sleepEnd = 0, slept = false, alarmOn = !!store.get('alarm', false), alarmRing = 0;
 let alarmTime = store.get('alarmTime', '07:00'), alarmSrc = store.get('alarmSrc', 'radio'), alarmFired = '';
-const ecoNow = () => eco || sleepEnd > 0 || sleepAtEnd || slept || (alarmOn && !alarmRing);
+function alarmNear(){                                        // the alarm is set and due within 8 hours (the night before it, not the day after)
+  if(!alarmOn || alarmRing) return false;
+  const [hh, mm] = alarmTime.split(':').map(Number), now = new Date(), t = new Date(now); t.setHours(hh, mm, 0, 0); if(t <= now) t.setDate(t.getDate() + 1);
+  return t - now < 8*3600e3;
+}
+const ecoNow = () => eco || sleepEnd > 0 || sleepAtEnd || slept || alarmNear();
 const shade = document.createElement('div');
 shade.style.cssText = 'position:fixed; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity 1.2s; z-index:900';
 document.body.appendChild(shade);
 function setShade(){
-  const o = slept ? .88 : (sleepEnd || sleepAtEnd) ? .62 : (alarmOn && !alarmRing) ? .62 : 0;
+  const o = slept ? .88 : (sleepEnd || sleepAtEnd || alarmNear()) ? .62 : 0;   // after the alarm has rung the screen is bright again
   shade.style.opacity = o; shade.style.pointerEvents = slept ? 'auto' : 'none';
 }
-shade.addEventListener('click', () => { slept = false; setShade(); });
+function wakeUp(){ if(slept){ slept = false; setShade(); } }
+shade.addEventListener('click', wakeUp);
+[audio, plain].forEach(el => el.addEventListener('playing', wakeUp));           // so does playing again (lock screen, earphones)
 function setEco(v, announce){
   eco = v; if(announce) store.set('eco2', v);
   document.querySelectorAll('#ecoChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.eco === '1') === v));
@@ -3298,7 +3452,7 @@ setInterval(() => {
   if(alarmOn){
     const d = new Date(), hm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), stamp = d.toDateString() + hm;
     if(hm === alarmTime && alarmFired !== stamp){ alarmFired = stamp; ringAlarm(); }
-    if(d.getSeconds() === 0) alarmLeftText();
+    if(d.getSeconds() === 0){ alarmLeftText(); setShade(); }
   }
   if(alarmRing){                                              // fading in over a minute
     const f = Math.min(1, (now - alarmRing)/60000); sleepFade = f; applyVol();
@@ -3495,7 +3649,7 @@ function frame(now){
   // the playing time sits at the right end of the seek bar (none on the radio)
   const d = new Date();
   $('#time').textContent = clockText(d);
-  const pt = mode === 'radio' ? '' : fmt(cur); if(pt !== frame.pt){ frame.pt = pt; $('#ptime').textContent = pt; }
+  const pt = mode === 'radio' ? '' : fmt(cur); if(pt !== frame.pt){ frame.pt = pt; $('#ptime').textContent = pt; root.classList.toggle('radio', mode === 'radio'); }
   const dk = d.getDate() + ':' + wxCode + ':' + (d.getHours() >= 6 && d.getHours() < 18); if(dk !== frame.dk){ frame.dk = dk; dateLine(d); }
   if(d.getSeconds() % 30 === 0) wxUpdate();
   if(!seeking){ const pr = dur ? cur/dur*1000 : 0; seek.value = pr; seek.style.setProperty('--p', pr/10 + '%'); }
