@@ -665,6 +665,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-eco="1">ON</button>
         </div>
         <p class="rnote">描画を毎秒15回に減らし、光のにじみをなくして電池と発熱を抑えます。見た目は少しシンプルになります。</p>
+        <h3 style="margin-top:14px">電池が少ないときは自動で省電力</h3>
+        <div class="chips" id="battAutoChips">
+          <button class="chip" data-ba="1">ON</button>
+          <button class="chip" data-ba="0">OFF</button>
+        </div>
+        <p class="rnote">電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。充電を始めると元に戻ります。Android のみ。</p>
       </section>
       <section data-tab="night">
         <h3>おやすみモード <span id="sleepLeft" style="float:right"></span></h3>
@@ -813,6 +819,11 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </ol>
       </section>
       <section data-tab="app">
+        <h3>ラジオの通信量（目安）</h3>
+        <p id="dataUse" style="margin:6px 0"></p>
+        <p class="rnote">ラジオを聴いた時間から計算した目安です（128kbps として計算。1時間でおよそ 58MB、局によって多少変わります）。「うち電波」は Android でモバイル回線（ギガ）を使っていた分です。日付・月が変わると 0 から数え直します。</p>
+      </section>
+      <section data-tab="app">
         <h3>友達に教える</h3>
         <div class="row"><button class="pbtn pri" id="shareBtn">友達に教える（LINE など）</button></div>
         <div class="sharebox"><code id="shareUrl">https://antobi123.github.io/antobi-deck/</code><button class="pbtn" id="shareCopy">URLをコピー</button></div>
@@ -853,9 +864,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリストと曲順・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴（★ で残せる）</dd>
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・ブースト・操作音・自動で再開</dd>
-            <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
+            <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・電池が少ないときの自動省電力・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
             <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
-            <dt>その他</dt><dd>アプリとして使う（インストール）・友達に教える・設定のバックアップ・更新のお知らせ</dd>
+            <dt>その他</dt><dd>アプリとして使う（インストール）・ラジオの通信量・友達に教える・設定のバックアップ・更新のお知らせ</dd>
             <dt>使い方</dt><dd>このページ（「はじめての案内をもう一度見る」もここ）</dd>
           </dl>
         </div>
@@ -883,6 +894,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
             <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。上の段に局名、一番下のバーに ♪ 局名と曲名（曲名を公開している局のみ）が出ます</dd>
+            <dt>電波が切れたとき</dt><dd>ネットが切れると1段目に「NO SIGNAL」、一番下の段に「電波がありません」と出ます。つながると、聴いていた局に自動でつなぎ直します（「SIGNAL OK」）。その間に SRC で DISC に切り替えることもできます</dd>
             <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
             <dt>局のロゴ</dt><dd>ラジオを聴いているとき、ロック画面や車のディスプレイに局のロゴが出ます（ロゴの無い局は局名の画像）</dd>
@@ -913,7 +925,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>右上</dt><dd>今の時刻。その下に日付（2026/11/26 のように年から）・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
             <dt>1段目</dt><dd>左から DISC／RADIO、曲名（ラジオは局名）、曲の番号（ラジオは FM1-3 など）、時刻。長い曲名は流れて表示されます（1 ボタンの SCROLL で切り替え）</dd>
-            <dt>通信・電池の小窓</dt><dd><b>電波</b>：棒の数が回線の速さ。下に 4G など（ネットにつながっていないときは OFF）<br><b>Wi-Fi</b>：Wi-Fi のとき光ります（下の文字は WiFi、有線は LAN）<br><b>電池</b>：残りの％。充電中は ⚡ が出てゆっくり点滅、20％以下でオレンジ、10％以下で速く点滅<br>電池が 20％・10％・5％になると、1段目に「BATTERY LOW」がオレンジで数秒出ます。10％からは充電するまで、一番下の段にもお知らせが出たままに。充電を始めると消えて「CHARGING」と出ます<br>出す場所は ⚙「表示」の「通信・電池の小窓」で、画面の中（2段目の日付の左。最初はこれ）・右・左・電波と電池を左右に分ける・表示しない から選べます<br><small>Android（Chrome）はすべて表示。iPhone はネットにつながっているかだけ（NET／OFF）で、電池はスマホが教えてくれないため「--」のまま（お知らせも出ません）。Bluetooth の接続はアプリからは調べられないので出ません</small></dd>
+            <dt>通信・電池の小窓</dt><dd><b>電波</b>：棒の数が回線の速さ。下に 4G など（ネットにつながっていないときは OFF）<br><b>Wi-Fi</b>：Wi-Fi のとき光ります（下の文字は WiFi、有線は LAN）<br><b>電池</b>：残りの％。充電中は ⚡ が出てゆっくり点滅、20％以下でオレンジ、10％以下で速く点滅<br>電池が 20％・10％・5％になると、1段目に「BATTERY LOW」がオレンジで数秒出ます。10％からは充電するまで、一番下の段にもお知らせが出たままに。充電を始めると消えて「CHARGING」、100％になると「BATTERY FULL」と出て、電池マークの点滅も止まります。20％を切ると自動で省電力にもなります（⚙「時計・電力・タイマー」で OFF にできます）<br>出す場所は ⚙「表示」の「通信・電池の小窓」で、画面の中（2段目の日付の左。最初はこれ）・右・左・電波と電池を左右に分ける・表示しない から選べます<br><small>Android（Chrome）はすべて表示。iPhone はネットにつながっているかだけ（NET／OFF）で、電池はスマホが教えてくれないため「--」のまま（お知らせも出ません）。Bluetooth の接続はアプリからは調べられないので出ません</small></dd>
             <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
@@ -974,6 +986,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>その他（⚙「その他」）</h3>
           <dl class="help">
             <dt>アプリとして使う</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます。手順は「はじめに」のページに。Android では「ホーム画面にインストール」ボタンが出ていれば、押すだけで追加できます。今の状態（ブラウザで開いているか、アプリとして起動中か）もここに出ます</dd>
+            <dt>ラジオの通信量</dt><dd>今日と今月、ラジオで使った通信量の目安。聴いた時間から 128kbps として計算します（1時間でおよそ 58MB）。「うち電波」は Android でモバイル回線（ギガ）を使っていた分。日付・月が変わると 0 から数え直します<br><small>DISC の曲はスマホの中にあるので、通信量はかかりません</small></dd>
             <dt>設定のバックアップ</dt><dd>「設定を書き出す」で、ラジオのプリセット・表示や音の設定・聴いた曲の履歴を1つのファイルに保存。「設定を読み込む」で元に戻せます。機種変更のときや、友達に同じ設定を渡すときに。入れた曲は含まれません</dd>
             <dt>友達に教える</dt><dd>「友達に教える」でスマホの共有メニューが開き、LINE やメールでアプリのURLを送れます。「URLをコピー」で貼り付け用にも。送られるのはURLだけです</dd>
             <dt>メモ</dt><dd>入れた曲はこの端末の中だけで再生され、どこにも送信されません</dd>
@@ -985,6 +998,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>時計の表示</dt><dd>右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に</dd>
+            <dt>電池が少ないときは自動で省電力</dt><dd>はじめから ON。電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。1段目の「BATTERY LOW」のあとに「▸ ECO」と出ます。充電を始めると元の明るさに戻ります<br><small>Android のみ（iPhone は電池の残りが分からないため）</small></dd>
             <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります。「おやすみに流すラジオ」で局を選んでおくと、おやすみモードを始めたときにその局に切り替わります（「そのまま」なら今のまま）</dd>
             <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります。「鳴る前は画面を暗く」（はじめはこちら）か「暗くしない」も選べます。「目覚ましのラジオ局」で鳴らす局を選べます（はじめは最後に聴いた局）</dd>
           </dl>
@@ -3189,6 +3203,45 @@ function statNet(){
 ['online', 'offline'].forEach(ev => window.addEventListener(ev, statNet));
 navigator.connection && navigator.connection.addEventListener && navigator.connection.addEventListener('change', statNet);
 setInterval(statNet, 30000); statNet();
+
+/* ラジオの通信量（目安）: the time the radio plays x 128 kbps, counted per day and per month
+   (and the part on the mobile network, where the phone tells it). */
+var dataUse = store.get('dataUse', null) || {}, dataLast = Date.now();
+const ymd = d => d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+function dataTick(){
+  const now = new Date(), day = ymd(now), mon = now.getFullYear() + '-' + (now.getMonth() + 1);
+  const sec = Math.min(120, (now - dataLast) / 1000); dataLast = +now;
+  if(dataUse.day !== day){ dataUse.day = day; dataUse.d = 0; dataUse.dc = 0; }
+  if(dataUse.mon !== mon){ dataUse.mon = mon; dataUse.m = 0; dataUse.mc = 0; }
+  if(mode === 'radio' && radioNow && !radioEl().paused && navigator.onLine){
+    const by = sec * 128000 / 8, cell = navigator.connection && navigator.connection.type === 'cellular';
+    dataUse.d += by; dataUse.m += by; if(cell){ dataUse.dc += by; dataUse.mc += by; }
+    store.set('dataUse', dataUse);
+  }
+  renderData();
+}
+function renderData(){
+  const el = $('#dataUse'); if(!el) return;
+  const f = x => x >= 1e9 ? (x / 1e9).toFixed(1) + 'GB' : x < 1e7 ? (x / 1e6).toFixed(1) + 'MB' : Math.round(x / 1e6) + 'MB';
+  const known = navigator.connection && 'type' in navigator.connection;
+  el.innerHTML = `今日 <b>${f(dataUse.d || 0)}</b>${known ? `（うち電波 ${f(dataUse.dc || 0)}）` : ''}　　今月 <b>${f(dataUse.m || 0)}</b>${known ? `（うち電波 ${f(dataUse.mc || 0)}）` : ''}`;
+}
+setInterval(dataTick, 5000); dataTick();
+
+/* 電波が切れたら: NO SIGNAL on the top line; when the network is back the radio joins the station again by itself. */
+var noSig = false, sigWasOn = false;
+window.addEventListener('offline', () => {
+  noSig = true;
+  if(mode !== 'radio' || !radioNow) return;
+  sigWasOn = !radioEl().paused;
+  setTitle('NO SIGNAL'); setPnow(tracks.length ? '電波がありません ─ つながったら自動で再開。SRC で DISC にも切り替えられます' : '電波がありません ─ つながったら自動で再開します');
+});
+window.addEventListener('online', () => {
+  if(!noSig) return; noSig = false;
+  if(mode !== 'radio' || !radioNow) return;
+  if(sigWasOn){ playStation(radioNow, $('#trk').textContent); flash('SIGNAL OK', 1200); }
+  else { setTitle(radioNow.name); updateUI(); }
+});
 function setStatPos(v, announce){
   if(!['r', 'l', 'sl', 'sr', 'in', 'off'].includes(v)) v = 'in';
   const el = $('#stat'), el2 = $('#stat2'), split = v === 'sl' || v === 'sr';      // sl: bars on the left, battery on the right; sr: the other way
@@ -3201,24 +3254,39 @@ function setStatPos(v, announce){
 document.querySelectorAll('#statChips .chip').forEach(b => b.addEventListener('click', () => setStatPos(b.dataset.sp, true)));
 setStatPos(store.get('statPos', 'in'), false);
 /* 電池が少ないお知らせ: at 20 %, 10 % and 5 % the top line shows BATTERY LOW in orange for a few seconds;
-   from 10 % the bottom line keeps 「⚠ BATT 9%  そろそろ充電を」 until the phone is charging. */
+   from 10 % the bottom line keeps 「⚠ BATT 9%  そろそろ充電を」 until the phone is charging.
+   電池が少ないときは省電力: from 20 % the screen is dimmed a little and drawn the light way, until charging.
+   Charged to 100 %: BATTERY FULL once. */
+var battSave = false, battAuto = store.get('battAuto', true) !== false;
 function battNotice(b, told){
   if(performance.now() < 6000){                                    // just opened: wait until the start-up messages have shown
     clearTimeout(battNotice.t); battNotice.t = setTimeout(() => battNotice(b, told), 6000 - performance.now()); return;
   }
   const p = Math.round(b.level * 100);
   if(b.charging){
-    if(battWarn || Object.keys(told).length) flash('CHARGING', 1500);
-    for(const k in told) delete told[k];
-    setBattWarn(''); return;
+    if(!told.chg && (battWarn || told[20])) flash('CHARGING', 1500);
+    if(p >= 100 && !told.full && told.chg) flash('BATTERY FULL', 2500);
+    if(p >= 100) told.full = 1;
+    delete told[5]; delete told[10]; delete told[20]; told.chg = 1;
+    setBattWarn(''); setBattSave(false); return;
   }
-  const th = [5, 10, 20].find(t => p <= t && !told[t]);
+  delete told.chg; delete told.full;
+  const th = [5, 10, 20].find(t => p <= t && !told[t]), save = battAuto && p <= 20;
   if(th){
     [5, 10, 20].forEach(t => { if(p <= t) told[t] = 1; });          // starting at 8 % tells once, not three times
-    flash('BATTERY LOW  ' + p + '%', 3500); marq.classList.add('warn');
+    flash('BATTERY LOW  ' + p + '%' + (save && !battSave ? '  ▸ ECO' : ''), 3500); marq.classList.add('warn');
   }
+  setBattSave(save);
   setBattWarn(p <= 10 ? '⚠ BATT ' + p + '%  そろそろ充電を' : '');
 }
+function setBattSave(v){ if(battSave === v) return; battSave = v; setShade(); }
+function setBattAuto(v, announce){
+  battAuto = v; if(announce){ store.set('battAuto', v); flash(v ? 'AUTO ECO  ON' : 'AUTO ECO  OFF', 900); }
+  if(!v) setBattSave(false);
+  document.querySelectorAll('#battAutoChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.ba === '1') === v));
+}
+document.querySelectorAll('#battAutoChips .chip').forEach(b => b.addEventListener('click', () => setBattAuto(b.dataset.ba === '1', true)));
+setTimeout(() => setBattAuto(battAuto, false), 0);
 function setBattWarn(t){
   if(battWarn === t) return;
   battWarn = t; root.classList.toggle('battlow', !!t); setPnow(pnowReq);
@@ -3234,9 +3302,9 @@ function setBattWarn(t){
       statLight('.sBat .sg', seg);
       document.querySelectorAll('.sBat .sbo, .sBat .sbn').forEach(e => { e.classList.add('on'); e.classList.toggle('low', low); e.classList.toggle('warn', warn); });
       document.querySelectorAll('.sBat .sg').forEach(e => { e.classList.toggle('low', low); e.classList.toggle('warn', warn); });
-      document.querySelectorAll('.sBat').forEach(e => e.classList.toggle('chg', b.charging));          // charging: the battery breathes slowly
+      document.querySelectorAll('.sBat').forEach(e => e.classList.toggle('chg', b.charging && lv < 1));          // charging: the battery breathes slowly
       document.querySelectorAll('.sChg').forEach(e => e.classList.toggle('on', b.charging));
-      pcts().forEach(p => { p.textContent = Math.round(lv * 100) + (lv < 1 ? '%' : ''); p.classList.add('on'); p.classList.toggle('low', low); p.classList.toggle('warn', warn); p.classList.toggle('chg', b.charging); });
+      pcts().forEach(p => { p.textContent = Math.round(lv * 100) + (lv < 1 ? '%' : ''); p.classList.add('on'); p.classList.toggle('low', low); p.classList.toggle('warn', warn); p.classList.toggle('chg', b.charging && lv < 1); });
       battNotice(b, told);
     };
     ['levelchange', 'chargingchange'].forEach(ev => b.addEventListener(ev, draw)); draw();
@@ -3279,7 +3347,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126133134';                                 // stamped by build.ps1
+const APP_VER = '20261126133608';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3775,12 +3843,12 @@ function alarmNear(){                                        // the alarm is set
   const [hh, mm] = alarmTime.split(':').map(Number), now = new Date(), t = new Date(now); t.setHours(hh, mm, 0, 0); if(t <= now) t.setDate(t.getDate() + 1);
   return t - now < 8*3600e3;
 }
-const ecoNow = () => eco || sleepEnd > 0 || sleepAtEnd || slept || (alarmDim && alarmNear());
+const ecoNow = () => eco || battSave || sleepEnd > 0 || sleepAtEnd || slept || (alarmDim && alarmNear());
 const shade = document.createElement('div');
 shade.style.cssText = 'position:fixed; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity 1.2s; z-index:900';
 document.body.appendChild(shade);
 function setShade(){
-  const o = slept ? .88 : (sleepEnd || sleepAtEnd || alarmDim && alarmNear()) ? .62 : 0;   // after the alarm has rung the screen is bright again
+  const o = slept ? .88 : (sleepEnd || sleepAtEnd || alarmDim && alarmNear()) ? .62 : battSave ? .28 : 0;   // after the alarm has rung the screen is bright again
   shade.style.opacity = o; shade.style.pointerEvents = slept ? 'auto' : 'none';
 }
 function wakeUp(){ if(slept){ slept = false; setShade(); } }
