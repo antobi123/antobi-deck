@@ -1001,7 +1001,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </dl>
           <h3 style="margin-top:16px">局を入れ替えるには</h3>
           <ol class="hsteps">
-            <li>⚙ の「ラジオ」タブで検索 → ▶ で試聴 → 1〜6 を押して登録</li>
+            <li>⚙ の「ラジオ」タブで検索 → ▶ で試聴 → 1〜6 を押して登録<br><small>▶ を押すと、つながるまでボタンが点滅して「チューニング中…」、聴こえ始めると ■ と「受信中」に変わります。■ をもう一度押すと止まります。15秒たってもつながらないときは ✕ が出るので、別の局を試してね。プリセットの一覧の ▶ も同じです</small></li>
             <li>聴いている局は、1〜6 を<b>長押し</b>でそのボタンに登録</li>
             <li>配信 URL がわかる局は「URLで登録する」から</li>
           </ol>
@@ -4194,7 +4194,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126190906';                                 // stamped by build.ps1
+const APP_VER = '20261126191012';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
