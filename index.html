@@ -961,6 +961,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="play" hidden>
           <h3>再生</h3>
           <dl class="help">
+            <dt>曲を入れる（▲ DISC LOAD）</dt><dd>デッキ左上の <b class="kb">▲ DISC LOAD</b> か ⚙「曲」の「曲を追加」で、スマホの中の曲を選びます。曲を<b>長押し</b>するとまとめて選べて、選んだら右上の「選択」や「開く」を押します。入れた曲はアプリの中に保存されるので、スマホ本体・SDカードのどのフォルダの曲でも同じように使え、曲順は保存先ではなく「並べ替え」の順になります<br><small>Android のアプリでは、曲を選ぶ画面の戻るボタンが隠れています。画面のいちばん下の端から上へ（ジェスチャー操作なら左右の端から内側へ）スワイプすると出てきます。その前に出る案内は「次から表示しない」で消せて、⚙「曲」の一番下の「このタブを最初の設定に戻す」でまた出るようになります</small></dd>
             <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
             <dt>VOLUME ∧∨</dt><dd>音量（0〜40）。長押しで連続して変わる。40 がほかの音楽アプリと同じ大きさで、30 前後でもほぼ同じくらい、下のほうほど小さくなります（はじめは 30）。もっと大きくしたいときは ⚙「サウンド」のブースト</dd>
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
@@ -1005,7 +1006,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <tr><td>1</td><td>SCROLL　曲名のスクロール表示 ON/OFF（ON は長い曲名だけ流れ、OFF は長い曲名を小さい文字にして収めます）</td></tr>
             <tr><td>2</td><td>SCN　イントロスキャン（各曲の頭10秒ずつ）</td></tr>
             <tr><td>3</td><td>RDM　ランダム再生</td></tr>
-            <tr><td>4</td><td>REP　リピート（全曲 → 1曲 → オフ）</td></tr>
+            <tr><td>4</td><td>REP　リピート（全曲 → 1曲 → オフ）<br><small>オフのときは、最後の曲が終わると「DISC END」と出て止まります</small></td></tr>
             <tr><td>5</td><td>LOUD　ラウドネス（低音と高音を持ち上げる）</td></tr>
             <tr><td>6</td><td>SPEC　スペアナの種類を切り替え</td></tr>
           </table>
@@ -3107,7 +3108,7 @@ const RESET_KEYS = {
   sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'loud'],
   night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
   fx: ['dimmer2', 'boot2'],
-  music: ['sort', 'nextTempo', 'plSel']
+  music: ['sort', 'nextTempo', 'plSel', 'pickHint']
 };
 Object.keys(RESET_KEYS).forEach(tab => {
   const secs = document.querySelectorAll(`.pbody > section[data-tab="${tab}"]`); if(!secs.length) return;
@@ -4157,7 +4158,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126181242';                                 // stamped by build.ps1
+const APP_VER = '20261126183237';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
