@@ -852,7 +852,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です。BASS・MID・TREBLE のつまみは触ってずれないようにロックしてあり、「タップで調整」を押すと動かせます（15秒触らないと自動でロック）</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
-            <dt>音量をそろえる</dt><dd>はじめから ON。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。小さい曲は大きく、大きすぎる曲だけ少し下げるので、全体の音量はほとんど下がりません。初めての曲は20秒ほどで調整</dd>
+            <dt>音量をそろえる</dt><dd>はじめは OFF（ON にすると使えます）。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。小さい曲は大きく、大きすぎる曲だけ少し下げるので、全体の音量はほとんど下がりません。初めての曲は20秒ほどで調整</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整</dd>
             <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
@@ -2914,7 +2914,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126100337';                                 // stamped by build.ps1
+const APP_VER = '20261126100503';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3191,7 +3191,7 @@ $('#beepVol').addEventListener('input', e => { beepVol = +e.target.value; store.
 $('#beepVol').addEventListener('change', () => { if(beepMode === 'beep' || beepMode === 'both') keyFeedback(); });   // a sample beep at the new level
 
 /* ---------------- 音量をそろえる: learn each song's (and station's) loudness and even it out ---------------- */
-let normOn = store.get('norm2', true), normMap = store.get('normMap2', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
+let normOn = store.get('norm2', false), normMap = store.get('normMap2', {}) || {}, normKey = '', normAcc = 0, normN = 0, normBuf = null;
 const NORM_TARGET = -14;                                // average loudness the songs are brought to (dBFS RMS): about a normal modern song, so loud songs are only trimmed a little
 function setNorm(v, announce){
   normOn = v; if(announce) store.set('norm2', v);
