@@ -157,8 +157,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 #trk,#time{flex:none; font-variant-numeric:tabular-nums}
 .inds{position:relative; z-index:1; display:flex; gap:12px; padding:2px 18px 0; height:20px; font:12px/1 var(--font-seg); letter-spacing:.1em}
 #dateLine{margin-left:auto; color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.08em; white-space:nowrap; font-family:var(--font-seg), "Segoe UI Symbol", "Apple Symbols", sans-serif}
-#ptime{position:absolute; z-index:4; right:16px; bottom:4px; height:16px; line-height:16px; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none}
-#pnow{position:absolute; z-index:4; left:16px; right:70px; bottom:4px; height:16px; overflow:hidden; white-space:nowrap; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.04em; pointer-events:none; display:none;
+#ptime{position:absolute; z-index:4; right:74px; bottom:4px; height:16px; line-height:16px; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none}
+#pbpm{position:absolute; z-index:4; right:16px; bottom:4px; width:52px; height:16px; text-align:right; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); font-variant-numeric:tabular-nums; letter-spacing:.04em; pointer-events:none; white-space:nowrap}
+#pbpm.off{color:var(--dimt); text-shadow:none}
+#pnow{position:absolute; z-index:4; left:16px; right:128px; bottom:4px; height:16px; overflow:hidden; white-space:nowrap; font:13px/16px var(--font-seg); color:var(--lit); text-shadow:0 0 6px var(--glow); letter-spacing:.04em; pointer-events:none; display:none;
   -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent); mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
 #pnowT{display:inline-block}
 #pnowT.run{animation:mq var(--dur,14s) linear infinite}
@@ -171,7 +173,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .ind{color:var(--dimt)}
 .ind.on{color:var(--lit2); text-shadow:0 0 7px var(--lit2)}
 #viz{position:relative; z-index:1; display:block; width:664px; height:244px}
-#seek{position:absolute; z-index:4; left:16px; right:70px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
+#seek{position:absolute; z-index:4; left:16px; right:128px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
 #seek::-webkit-slider-runnable-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p)); box-shadow:0 0 6px var(--glow)}
 #seek::-moz-range-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p))}
 #seek::-webkit-slider-thumb{-webkit-appearance:none; width:10px; height:12px; margin-top:-4.5px; background:var(--lit); box-shadow:0 0 8px var(--lit)}
@@ -453,6 +455,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <canvas id="viz"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
         <span id="ptime">0:00</span>
+        <span id="pbpm" class="off">--- BPM</span>
         <div id="pnow"><span id="pnowT"></span></div>
       </div>
 
@@ -912,7 +915,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
             <dt>VOLUME ∧∨</dt><dd>音量（0〜40）。長押しで連続して変わる。40 がほかの音楽アプリと同じ大きさで、30 前後でもほぼ同じくらい、下のほうほど小さくなります（はじめは 30）。もっと大きくしたいときは ⚙「サウンド」のブースト</dd>
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
-            <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます<br>電池が 10％を切ると、充電するまでここに「⚠ BATT 9%　そろそろ充電を」がオレンジで出ます（DISC 中は再生位置のバーの代わりに出るので、早送り・巻き戻しは SEEK で）</dd>
+            <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。その右の数字が再生時間、右端が曲のテンポ（「128 BPM」のように、低音から読み取ります。読み取れないときや止まっているときは ---）<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます<br>電池が 10％を切ると、充電するまでここに「⚠ BATT 9%　そろそろ充電を」がオレンジで出ます（DISC 中は再生位置のバーの代わりに出るので、早送り・巻き戻しは SEEK で）</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すか、VOLUME を押すと戻る）</dd>
             <dt>LIST</dt><dd>曲の一覧を開く（⚙ の「曲」タブ）。<b>長押し</b>で再生中の曲を ★ お気に入りに（ラジオのときは、いま流れている曲を履歴の ★ に）</dd>
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
@@ -987,7 +990,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。季節によってはサンタ帽などの衣装と、ツリーや門松などの飾りも。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「キャラクター」タブで7種類から</dd>
             <dt>STAGE</dt><dd>ステージで動物が大きく踊ります。左右からスポットライト、床は音に合わせて光り、踊りが変わると紙吹雪。踊りは10種類（左右に揺れる・ジャンプ・手拍子・ディスコ・くるっと回る・スクワット・手を振る・シャッフル・ロボット など）で、8拍ごとに変わります</dd>
             <dt>LINE DANCE</dt><dd>同じ動物が3匹でラインダンス。上でミラーボールが回ります。そろって踊る・順番にずれて踊る（ウェーブ）・左右が鏡写し・真ん中がソロで両側は手拍子、の4つの並びが16拍ごとに変わります</dd>
-            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。左上の「128 BPM」は動物が踊っているテンポ（低音から読み取れないときは --）。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。動物は⚙「キャラクター」タブで選べます</small></dd>
+            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
@@ -1153,6 +1156,8 @@ function ensureAudio(){
   eqT = AC.createBiquadFilter(); eqT.type = 'highshelf'; eqT.frequency.value = 7000;
   lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); normG = AC.createGain(); normAn = AC.createAnalyser(); normAn.fftSize = 2048; eqT.connect(normG); { const lim = AC.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .003; lim.release.value = .25; boostG = AC.createGain(); boostG.gain.value = Math.pow(10, boostDb/20); normG.connect(boostG); boostG.connect(lim); lim.connect(master); }   // a limiter keeps boosted quiet songs from cracking
   eqT.connect(normAn);   // normG: 音量をそろえる
+  bassLP = AC.createBiquadFilter(); bassLP.type = 'lowpass'; bassLP.frequency.value = 140; bassAn = AC.createAnalyser(); bassAn.fftSize = 1024; bassBuf = new Float32Array(1024);
+  eqT.connect(bassLP); bassLP.connect(bassAn);   // the bass alone, before the volume: the beat for the BPM and the dancing animals
   master.connect(analyser); analyser.connect(AC.destination);
   master.connect(split); split.connect(anL, 0); split.connect(anR, 1);
   mediaSrc = AC.createMediaElementSource(audio); fadeG = AC.createGain(); mediaSrc.connect(fadeG); fadeG.connect(lowS);   // fadeG: fades the new song in
@@ -3008,6 +3013,17 @@ const DN_FONT = { '0': '111101101101111', '1': '010110010010111', '2': '11100111
   '5': '111100111001111', '6': '111100111101111', '7': '111001001001001', '8': '111101111101111', '9': '111101111001111',
   'B': '110101110101110', 'P': '110101110100100', 'M': '101111111101101', '-': '000000111000000', ' ': '000000000000000' };
 function dnText(s, x, y, c){ [...s].forEach((ch, i) => { const f = DN_FONT[ch] || DN_FONT[' ']; for(let k=0;k<15;k++) if(f[k] === '1') ddot(x + i*4 + k % 3, y + Math.floor(k/3), c); }); }
+const BPM_DBG = new URLSearchParams(location.search).has('bpmdebug');
+var dnState = { st: { v: new Array(16).fill(0) }, playing: false, ph: 0 }, bpmAt = 0;
+// the tempo at the right end of the bottom row (--- while nothing plays or the bass gives no beat)
+function bpmShow(){
+  if(performance.now() - bpmAt < 1000) return; bpmAt = performance.now();
+  const el = $('#pbpm'); if(!el) return;
+  let txt = '--- BPM', on = false;
+  if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = Math.round(dnShown) + ' BPM'; on = true; }
+  else if(!dnState.playing){ dnShown = 0; dnIv.length = 0; }
+  if(el.textContent !== txt) el.textContent = txt; el.classList.toggle('off', !on);
+}
 function dnBpm(x, y){
   let s = '--';
   if(dnT - dnReal < 3){ let b = 60/dnPeriod; while(b < 70) b *= 2; while(b > 180) b /= 2; s = String(Math.round(b)); }
@@ -3044,13 +3060,18 @@ const ddot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.
 const dline = (x0, y0, x1, y1, c, gap) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) || 1; for(let i=0;i<=n;i+=(gap || 1)) ddot(x0 + (x1 - x0)*i/n, y0 + (y1 - y0)*i/n, c); };
 
 // the beat
-let dnReal = -99, dnT = 0, dnPulse = 0, dnBeat = 0, dnLast = 0, dnPeriod = .5, dnArm = true, dnMove = 'sway', dnForm = 'sync', dnDj = 'nod';
+var bassLP = null, bassAn = null, bassBuf = null;
+let dnIv = [], dnShown = 0, dnBass = 0, dnAvg = 0, dnReal = -99, dnT = 0, dnPulse = 0, dnBeat = 0, dnLast = 0, dnPeriod = .5, dnArm = true, dnMove = 'sway', dnForm = 'sync', dnDj = 'nod';
 const DN_MOVES = ['sway', 'jump', 'lr', 'clap', 'disco', 'spin', 'squat', 'wave', 'shuffle', 'robot'];
 const DN_FORMS = ['sync', 'canon', 'mirror', 'solo'];
 const DN_DJ = ['nod', 'lean', 'scratch', 'handsup', 'ear', 'point'];
 const dnPick = (list, cur) => { let n; do{ n = list[Math.floor(Math.random()*list.length)]; } while(n === cur && list.length > 1); return n; };
 function dnHit(auto){
-  const p = dnT - dnLast; if(!auto){ if(p > .25 && p < 1.2) dnPeriod += (p - dnPeriod)*.3; dnReal = dnT; }
+  const p = dnT - dnLast; if(!auto){
+    if(p > .25 && p < 1.5){ let q = p; while(q < .33) q *= 2; while(q > .86) q /= 2; dnIv.push(q); if(dnIv.length > 12) dnIv.shift(); }   // one beat folded into 70-180 BPM
+    if(dnIv.length >= 4){ const m = [...dnIv].sort((a, b) => a - b)[dnIv.length >> 1]; dnPeriod += (m - dnPeriod)*.5; }   // the median of the last beats, so a missed or extra kick does not throw it
+    dnReal = dnT;
+  }
   dnLast = dnT; dnBeat++;
   if(dnBeat % 8 === 0){ dnMove = dnPick(DN_MOVES, dnMove); dnDj = dnPick(DN_DJ, dnDj); }
   if(dnBeat % 16 === 0) dnForm = dnPick(DN_FORMS, dnForm);
@@ -3060,8 +3081,11 @@ function dnTick(dt){
   const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3, playing = isActive();
   dnPulse += (bass - dnPulse)*.25;
   if(playing){
-    if(bass > .55 && dnArm && dnT - dnLast > .28){ dnHit(); dnArm = false; }
-    if(bass < .4) dnArm = true;
+    // the beat = a kick in the bass: its energy (from its own unsmoothed meter) jumping well above the last second's average
+    const e = bassAn && !radioPlain ? Math.pow(rms(bassAn, bassBuf), 2) : bass*bass*.01;
+    dnAvg += (e - dnAvg)*.05; dnBass = dnAvg > 0 ? e/dnAvg : 0;
+    if(e > dnAvg*1.4 && e > 1e-6 && dnArm && dnT - dnLast > .28){ dnHit(); dnArm = false; }
+    if(e < dnAvg*1.1) dnArm = true;
     if(dnT - dnLast > Math.max(.75, dnPeriod*1.6)) dnHit(true);              // keep time when the bass gives no beat
   }
   return { st, playing, ph: Math.min(1, (dnT - dnLast)/Math.max(.3, dnPeriod)) };
@@ -3125,7 +3149,7 @@ function dnConfDraw(dt, floor){
 // STAGE: one big animal, two moving spotlights, a floor that lights with the music, confetti when the move changes
 let dnStageMove = '';
 function drawDanceStage(dt){
-  const { st, playing, ph } = dnTick(dt); vbBegin();
+  const { st, playing, ph } = dnState; vbBegin();
   for(let x=0;x<VB_C;x++) ddot(x, 37, DG);
   for(let i=0;i<11;i++){ const lv = playing ? Math.round(st.v[Math.min(15, i + 2)]*3.4) : 0; for(let r=0;r<lv;r++) for(let x=1;x<11;x+=2) ddot(i*12 + x + (r % 2), 43 - r*2, r > 1 ? DA : DG); }
   vbStars.slice(0, 8).forEach(([x, y, p]) => { if(Math.sin(dnT*1.5 + p) > .3) ddot(x, y % 8, DG); });
@@ -3142,14 +3166,13 @@ function drawDanceStage(dt){
   dnPet(pet, 66 - 11, 37 - 22, 2, pose);
   dnConfDraw(dt, 37);
   if(sl === 'sleep' || sl === 'drowsy' && (dnT % 7) < 1.2) dnZzz(cx + 14, 12);
-  if(playing) dnBpm(2, 1);
   if(playing && dnPulse > .5) [[cx - 20, 14], [cx + 18, 12]].forEach(([x, y]) => { ddot(x, y, DA); ddot(x, y - 1, DA); ddot(x + 1, y - 2, DA); ddot(x - 1, y, DA); });   // ♪
   vbEnd();
 }
 
 // LINE DANCE: three of the same animal; in step, one after another, mirrored, or the middle one solo
 function drawDanceLine(dt){
-  const { st, playing, ph } = dnTick(dt); vbBegin();
+  const { st, playing, ph } = dnState; vbBegin();
   const bx = 66, by = 5, spin = dnT*(playing ? 2.2 : .5);
   dline(bx, 0, bx, 1, DG);
   for(let y=-3;y<=3;y++) for(let x=-4;x<=4;x++) if(x*x/16 + y*y/9 <= 1){ const on = ((Math.floor(x + spin*2) + y) % 2 + 2) % 2 === 0; ddot(bx + x, by + y, on ? DG : DK); }
@@ -3169,13 +3192,12 @@ function drawDanceLine(dt){
     dnPet(pet, x - 5, 38 - 11, 1, pose);
   });
   if(dnSleep() === 'sleep') dnZzz(74, 20);
-  if(playing) dnBpm(2, 1);
   vbEnd();
 }
 
 // DJ BOOTH: headphones on, turntables in front, the speakers on each side are the spectrum
 function drawDanceDJ(dt){
-  const { st, playing, ph } = dnTick(dt); vbBegin();
+  const { st, playing, ph } = dnState; vbBegin();
   for(let i=0;i<2;i++){ const x0 = i ? 112 : 4;
     for(let x=0;x<16;x++){ ddot(x0 + x, 6, DG); ddot(x0 + x, 43, DG); } for(let y=6;y<=43;y++){ ddot(x0, y, DG); ddot(x0 + 15, y, DG); }
     for(let c=0;c<3;c++){ const h = playing ? Math.round(st.v[c*3 + i*2]*12) : 0; for(let y=0;y<h;y++){ ddot(x0 + 3 + c*4, 41 - y*3, y > 8 ? DA : DG); ddot(x0 + 4 + c*4, 41 - y*3, y > 8 ? DA : DG); } }
@@ -3207,7 +3229,6 @@ function drawDanceDJ(dt){
   });
   if(m === 'scratch') dline(ox + 4, oy + 16, 46, 34, DG);                                                           // a hand on the record
   if(m === 'zsleep') dnZzz(ox + 24, oy + 2);
-  if(playing) dnBpm(4, 0);
   for(let x=60;x<=72;x+=2) ddot(x, 32, playing && st.v[(x/2) % 16] > .45 ? DA : DG);                          // the mixer's lights
   for(let x=60;x<=72;x+=4) ddot(x + (playing ? Math.round(Math.sin(dnT*2 + x)) : 0), 38, DG);
   vbEnd();
@@ -3717,7 +3738,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126141830';                                 // stamped by build.ps1
+const APP_VER = '20261126142440';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4487,6 +4508,7 @@ function frame(now){
   if(now - last < 1000/(ecoNow() ? 15 : 30) - 4){ requestAnimationFrame(frame); return; }   // 30 frames a second is plenty for the dot matrix (and keeps the phone cool)
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
+  try{ dnState = dnTick(dt); bpmShow(); }catch(e){}
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
