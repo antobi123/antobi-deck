@@ -337,6 +337,13 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 #rResults .slots{display:flex; gap:3px; flex:none}
 #rResults .slots button{padding:5px 7px}
 #rResults button.ok{border-color:var(--illum); color:var(--illum)}
+/* 試聴: the ▶ shows tuning (blinking) → on air (■), and the line under the name says so */
+#presetList button.tuning, #rResults button.tuning{color:var(--illum); border-color:var(--illum); animation:tunBlink .7s steps(2) infinite}
+#presetList button.live, #rResults button.live{color:#06070a; background:var(--illum); border-color:transparent; box-shadow:0 0 10px var(--illumglow)}
+#presetList button.fail, #rResults button.fail{color:#ff6a5a; border-color:#ff6a5a}
+#presetList li.tuning small, #rResults li.tuning small, #presetList li.live small, #rResults li.live small{color:var(--illum)}
+#presetList li.fail small, #rResults li.fail small{color:#ff6a5a}
+@keyframes tunBlink{50%{opacity:.35}}
 .rsearch{display:flex; gap:8px; margin-top:12px}
 .rsearch input, .rurl input, .rurl select{flex:1; min-width:0; background:#0c0d11; border:1px solid var(--line); border-radius:8px; color:var(--fg); padding:9px 10px; font:13px var(--font-ui)}
 .rurl{display:flex; flex-direction:column; gap:6px; margin-top:8px}
@@ -1812,6 +1819,33 @@ function startMeta(){ clearInterval(metaTimer); if(radioNow) radioNow.nowTitle =
 function stopMeta(){ clearInterval(metaTimer); metaTimer = 0; }
 
 /* preset editor + station search in the ⚙ panel */
+// 試聴 in SETUP: after ▶ the button blinks while the station is tuning in, turns solid (■) once it is on air, and ✕ if it
+// cannot connect. Pressing it again stops. Only one button at a time.
+let tryCur = null;
+function tryMark(state, text){
+  if(!tryCur) return; const { btn, li, sm } = tryCur;
+  btn.classList.remove('tuning', 'live', 'fail'); li.classList.remove('tuning', 'live', 'fail');
+  if(state){ btn.classList.add(state); li.classList.add(state); }
+  btn.textContent = { tuning: '…', live: '■', fail: '✕' }[state] || '▶';
+  if(sm) sm.textContent = text || tryCur.orig;
+}
+function tryReset(){ if(!tryCur) return; clearTimeout(tryCur.timer); tryMark('', ''); tryCur = null; }
+function tryTune(btn, st, start){
+  if(tryCur && tryCur.btn === btn && !btn.classList.contains('fail')){ audio.pause(); tryReset(); return; }   // the same one again: stop
+  tryReset();
+  const li = btn.closest('li'), sm = li && li.querySelector('small');
+  tryCur = { btn, li, sm, orig: sm ? sm.textContent : '', url: st.url };
+  tryMark('tuning', 'チューニング中…');
+  tryCur.timer = setTimeout(() => { if(tryCur && tryCur.btn === btn && btn.classList.contains('tuning')) tryMark('fail', 'つながりませんでした。別の局を試してね'); }, 15000);
+  start();
+}
+const tryMine = () => tryCur && mode === 'radio' && radioNow && radioNow.url === tryCur.url;
+[audio, plain].forEach(el => {        // the station may play on either player (reconnects, iPhone)
+  el.addEventListener('playing', () => { if(tryMine() && el === radioEl()){ clearTimeout(tryCur.timer); tryMark('live', '♪ 受信中（もう一度押すと止まります）'); } });
+  el.addEventListener('waiting', () => { if(tryMine() && el === radioEl() && tryCur.btn.classList.contains('live')) tryMark('tuning', 'チューニング中…'); });
+  el.addEventListener('pause', () => { if(tryCur && el === radioEl() && tryCur.btn.classList.contains('live')) tryReset(); });
+});   // no answer within 15 s: ✕ (an error alone is not the end, the radio retries by itself)
+
 function renderPresets(){
   try{ refreshStSelects(); }catch(e){}   // the first time, before the bands are ready, it is filled in later
   const ol = $('#presetList'); ol.innerHTML = '';
@@ -1821,7 +1855,7 @@ function renderPresets(){
     li.querySelector('b').textContent = s.short; li.querySelector('small').textContent = s.name + (s.genre ? ' · ' + s.genre : '');
     li.addEventListener('click', e => {
       const a = e.target.dataset && e.target.dataset.a; if(!a) return;
-      if(a === 'play'){ if(s.url) tune(i); else flash(chLabel(i) + '  EMPTY', 900); }
+      if(a === 'play'){ if(s.url) tryTune(e.target, s, () => tune(i)); else flash(chLabel(i) + '  EMPTY', 900); }
       else if(a === 'name'){ const v = prompt('ボタンに出す名前（6文字まで）', s.short); if(v && v.trim()){ savePreset(i, {...s, short: v.trim().toUpperCase()}); } }
       else if(a === 'reset'){ savePreset(i, bandDefaults(band)[i]); flash(chLabel(i) + '  RESET', 900); }
     });
@@ -1861,7 +1895,7 @@ async function doSearch(){
     li.querySelector('small').textContent = [st.genre, s.countrycode, s.bitrate ? s.bitrate + 'k' : ''].filter(Boolean).join(' · ');
     li.addEventListener('click', e => {
       const a = e.target.dataset && e.target.dataset.a; if(!a) return;
-      if(a === 'try') playStation(st, 'P-');
+      if(a === 'try') tryTune(e.target, st, () => playStation(st, 'P-'));
       else { savePreset(+a - 1, st); flash(`MEMORY  P${a}`, 1200); e.target.classList.add('ok'); }
     });
     ul.append(li);
@@ -4160,7 +4194,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126183956';                                 // stamped by build.ps1
+const APP_VER = '20261126190906';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
