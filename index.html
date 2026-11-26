@@ -656,6 +656,15 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <p class="rnote">曲ごと（ラジオは局ごと）の音の大きさを覚えて、小さい曲は上げ、大きすぎる曲だけ少し下げます。初めての曲は流れ始めて20秒ほどで調整されます。</p>
       </section>
       <section data-tab="sound">
+        <h3>ブースト</h3>
+        <div class="chips" id="boostChips">
+          <button class="chip" data-boost="0">OFF</button>
+          <button class="chip" data-boost="3">+3dB</button>
+          <button class="chip" data-boost="6">+6dB</button>
+        </div>
+        <p class="rnote">ほかのアプリより大きく鳴らしたいときに。音割れ防止と一緒に効くので割れにくくなりますが、迫力のある曲では少し音が詰まって聞こえることがあります。はじめは OFF。iPhone で画面を消しているときや、一部のラジオ局では効きません。</p>
+      </section>
+      <section data-tab="sound">
         <h3>操作音</h3>
         <div class="chips" id="beepChips">
           <button class="chip" data-beep="off">OFF</button>
@@ -746,7 +755,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリスト・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
-            <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音・自動で再開</dd>
+            <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・ブースト・操作音・自動で再開</dd>
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし</dd>
             <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
             <dt>使い方</dt><dd>このページ</dd>
@@ -856,6 +865,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>イコライザー</dt><dd>FLAT・ROCK・POP・JAZZ・HIP-HOP・VOCAL・NIGHT から選ぶか、BASS（低音）・MID（中音）・TREBLE（高音）を ±8 で調整。NIGHT は夜に小さめの音で聴く用です。BASS・MID・TREBLE のつまみは触ってずれないようにロックしてあり、「タップで調整」を押すと動かせます（15秒触らないと自動でロック）</dd>
             <dt>LOUD</dt><dd>5 ボタン。低音と高音を持ち上げます。イコライザーと重ねて使えます</dd>
             <dt>音量をそろえる</dt><dd>はじめは OFF（ON にすると使えます）。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。小さい曲は大きく、大きすぎる曲だけ少し下げるので、全体の音量はほとんど下がりません。初めての曲は20秒ほどで調整</dd>
+            <dt>ブースト</dt><dd>はじめは OFF。+3dB・+6dB にすると、VOLUME 40 よりさらに大きく（ほかのアプリより大きく）鳴ります。音割れ防止と一緒に効くので割れにくくなりますが、迫力のある曲では少し音が詰まって聞こえることがあります。iPhone で画面を消しているときや、一部のラジオ局では効きません</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの、やわらかく澄んだ「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整（つまみはロックしてあり、「タップで調整」で動かせます。15秒触らないと自動でロック）</dd>
             <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
@@ -962,6 +972,7 @@ const DB = {
 };
 
 /* ---------------- audio graph ---------------- */
+let boostG = null, boostDb = +store.get('boost', 0) || 0;   // ブースト: extra dB on top of the full volume, held in by the limiter
 let AC, master, analyser, anL, anR, lowS, highS, mediaSrc, freq, tdL, tdR, eqB, eqM, eqT, fadeG, xSrc, xG, normG, normAn;
 function ensureAudio(){
   if(AC){ if(AC.state !== 'running') AC.resume().catch(() => {}); return; }   // iPhone leaves it 'interrupted' after the background
@@ -976,7 +987,7 @@ function ensureAudio(){
   eqB = AC.createBiquadFilter(); eqB.type = 'lowshelf'; eqB.frequency.value = 120;      // the EQ (⚙ サウンド)
   eqM = AC.createBiquadFilter(); eqM.type = 'peaking'; eqM.frequency.value = 1200; eqM.Q.value = .8;
   eqT = AC.createBiquadFilter(); eqT.type = 'highshelf'; eqT.frequency.value = 7000;
-  lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); normG = AC.createGain(); normAn = AC.createAnalyser(); normAn.fftSize = 2048; eqT.connect(normG); { const lim = AC.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .003; lim.release.value = .25; normG.connect(lim); lim.connect(master); }   // a limiter keeps boosted quiet songs from cracking
+  lowS.connect(highS); highS.connect(eqB); eqB.connect(eqM); eqM.connect(eqT); normG = AC.createGain(); normAn = AC.createAnalyser(); normAn.fftSize = 2048; eqT.connect(normG); { const lim = AC.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .003; lim.release.value = .25; boostG = AC.createGain(); boostG.gain.value = Math.pow(10, boostDb/20); normG.connect(boostG); boostG.connect(lim); lim.connect(master); }   // a limiter keeps boosted quiet songs from cracking
   eqT.connect(normAn);   // normG: 音量をそろえる
   master.connect(analyser); analyser.connect(AC.destination);
   master.connect(split); split.connect(anL, 0); split.connect(anR, 1);
@@ -2926,7 +2937,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126112901';                                 // stamped by build.ps1
+const APP_VER = '20261126113257';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3251,6 +3262,15 @@ setInterval(() => {                                      // listen for ~20 s of 
 }, 250);
 document.querySelectorAll('#normChips .chip').forEach(b => b.addEventListener('click', () => setNorm(b.dataset.norm === '1', true)));
 setNorm(!!normOn, false);
+/* ---------------- ブースト: louder than other apps (+3 / +6 dB), the limiter keeps it from cracking ---------------- */
+function setBoost(db, announce){
+  boostDb = [0, 3, 6].includes(db) ? db : 0; if(announce) store.set('boost', boostDb);
+  document.querySelectorAll('#boostChips .chip').forEach(b => b.setAttribute('aria-pressed', +b.dataset.boost === boostDb));
+  if(boostG) boostG.gain.setTargetAtTime(Math.pow(10, boostDb/20), AC.currentTime, .05);
+  if(announce) flash(boostDb ? 'BOOST  +' + boostDb + 'dB' : 'BOOST  OFF', 900);
+}
+document.querySelectorAll('#boostChips .chip').forEach(b => b.addEventListener('click', () => setBoost(+b.dataset.boost, true)));
+setBoost(boostDb, false);
 
 /* ---------------- 時計: 24-hour or 12-hour ---------------- */
 let clock12 = !!store.get('clock12', false);
