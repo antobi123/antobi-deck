@@ -237,10 +237,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .pbody h3{margin:0 0 10px; font:700 12px var(--font-print); letter-spacing:.18em; color:var(--muted)}
 .ptop{position:sticky; top:0; z-index:2; background:var(--panel); border-bottom:1px solid var(--line)}
 .ptop .phead{position:static; border-bottom:0; padding-bottom:8px}
-.ptabs{display:flex; gap:5px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none}
+.ptabs{display:flex; gap:4px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none}
 .ptabs button, .hnav button{flex:none; border:1px solid var(--line); background:#14151a; color:var(--muted); border-radius:999px; padding:7px 15px; font:700 12px var(--font-ui)}
 .ptabs button[aria-pressed="true"]{color:#06070a; background:var(--illum); border-color:transparent; box-shadow:0 0 12px var(--illumglow)}
-.ptabs button{padding:7px 12px}
+.ptabs button{padding:7px 9px; letter-spacing:0}
 .hnav{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px}
 .hnav button{padding:6px 12px; font-size:11.5px}
 .hnav button[aria-pressed="true"]{color:var(--fg); border-color:var(--illum); background:#22242b}
@@ -541,7 +541,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
     <div class="ptop">
     <div class="phead"><h2 id="setupTitle">⚙ SETUP</h2><button class="x" id="closeSheet" aria-label="閉じる">✕</button></div>
-    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="fx" aria-pressed="false">ディマー・OP演出</button><button data-tab="app" aria-pressed="false">その他</button><button data-tab="help" aria-pressed="false">使い方</button></nav>
+    <nav class="ptabs" id="ptabs"><button data-tab="look" aria-pressed="true">表示</button><button data-tab="chara" aria-pressed="false">キャラクター</button><button data-tab="photo" aria-pressed="false">マイ フォト</button><button data-tab="music" aria-pressed="false">曲</button><button data-tab="radio" aria-pressed="false">ラジオ</button><button data-tab="sound" aria-pressed="false">サウンド</button><button data-tab="night" aria-pressed="false">時計・電力・タイマー</button><button data-tab="fx" aria-pressed="false">ディマー・OP演出</button><button data-tab="app" aria-pressed="false">その他</button><button data-tab="help" aria-pressed="false">使い方</button></nav>
     </div>
     <div class="pbody">
       <section data-tab="look">
@@ -649,7 +649,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-sp="off"><svg viewBox="0 0 52 30" aria-hidden="true"><rect x="1" y="1" width="50" height="28" rx="6" fill="#1a1c22" stroke="#4a4c53"/><rect x="10" y="5" width="32" height="20" rx="2" fill="#021311"/></svg>表示しない</button>
         </div>
       </section>
-      <section data-tab="look">
+      <section data-tab="chara">
         <h3>動物のキャラクター</h3>
         <p class="rnote" style="margin:0 0 8px">ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物です。</p>
         <div class="chips" id="petChips">
@@ -866,7 +866,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="chara" aria-pressed="false">キャラクター</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
@@ -894,7 +894,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
-            <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・左右の楕円のリング・通信・電池の小窓・動物のキャラクター・季節の衣装と飾り</dd>
+            <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・左右の楕円のリング・通信・電池の小窓</dd>
+            <dt>キャラクター</dt><dd>動物のキャラクター（7種類）・季節の衣装と飾り</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリストと曲順・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴（★ で残せる）</dd>
@@ -975,7 +976,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
-            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます。⚙「表示」の「季節の衣装と飾り」が ON（はじめから）なら、12/1〜25 はサンタ帽、12/30〜1/7 は鉢巻き、3/25〜4/10 は桜、7/20〜8/31 はサングラス、10/20〜31 は魔女の帽子に自動で着替えます。そばにはクリスマスツリー・門松・桜の木・ひまわり・かぼちゃのランタンが飾られます（ROOM は観葉植物の代わりに）<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
           </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
@@ -984,16 +984,24 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>BEACH</dt><dd>ヤシの木の浜辺。時刻に合わせて朝日・昼・夕日・月夜に変わります</dd>
             <dt>TURNTABLE</dt><dd>窓辺で回るレコード。窓の外は時刻と今の天気（雨の日は雨）に合わせて変わります</dd>
             <dt>CASSETTE</dt><dd>回るカセットテープ。テープの巻きは曲の進み具合に合わせて移ります</dd>
-            <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。季節によってはサンタ帽などの衣装と、ツリーや門松などの飾りも。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「表示」の「動物のキャラクター」で7種類から</dd>
+            <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。季節によってはサンタ帽などの衣装と、ツリーや門松などの飾りも。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「キャラクター」タブで7種類から</dd>
             <dt>STAGE</dt><dd>ステージで動物が大きく踊ります。左右からスポットライト、床は音に合わせて光り、踊りが変わると紙吹雪。踊りは10種類（左右に揺れる・ジャンプ・手拍子・ディスコ・くるっと回る・スクワット・手を振る・シャッフル・ロボット など）で、8拍ごとに変わります</dd>
             <dt>LINE DANCE</dt><dd>同じ動物が3匹でラインダンス。上でミラーボールが回ります。そろって踊る・順番にずれて踊る（ウェーブ）・左右が鏡写し・真ん中がソロで両側は手拍子、の4つの並びが16拍ごとに変わります</dd>
-            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。左上の「128 BPM」は動物が踊っているテンポ（低音から読み取れないときは --）。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。動物は⚙「表示」の「動物のキャラクター」で選べます</small></dd>
+            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。左上の「128 BPM」は動物が踊っているテンポ（低音から読み取れないときは --）。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>お店のロゴ</dt><dd>レコード屋さんなどのロゴが光ります</dd>
             <dt>MY PHOTO</dt><dd>自分で登録した画像がドット風に光る画面。「使う」にした画像が2枚以上あると、SHUFFLE と同じようにランダムで切り替わります（お店のロゴの SHUFFLE には入りません）</dd>
             <dt>SHUFFLE</dt><dd>お店のロゴ14種類から、16秒ごとにランダムで切り替わります（同じロゴは続きません）</dd>
+          </dl>
+        </div>
+        <div class="hpage" data-h="chara" hidden>
+          <h3>キャラクター（⚙「キャラクター」）</h3>
+          <dl class="help">
+            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます</dd>
+            <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
+            <dt>どこで会える？</dt><dd>ディスプレイの ROOM（部屋で暮らす）と、STAGE・LINE DANCE・DJ BOOTH（音楽に合わせて踊る）。ディスプレイは DISP か ⚙「表示」で切り替えます。くわしくは「ディスプレイ」のページへ</dd>
           </dl>
         </div>
         <div class="hpage" data-h="photo" hidden>
@@ -3709,7 +3717,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126141259';                                 // stamped by build.ps1
+const APP_VER = '20261126141509';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
