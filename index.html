@@ -212,6 +212,14 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
   display:grid; place-items:center; transition:transform .05s, box-shadow .05s}
 .k:active{transform:translateY(2px); box-shadow:0 0 0 1px #000, inset 0 1px 0 rgba(255,255,255,.15), 0 1px 0 rgba(0,0,0,.55)}
 .k.on{color:#fff; text-shadow:0 0 6px var(--illum), 0 0 14px var(--illum)}
+.k.oplit, .bar.oplit{box-shadow:0 0 0 1px #000, 0 0 14px var(--illum), 0 0 26px var(--illumglow), inset 0 0 8px var(--illumglow); color:#fff; transition:box-shadow .18s, color .18s}
+.rk.oplit{box-shadow:0 0 14px var(--illum), 0 0 26px var(--illumglow); transition:box-shadow .18s}
+:root.opkeys .strip{animation:opStrip 1.6s ease-out .3s both}
+@keyframes opStrip{from{clip-path:inset(0 100% 0 0); opacity:.4} to{clip-path:inset(0 0 0 0); opacity:.9}}
+:root.opkeys .wing::after{display:block; animation:opRing 2.9s ease-in-out both}
+@keyframes opRing{0%,30%{opacity:0} 55%{opacity:1} 100%{opacity:0}}
+:root.opflash .k, :root.opflash .bar, :root.opflash .strip{filter:brightness(1.8)}
+@media (prefers-reduced-motion: reduce){ :root.opkeys .strip, :root.opkeys .wing::after{animation:none} }
 .k svg{width:22px; height:22px; fill:currentColor; filter:drop-shadow(0 0 5px var(--illum))}
 .k.round{border-radius:50%/50%}
 .k.src{border-radius:16px; box-shadow:0 0 0 1px #000, inset 0 0 0 1px var(--illum), inset 0 1px 0 rgba(255,255,255,.28), 0 0 16px var(--illumglow), 0 3px 0 rgba(0,0,0,.55)}
@@ -648,6 +656,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="white"><span class="dot" style="background:#eef2ff;box-shadow:0 0 10px #eef2ff"></span>WHITE</button>
           <button class="chip" data-illum="yellow"><span class="dot" style="background:#ffe63a;box-shadow:0 0 10px #ffe63a"></span>YELLOW</button>
           <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
+          <button class="chip" data-illum="auto"><span class="dot" style="background:conic-gradient(#eef2ff 0 25%,#4aa8ff 25% 50%,#ffb23a 50% 75%,#ff4d3d 75%);box-shadow:0 0 10px #ffb23a"></span>AUTO</button>
         </div>
       </section>
       <section data-tab="look">
@@ -696,6 +705,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-cs="0">OFF</button>
         </div>
         <p class="rnote">12月はサンタ帽、年末年始は鉢巻き、春は桜、夏はサングラス、ハロウィンは魔女の帽子。季節になると動物が自動で着替えて、そばにクリスマスツリー・門松・桜・ひまわり・かぼちゃのランタンが飾られます。</p>
+        <h3 style="margin-top:14px">天気で着替える</h3>
+        <div class="chips" id="wearChips">
+          <button class="chip" data-ww="1">ON</button>
+          <button class="chip" data-ww="0">OFF</button>
+        </div>
+        <p class="rnote">右上の天気マークと同じ天気で、雨の日は傘、雪の日はマフラー、30℃以上の日はうちわ。位置情報を許可していると使えます。</p>
         <h3 style="margin-top:14px">誕生日・記念日</h3>
         <div class="avrow"><input type="date" id="av0d" aria-label="日付1"><input type="text" id="av0n" maxlength="16" placeholder="名前（なくてもOK）" aria-label="名前1"><select id="av0k" aria-label="種類1"><option value="bd">誕生日</option><option value="an">記念日</option></select></div>
         <div class="avrow"><input type="date" id="av1d" aria-label="日付2"><input type="text" id="av1n" maxlength="16" placeholder="名前（なくてもOK）" aria-label="名前2"><select id="av1k" aria-label="種類2"><option value="bd">誕生日</option><option value="an">記念日</option></select></div>
@@ -930,7 +945,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
             <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・左右の楕円のリング・拍に合わせて光る・通信・電池の小窓</dd>
-            <dt>キャラクター</dt><dd>動物のキャラクター（7種類）・季節の衣装と飾り・誕生日・記念日</dd>
+            <dt>キャラクター</dt><dd>動物のキャラクター（7種類）・季節の衣装と飾り・天気で着替える・誕生日・記念日</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリストと曲順・検索・並べ替え（テンポ順も）・次の曲をテンポで選ぶ・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴（★ で残せる）</dd>
@@ -953,6 +968,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>お気に入り ★</dt><dd>⚙「曲」の一覧で曲の右の <b>☆</b> を押すと ★ に。再生中の曲は <b class="kb">LIST</b> の<b>長押し</b>でも ★ にできます（もう一度でやめる）</dd>
             <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入り」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。その間は画面の FAV が光ります。「すべての曲」で元に戻ります</dd>
             <dt>プレイリスト</dt><dd>「＋ 新しいリスト」で名前（「ドライブ用」「おやすみ用」など）を付けて作り、曲の右の <b>＋</b> をタップして入れます（✓ をもう一度で外す）。終わったら「選び終わり」。リストの名前を選ぶとその曲だけを再生し、画面の LIST が光ります。「曲を選ぶ」でいつでも出し入れ、「名前を変える」「このリストを消す」も（曲そのものは消えません）。10個まで</dd>
+            <dt>♪ アップテンポ・♪ ゆったり</dt><dd>⚙「曲」の上の「♪ アップテンポ」を選ぶとテンポ 120 BPM 以上の曲だけ、「♪ ゆったり」は 90 以下の曲だけを流します。曲を20秒以上流してテンポを覚えた曲が、自動で入ります（自分で選ぶ必要はありません）。ドライブ用・おやすみ用に</dd>
             <dt>検索</dt><dd>⚙「曲」の検索欄に曲名・アーティスト・アルバムの一部を入れると、一覧がしぼり込まれます。タップでその曲を再生</dd>
             <dt>並べ替え</dt><dd>「入れた順」「曲名順」「アーティスト順」（同じアーティストはアルバムごと）「テンポ順」（ゆっくりな曲から。テンポが分からない曲は最後）。並べた順番がそのまま再生の順番になります</dd>
             <dt>曲のテンポ</dt><dd>曲を20秒ほど流すと、右下の BPM がその曲のテンポとして覚えられ、一覧の曲名の右に「120」のように出ます。もう一度流すと少しずつ正確に</dd>
@@ -1003,7 +1019,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
           <dl class="help">
-            <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）。柄の一覧と説明は「ディスプレイ」のページに</dd>
+            <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）。ROOM・STAGE・LINE DANCE・DJ BOOTH では、画面を<b>長押し</b>すると動物をなでられます（柄は切り替わりません）。柄の一覧と説明は「ディスプレイ」のページに</dd>
             <dt>通信・電池の小窓</dt><dd>電波・Wi-Fi・電池の表示をどこに出すか。ボタンの絵が置き場所です（画面の中・右・左・電波 左／電池 右・電波 右／電池 左・表示しない）</dd>
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります（お店のロゴは元の色のまま）</dd>
@@ -1011,7 +1027,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面とお店のロゴの画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
             <dt>時計</dt><dd>⚙「時計・電力・タイマー」タブで、右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
-            <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
+            <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます。<b>AUTO</b> は時間帯で色が変わります（5〜9時 白、9〜16時 青、16〜19時 アンバー、夜は赤）</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
             <dt>拍に合わせて光る</dt><dd>はじめは「控えめ」。「控えめ」「派手」のときは、曲の拍（右下の BPM）に合わせて、キー下の光る線・左右の楕円のリング・上のバーがドンドンと明るくなります。派手は光らせていないリングも拍で光ります。⚙「表示」のボタンの絵が光り方の見本です（絵も同じように点滅します）。運転中にまぶしいときは OFF に</dd>
           </dl>
@@ -1040,6 +1056,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます</dd>
             <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
             <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
+            <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面を長押しすると、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回なでると、くるくる回ります（スマホが少しブルッと震えます）</dd>
+            <dt>天気で着替える</dt><dd>はじめから ON。右上の天気マークと同じ天気で、雨の日は傘、雪の日はマフラー、30℃以上の日はうちわを持ちます。季節の衣装や誕生日の帽子と一緒に着られます。天気は位置情報を許可していると分かります<br><small>先に見たいときは、アドレスの最後に ?wxwear=rain（ほかに snow・hot）</small></dd>
             <dt>どこで会える？</dt><dd>ディスプレイの ROOM（部屋で暮らす）と、STAGE・LINE DANCE・DJ BOOTH（音楽に合わせて踊る）。ディスプレイは DISP か ⚙「表示」で切り替えます。くわしくは「ディスプレイ」のページへ</dd>
           </dl>
         </div>
@@ -1099,7 +1117,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>ディマー・OP演出（⚙「ディマー・OP演出」）</h3>
           <dl class="help">
             <dt>夜のディマー</dt><dd>はじめは OFF。AUTO にすると日没〜日の出の間、ディスプレイとキー照明が少し暗くなります（車のライト連動の減光のように）。「いつも暗め」「OFF」も選べます。日没・日の出の時刻は季節に合わせて変わります</dd>
-            <dt>オープニング演出</dt><dd>はじめは OFF。ON にすると、アプリを開いたときに起動演出（約3秒）が出ます。タップで飛ばせます。ON を押すと、その場でもう一度見られます</dd>
+            <dt>オープニング演出</dt><dd>はじめは OFF。ON にすると、アプリを開いたときに起動演出（約3秒）が出ます。タップで飛ばせます。ON を押すと、その場でもう一度見られます。画面の演出に合わせて、キーが左から順に光り、キー下の線が伸び、左右の楕円のリングが光って、最後に2回フラッシュします</dd>
           </dl>
         </div>
         <div class="hpage" data-h="lock" hidden>
@@ -1141,7 +1159,7 @@ const store = {
 const FIRST_RUN = (() => { try{ for(let i = 0; i < localStorage.length; i++) if((localStorage.key(i) || '').startsWith('mdeck.')) return false; return true; }catch(e){ return false; } })();
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdstage','vfdline','vfddj','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdmine','vfdshuffle'], SKIN_NAME = {vfdstage:'STAGE', vfdline:'LINE DANCE', vfddj:'DJ BOOTH', vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdstage','vfdline','vfddj','vfdclub','vfddrive','vfd','vfddx','vfdasahi','vfdfrisco','vfdpen','vfdmellow','vfdsea','vfdbeat','vfdhmv','vfdnext','vfdface','vfdunion','vfdyuji','vfdnote','vfdtower','vfdmine','vfdshuffle'], SKIN_NAME = {vfdstage:'STAGE', vfdline:'LINE DANCE', vfddj:'DJ BOOTH', vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfdshuffle:'SHUFFLE', vfd:'SPECTRUM', vfdb:'BEACH', vfddx:'DX Record', vfdasahi:'朝日レコード', vfdfrisco:'喫茶フリスコ', vfdpen:'円盤Peninsula', vfdmellow:'MELLOW RECORDS', vfdsea:'Sea record', vfdbeat:'BEATBOOM!', vfdhmv:'HMV', vfdnext:'next.records', vfdface:'FACE Records', vfdunion:'disk union', vfdyuji:'YUJI CAFE', vfdnote:'Note', vfdtower:'TOWER RECORDS', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random','auto'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
@@ -1507,6 +1525,7 @@ function setIllum(c, announce){
   document.querySelectorAll('#illChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.illum === c));
   clearInterval(illumTimer);
   if(c === 'random'){ illumStep(); illumTimer = setInterval(illumStep, 7000); }
+  else if(c === 'auto'){ illumNow = ''; illumAutoStep(); illumTimer = setInterval(illumAutoStep, 60e3); }
   else { illumNow = ''; root.style.removeProperty('--illum'); root.style.removeProperty('--illumglow'); }
   if(announce) flash('ILLUMI  ' + c.toUpperCase(), 900);
 }
@@ -1524,7 +1543,7 @@ on('#prev', () => step(-1));
 on('#next', () => step(1));
 $('#file').addEventListener('change', e => { ensureAudio(); addFiles(e.target.files); e.target.value = ''; });
 on('#dispBtn', () => setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true));
-on('#disp', e => { if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true); });
+on('#disp', e => { if(dispLong){ dispLong = false; return; } if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true); });
 on('#illBtn', () => setIllum(ILLUMS[(ILLUMS.indexOf(illum)+1) % ILLUMS.length], true));
 /* KEY LOCK: a clear layer over everything so nothing reacts in a pocket; hold LOCK ~1.5 s to release */
 let locked = false, holdStart = 0, holdRAF = 0, hintT = 0;
@@ -2287,10 +2306,10 @@ function wxUpdate(){
   navigator.geolocation.getCurrentPosition(async pos => {
     try{
       const la = pos.coords.latitude.toFixed(2), lo = pos.coords.longitude.toFixed(2);   // ~1 km is plenty for weather
-      const j = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=precipitation,weather_code`)).json();
+      const j = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=precipitation,weather_code,temperature_2m`)).json();
       const c = j.current || {}, code = c.weather_code || 0, pr = c.precipitation || 0;
       const wet = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95 || pr > 0;
-      wxRain = wet ? Math.min(1, .45 + pr*.25) : 0; wxStorm = code >= 95; wxCode = code;
+      wxRain = wet ? Math.min(1, .45 + pr*.25) : 0; wxStorm = code >= 95; wxCode = code; wxTemp = typeof c.temperature_2m === 'number' ? c.temperature_2m : null;
     }catch(e){}
     wxBusy = false;
   }, () => { wxBusy = false; }, { maximumAge: 30*60e3, timeout: 15000 });
@@ -2906,6 +2925,7 @@ function drawVFDRoom(dt){
   } else for(let c=1;c<10;c++) dot(ox + c, oy + 7, G);                                              // curled up
   RM_PETS[sp].extra(ox, oy, { dot, G, A, K, t: rmT, walking, dancing, sleeping });                // ears, tail, whiskers…
   costumeDraw((x, y, c) => dot(ox + x, oy + y, c), G, A, true);
+  weatherDraw((x, y, c) => dot(ox + x, oy + y, c), G, A, true);
   return { ox, oy };
   };
   const HEART = [[0,0],[1,1],[3,1],[4,0],[0,1],[4,1],[1,2],[2,3],[3,2]], NOTE = [[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]];
@@ -2942,6 +2962,91 @@ function drawVFDRoom(dt){
   g.drawImage(vbDim, 0, 0, W, H);
   drawLit();
 }
+/* ---------------- 天気で着替える: an umbrella on a rainy day, a scarf when it snows, a fan when it is 30 °C or more ----------------
+   From the weather the app already reads (右上の天気マーク). ?wxwear=rain / snow / hot previews one. */
+var wearOn = store.get('wxwear', true) !== false, wxTemp = null;
+const WEAR_FAKE = new URLSearchParams(location.search).get('wxwear');
+function weatherWear(){
+  if(WEAR_FAKE) return WEAR_FAKE;
+  if(!wearOn) return '';
+  try{
+    if((wxCode >= 71 && wxCode <= 77) || wxCode === 85 || wxCode === 86) return 'snow';
+    if(isRaining()) return 'rain';
+    if(wxTemp !== null && wxTemp >= 30) return 'hot';
+  }catch(e){}
+  return '';
+}
+function weatherDraw(P, G, A, front){
+  const w = weatherWear();
+  if(w === 'rain'){                                                     // an umbrella held up on the right
+    for(let x=6;x<=11;x++) P(x, -7, A); for(let x=4;x<=13;x++) P(x, -6, A); for(let x=3;x<=14;x+=2) P(x, -5, A);
+    for(let y=-4;y<=5;y++) P(10, y, G); P(9, 5, G);
+  } else if(w === 'snow'){                                              // a scarf, its end hanging down
+    for(let x=1;x<=9;x++) P(x, 6, A); P(7, 7, A); P(7, 8, A); P(8, 9, A); P(6, 9, A);
+  } else if(w === 'hot'){                                               // a round fan waving by the face
+    const s = Math.round(Math.sin(performance.now()/120));
+    for(let a=0;a<6.3;a+=.8) P(12 + Math.round(Math.cos(a)*1.6), 2 + s + Math.round(Math.sin(a)*1.6), A); P(12, 2 + s, A);
+    P(11, 4 + s, G); P(10, 5, G);
+    if(front) P(-1, 1, G);                                              // a drop of sweat
+  }
+}
+function setWear(v, announce){
+  wearOn = v; if(announce){ store.set('wxwear', v); flash(v ? 'WEATHER WEAR  ON' : 'WEATHER WEAR  OFF', 1000); }
+  document.querySelectorAll('#wearChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.ww === '1') === v));
+}
+document.querySelectorAll('#wearChips .chip').forEach(b => b.addEventListener('click', () => setWear(b.dataset.ww === '1', true)));
+setWear(wearOn, false);
+
+/* ---------------- なでる: hold the screen on ROOM / STAGE / LINE DANCE / DJ BOOTH; hearts, a jump, and a spin if you keep at it ---------------- */
+var petAt = -99, petN = 0, dispLong = false, dispHold = 0;
+const PET_SKINS = ['vfdroom', 'vfdstage', 'vfdline', 'vfddj'];
+function petLove(){
+  const now = performance.now()/1000;
+  petN = now - petAt < 4 ? petN + 1 : 1; petAt = now;
+  try{ navigator.vibrate && navigator.vibrate(15); }catch(e){}
+  if(skin === 'vfdroom'){ try{ rmState = 'greet'; rmUntil = rmT + 3; rmFace = 0; }catch(e){} }
+}
+function petting(){ return performance.now()/1000 - petAt < 2.5; }
+function petPose(i){
+  const t = performance.now()/1000 + (i || 0)*.15;
+  if(petN >= 3) return { arms: 'up', eyes: ['open', 'R', 'back', 'L'][Math.floor(t*8) % 4], hop: 2 };     // a spin
+  return { arms: 'up', eyes: 'happy', hop: (t*3) % 1 < .5 ? 2 : 0 };
+}
+function petHearts(x, y){
+  const H = [[0,0],[1,0],[3,0],[4,0],[0,1],[1,1],[2,1],[3,1],[4,1],[1,2],[2,2],[3,2],[2,3]], age = performance.now()/1000 - petAt;
+  for(let k=0;k<3;k++){ const p = (age*.9 + k/3) % 1; H.forEach(([a, b]) => ddot(x - 9 + k*7 + a, y - p*12 + b, '#f00')); }
+}
+(() => {
+  const d = $('#disp');
+  d.addEventListener('pointerdown', e => {
+    if(e.target.id === 'seek' || !PET_SKINS.includes(skin)) return;
+    clearTimeout(dispHold); dispHold = setTimeout(() => { dispLong = true; petLove(); }, 550);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => d.addEventListener(ev, () => clearTimeout(dispHold)));
+  d.addEventListener('contextmenu', e => { if(PET_SKINS.includes(skin)) e.preventDefault(); });
+})();
+
+/* ---------------- ILLUMI AUTO: the key colour follows the time of day ----------------
+   morning white, daytime blue, evening amber, night a soft red (easy on the eyes when it is dark) */
+function illumAutoColor(){
+  const h = new Date().getHours();
+  return h >= 5 && h < 9 ? 'white' : h >= 9 && h < 16 ? 'blue' : h >= 16 && h < 19 ? 'amber' : 'red';
+}
+function illumAutoStep(){
+  const c = illumAutoColor(); if(c === illumNow) return; illumNow = c;
+  root.style.setProperty('--illum', ILLUM_COL[c][0]); root.style.setProperty('--illumglow', ILLUM_COL[c][1]);
+}
+
+/* ---------------- OP演出 for the keys: while the tubes warm up, the keys light one after another, the light bars fill, the rings glow, then two flashes ---------------- */
+function opKeys(){
+  const keys = [...document.querySelectorAll('.deck .k, .deck .bar, .deck .rk')].sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
+  root.classList.add('opkeys');
+  keys.forEach((k, i) => setTimeout(() => k.classList.add('oplit'), 150 + i*1500/keys.length));
+  setTimeout(() => root.classList.add('opflash'), 2100); setTimeout(() => root.classList.remove('opflash'), 2300);
+  setTimeout(() => root.classList.add('opflash'), 2450); setTimeout(() => root.classList.remove('opflash'), 2650);
+  setTimeout(() => { keys.forEach(k => k.classList.remove('oplit')); root.classList.remove('opkeys'); }, 3200);
+}
+
 /* ---------------- 拍に合わせて光る: the light bars, the oval rings and the long keys swell with each beat ----------------
    OFF / 控えめ (the default) / 派手. 派手 also flashes an unlit ring on the beat. */
 var pulseMode = store.get('pulse', 'soft'), pulseV = 0, pulseSet = -1;
@@ -3256,6 +3361,7 @@ function dnPet(sp, x, y, s, pose){
     RM_PETS[sp].extra(0, 0, { dot: (cx, cy, c) => P(cx, cy, c), G: DG, A: DA, K: DK, t: dnT, walking: false, dancing: true, sleeping: false });
   }
   costumeDraw(P, DG, DA, e !== 'back');
+  weatherDraw(P, DG, DA, e !== 'back');
   for(let r=7;r<=9;r++){ P(2, r, DG); P(8, r, DG); }
   const st = pose.step || 0;
   if(pose.squat){ P(1, 10, DG); P(2, 10, DG); P(8, 10, DG); P(9, 10, DG); }
@@ -3278,7 +3384,7 @@ function drawDanceStage(dt){
   for(let x=0;x<VB_C;x++) ddot(x, 37, DG);
   for(let i=0;i<11;i++){ const lv = playing ? Math.round(st.v[Math.min(15, i + 2)]*3.4) : 0; for(let r=0;r<lv;r++) for(let x=1;x<11;x+=2) ddot(i*12 + x + (r % 2), 43 - r*2, r > 1 ? DA : DG); }
   vbStars.slice(0, 8).forEach(([x, y, p]) => { if(Math.sin(dnT*1.5 + p) > .3) ddot(x, y % 8, DG); });
-  const sl = dnSleep(), pose = sl ? dnSleepPose(sl) : playing ? dnPose(dnMove, dnBeat, ph) : dnIdle(), cx = 66 + (pose.lean || 0)*2;
+  const sl = dnSleep(), pose = petting() ? petPose() : sl ? dnSleepPose(sl) : playing ? dnPose(dnMove, dnBeat, ph) : dnIdle(), cx = 66 + (pose.lean || 0)*2;
   if(playing && sl !== 'sleep'){
     [3, 128].forEach((sx, i) => {
       const tx = cx + Math.sin(dnT*1.1 + i*2.4)*18;
@@ -3291,6 +3397,7 @@ function drawDanceStage(dt){
   dnPet(pet, 66 - 11, 37 - 22, 2, pose);
   dnConfDraw(dt, 37);
   if(sl === 'sleep' || sl === 'drowsy' && (dnT % 7) < 1.2) dnZzz(cx + 14, 12);
+  if(petting()) petHearts(cx, 12);
   if(playing && dnPulse > .5) [[cx - 20, 14], [cx + 18, 12]].forEach(([x, y]) => { ddot(x, y, DA); ddot(x, y - 1, DA); ddot(x + 1, y - 2, DA); ddot(x - 1, y, DA); });   // ♪
   vbEnd();
 }
@@ -3308,7 +3415,8 @@ function drawDanceLine(dt){
   [36, 66, 96].forEach((x, i) => {
     let pose;
     const sl = dnSleep();
-    if(sl) pose = dnSleepPose(sl, i);
+    if(petting()) pose = petPose(i);
+    else if(sl) pose = dnSleepPose(sl, i);
     else if(!playing) pose = Object.assign(dnIdle(), { lean: Math.round(Math.sin(dnT*.8 + i*.9)) });
     else if(dnForm === 'canon'){ const t = dnBeat + ph - i*.5, b = Math.floor(t); pose = dnPose(dnMove, b, t - b); }
     else if(dnForm === 'mirror'){ pose = dnPose(dnMove, dnBeat, ph); if(i === 0) pose = dnMirror(pose); }
@@ -3317,6 +3425,7 @@ function drawDanceLine(dt){
     dnPet(pet, x - 5, 38 - 11, 1, pose);
   });
   if(dnSleep() === 'sleep') dnZzz(74, 20);
+  if(petting()) petHearts(66, 22);
   vbEnd();
 }
 
@@ -3328,7 +3437,7 @@ function drawDanceDJ(dt){
     for(let c=0;c<3;c++){ const h = playing ? Math.round(st.v[c*3 + i*2]*12) : 0; for(let y=0;y<h;y++){ ddot(x0 + 3 + c*4, 41 - y*3, y > 8 ? DA : DG); ddot(x0 + 4 + c*4, 41 - y*3, y > 8 ? DA : DG); } }
     const r = 1 + (playing ? dnPulse*1.6 : 0); for(let a=0;a<Math.PI*2;a+=.5) ddot(x0 + 7.5 + Math.cos(a)*r, 9.5 + Math.sin(a)*r*.8, DG);
   }
-  const sl = dnSleep(), m = sl ? 'z' + sl : playing ? dnDj : 'dig', f = ph, b = dnBeat;
+  const sl = dnSleep(), m = petting() ? 'zwake' : sl ? 'z' + sl : playing ? dnDj : 'dig', f = ph, b = dnBeat;
   const pose = { arms: 'hold', eyes: 'open', lean: 0 }; let bob = 0;
   if(m === 'zsleep'){ pose.eyes = 'shut'; bob = 2; }
   else if(m === 'zdrowsy'){ const z = dnSleepPose('drowsy'); pose.eyes = z.eyes; if(z.arms === 'up') pose.arms = 'up'; bob = Math.sin(dnT*1.1) > 0 ? 1 : 0; }
@@ -3354,6 +3463,7 @@ function drawDanceDJ(dt){
   });
   if(m === 'scratch') dline(ox + 4, oy + 16, 46, 34, DG);                                                           // a hand on the record
   if(m === 'zsleep') dnZzz(ox + 24, oy + 2);
+  if(petting()) petHearts(ox + 11, oy - 2);
   for(let x=60;x<=72;x+=2) ddot(x, 32, playing && st.v[(x/2) % 16] > .45 ? DA : DG);                          // the mixer's lights
   for(let x=60;x<=72;x+=4) ddot(x + (playing ? Math.round(Math.sin(dnT*2 + x)) : 0), 38, DG);
   vbEnd();
@@ -3863,7 +3973,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126145740';                                 // stamped by build.ps1
+const APP_VER = '20261126150325';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3951,7 +4061,7 @@ var plSel = store.get('plSel', null); if(plSel === null) plSel = store.get('favO
 var plEditing = false, lq = '', sortMode = store.get('sort', 'add');
 const favPool = () => tracks.map((t, i) => favs.has(t.key) ? i : -1).filter(i => i >= 0);
 function curList(){ return typeof plSel === 'number' ? plists[plSel] || null : null; }
-function inSel(t){ return plSel === 'fav' ? favs.has(t.key) : curList() ? curList().keys.includes(t.key) : true; }
+function inSel(t){ return plSel === 'fav' ? favs.has(t.key) : plSel === 'up' ? songBpm(t) >= 120 : plSel === 'slow' ? songBpm(t) > 0 && songBpm(t) <= 90 : curList() ? curList().keys.includes(t.key) : true; }
 function selPool(){ return plSel === 'all' ? [] : tracks.map((t, i) => inSel(t) ? i : -1).filter(i => i >= 0); }
 function matchQ(t){ return !lq || [t.title, t.artist, t.album, t.name].join(' ').toLowerCase().includes(lq); }
 function toggleFav(i){
@@ -3964,7 +4074,7 @@ function savePl(){ store.set('plists', plists); }
 function renderPlChips(){
   const box = $('#favChips'); box.innerHTML = '';
   const mk = (label, sel) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = label; b.setAttribute('aria-pressed', plSel === sel); b.addEventListener('click', () => selectPl(sel, true)); box.append(b); };
-  mk('すべての曲', 'all'); mk('★ お気に入り', 'fav'); plists.forEach((p, i) => mk(p.name, i));
+  mk('すべての曲', 'all'); mk('★ お気に入り', 'fav'); mk('♪ アップテンポ', 'up'); mk('♪ ゆったり', 'slow'); plists.forEach((p, i) => mk(p.name, i));
   const add = document.createElement('button'); add.className = 'chip'; add.textContent = '＋ 新しいリスト'; add.addEventListener('click', newPl); box.append(add);
   $('#plTools').hidden = !curList();
   $('#plEdit').textContent = plEditing ? '選び終わり' : '曲を選ぶ'; $('#plEdit').setAttribute('aria-pressed', plEditing);
@@ -3974,13 +4084,14 @@ function plHint(){
   h.hidden = !tracks.length || plSel === 'all' || (n > 0 && !plEditing && !curList());
   h.textContent = plEditing ? '＋ をタップした曲がこのリストに入ります（✓ でもう一度タップすると外れます）。終わったら「選び終わり」。'
     : n > 0 && curList() ? '左の ≡ を上下にドラッグすると、曲順を変えられます（この順で再生します）。'
+    : plSel === 'up' || plSel === 'slow' ? 'テンポの分かる曲がまだありません。曲を20秒以上流すとテンポを覚えて、アップテンポ（120 BPM 以上）・ゆったり（90 以下）に自動で入ります（今はすべての曲を再生します）。'
     : plSel === 'fav' ? 'まだ ★ の曲がありません。曲の ☆ をタップするか、LIST ボタンを長押しすると ★ になります（今はすべての曲を再生します）。'
     : 'このリストはまだ空です。「曲を選ぶ」で曲を入れてね（今はすべての曲を再生します）。';
 }
 function selectPl(sel, announce){
-  plSel = sel === 'fav' || (typeof sel === 'number' && plists[sel]) ? sel : 'all'; store.set('plSel', plSel); plEditing = false;
+  plSel = sel === 'fav' || sel === 'up' || sel === 'slow' || (typeof sel === 'number' && plists[sel]) ? sel : 'all'; store.set('plSel', plSel); plEditing = false;
   renderPlChips(); renderList(); favInd();
-  if(announce){ const n = selPool().length; flash(plSel === 'all' ? 'ALL SONGS' : plSel === 'fav' ? (n ? '★ FAVORITES ONLY' : 'NO FAVORITE YET') : (n ? `PLAYLIST ${plSel + 1}  ${n} SONGS` : 'EMPTY PLAYLIST'), 1200); }
+  if(announce){ const n = selPool().length; flash(plSel === 'all' ? 'ALL SONGS' : plSel === 'fav' ? (n ? '★ FAVORITES ONLY' : 'NO FAVORITE YET') : plSel === 'up' ? (n ? `UP TEMPO  ${n} SONGS` : 'NO TEMPO YET') : plSel === 'slow' ? (n ? `SLOW  ${n} SONGS` : 'NO TEMPO YET') : (n ? `PLAYLIST ${plSel + 1}  ${n} SONGS` : 'EMPTY PLAYLIST'), 1200); }
 }
 function newPl(){
   if(plists.length >= 10){ flash('MAX 10 PLAYLISTS', 1200); return; }
@@ -4323,11 +4434,12 @@ document.querySelector('.deck').addEventListener('pointerdown', bootSkip, { capt
 function setBoot(v, announce){
   bootOn = v; if(announce) store.set('boot2', v);
   document.querySelectorAll('#bootChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.boot === '1') === v));
-  if(announce){ if(v){ bootT = 0; bootStart = performance.now(); bootPx = null; vbKey = ''; } flash(v ? 'OPENING  ON' : 'OPENING  OFF', 900); }
+  if(announce){ if(v){ bootT = 0; bootStart = performance.now(); bootPx = null; vbKey = ''; opKeys(); } flash(v ? 'OPENING  ON' : 'OPENING  OFF', 900); }
 }
 document.querySelectorAll('#bootChips .chip').forEach(b => b.addEventListener('click', () => setBoot(b.dataset.boot === '1', true)));
 setBoot(bootOn, false);
 if(bootOn) setTimeout(() => flash('WELCOME', 1800), 600);
+if(bootOn) setTimeout(opKeys, 60);
 
 /* ---------------- night dimmer: like a car's display dimming with the headlights, from sunset to sunrise ---------------- */
 var dimMode = store.get('dimmer2', 'off');
