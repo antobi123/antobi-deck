@@ -1013,7 +1013,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
-            <dt>拍に合わせて光る</dt><dd>はじめは OFF。「控えめ」「派手」にすると、曲の拍（右下の BPM）に合わせて、キー下の光る線・左右の楕円のリング・上のバーがドンドンと明るくなります。派手は光らせていないリングも拍で光ります。運転中にまぶしいときは OFF に</dd>
+            <dt>拍に合わせて光る</dt><dd>はじめは「控えめ」。「控えめ」「派手」のときは、曲の拍（右下の BPM）に合わせて、キー下の光る線・左右の楕円のリング・上のバーがドンドンと明るくなります。派手は光らせていないリングも拍で光ります。運転中にまぶしいときは OFF に</dd>
           </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
@@ -2943,8 +2943,8 @@ function drawVFDRoom(dt){
   drawLit();
 }
 /* ---------------- 拍に合わせて光る: the light bars, the oval rings and the long keys swell with each beat ----------------
-   OFF (the default) / 控えめ / 派手. 派手 also flashes an unlit ring on the beat. */
-var pulseMode = store.get('pulse', 'off'), pulseV = 0, pulseSet = -1;
+   OFF / 控えめ (the default) / 派手. 派手 also flashes an unlit ring on the beat. */
+var pulseMode = store.get('pulse', 'soft'), pulseV = 0, pulseSet = -1;
 function beatPulse(){ if(pulseMode !== 'off') pulseV = 1; }
 function pulseTick(dt){
   pulseV = pulseMode === 'off' ? 0 : Math.max(0, pulseV - dt*3.2);
@@ -3863,7 +3863,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126145539';                                 // stamped by build.ps1
+const APP_VER = '20261126145707';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
