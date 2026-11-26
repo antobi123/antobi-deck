@@ -895,16 +895,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <p class="rnote">曲名を公開している局で流れた曲を、新しい順に100曲まで残します。左の ☆ をタップすると ★ になり、★ の曲は消えずに残ります。ラジオを聴きながら LIST を長押しすると、いま流れている曲が ★ になります。「コピー」で曲名をコピー、「検索」で YouTube を開きます。</p>
       </section>
       <section data-tab="app">
-        <h3>アプリとして使う</h3>
-        <div class="row" id="installRow" hidden><button class="pbtn pri" id="installBtn">ホーム画面にインストール</button></div>
-        <p id="installState"></p>
-        <ol class="steps">
-          <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」</li>
-          <li>iPhone（Safari）：共有ボタン →「ホーム画面に追加」</li>
-          <li>ホーム画面のアイコンから開くと、全画面・横向きで起動します</li>
-        </ol>
-      </section>
-      <section data-tab="app">
         <h3>今日の音楽</h3>
         <div id="statsView"></div>
         <p class="rnote">聴いた時間・曲数・平均テンポを1週間分記録します。毎日21時には、その日の記録が1段目に流れます。</p>
@@ -922,8 +912,19 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="chara" aria-pressed="false">キャラクター</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="appuse" aria-pressed="false">アプリの使い方</button><button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="chara" aria-pressed="false">キャラクター</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
+        <div class="hpage" data-h="appuse" hidden>
+          <h3>アプリとして使う（ホーム画面に追加）</h3>
+          <div class="row" id="installRow" hidden><button class="pbtn pri" id="installBtn">ホーム画面にインストール</button></div>
+          <p id="installState"></p>
+          <ol class="hsteps">
+            <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><small>上に「ホーム画面にインストール」ボタンが出ていれば、それを押すだけでもOK</small></li>
+            <li>iPhone（Safari）：画面下の共有ボタン（□↑）→「ホーム画面に追加」<br><small>共有ボタンが見当たらないときは、画面下の「⋯」の中にあります。「はじめての案内」の1枚目に、押す場所の絵があります</small></li>
+            <li>ホーム画面のアイコンから開くと、全画面・横向きのアプリとして起動します。入れた曲や設定も、次に開いたときそのまま残ります</li>
+          </ol>
+          <p class="rnote" style="margin:4px 0 0">ブラウザで開いているときは、画面の下に「ホーム画面に追加すると、全画面のアプリとして使えます」というお知らせが出ます。「追加する」で Android はそのまま追加の画面へ、iPhone は押す場所の絵が出ます。「あとで」を押すと1週間出ません。</p>
+        </div>
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
           <ol class="hsteps">
@@ -934,13 +935,6 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </ol>
           <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
           <p class="rnote" style="margin:0 0 4px">初めて開いたときに出る案内です。アプリとして使う（ブラウザで開いているときだけ）・曲を入れる・ラジオを聴く・自分好みにする の順に出ます。</p>
-          <h3 style="margin-top:16px">アプリとして使う（ホーム画面に追加）</h3>
-          <ol class="hsteps">
-            <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><small>⚙「その他」の「ホーム画面にインストール」ボタンが出ていれば、それを押すだけでもOK</small></li>
-            <li>iPhone（Safari）：画面下の共有ボタン（□↑）→「ホーム画面に追加」<br><small>共有ボタンが見当たらないときは、画面下の「⋯」の中にあります。「はじめての案内」の1枚目に、押す場所の絵があります</small></li>
-            <li>ホーム画面のアイコンから開くと、全画面・横向きのアプリとして起動します。入れた曲や設定も、次に開いたときそのまま残ります</li>
-          </ol>
-          <p class="rnote" style="margin:4px 0 0">ブラウザで開いているときは、画面の下に「ホーム画面に追加すると、全画面のアプリとして使えます」というお知らせが出ます。「追加する」で Android はそのまま追加の画面へ、iPhone は押す場所の絵が出ます。「あとで」を押すと1週間出ません。</p>
           <h3 style="margin-top:16px">覚えておくと便利</h3>
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
@@ -948,7 +942,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li>音が小さいと感じたら、まず VOLUME を 40 まで。それでも足りなければ ⚙「サウンド」の<b>ブースト</b>（+3dB・+6dB）で、ほかのアプリより大きくできます</li>
             <li>設定が見つからないときは、⚙ SETUP の一番上の<b>検索欄</b>に「時報」「リング」などと入れると、その設定（または使い方の説明）に飛べます</li>
             <li>いろいろ触って分からなくなったら、各タブの一番下の「<b>このタブを最初の設定に戻す</b>」（2回押し）。そのタブの設定だけが元に戻り、曲・プレイリスト・写真・ラジオの局・誕生日・なつき度・記録は消えません</li>
-            <li>インストール・今日の音楽（聴いた時間と1週間のグラフ）・ラジオの通信量の目安・友達に教える・設定のバックアップ・更新のお知らせは ⚙「その他」のタブへ</li>
+            <li>ホーム画面への追加（インストール）は ⚙「使い方」の「<b>アプリの使い方</b>」へ。今日の音楽（聴いた時間と1週間のグラフ）・ラジオの通信量の目安・友達に教える・設定のバックアップ・更新のお知らせは ⚙「その他」のタブへ</li>
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
@@ -960,8 +954,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・ブースト・操作音・自動で再開</dd>
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・時報・省電力モード・電池が少ないときの自動省電力・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
             <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
-            <dt>その他</dt><dd>アプリとして使う（インストール）・今日の音楽・ラジオの通信量・友達に教える・設定のバックアップ・更新のお知らせ</dd>
-            <dt>使い方</dt><dd>このページ（「はじめての案内をもう一度見る」もここ）</dd>
+            <dt>その他</dt><dd>今日の音楽・ラジオの通信量・友達に教える・設定のバックアップ・更新のお知らせ</dd>
+            <dt>使い方</dt><dd>このページ。左端の「アプリの使い方」にホーム画面への追加（インストール）、「はじめに」に「はじめての案内をもう一度見る」</dd>
           </dl>
         </div>
         <div class="hpage" data-h="play" hidden>
@@ -1099,7 +1093,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="appx" hidden>
           <h3>その他（⚙「その他」）</h3>
           <dl class="help">
-            <dt>アプリとして使う</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます。手順は「はじめに」のページに。Android では「ホーム画面にインストール」ボタンが出ていれば、押すだけで追加できます。今の状態（ブラウザで開いているか、アプリとして起動中か）もここに出ます</dd>
+            <dt>アプリとして使う</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます。インストールボタンと手順は、このページの左端「アプリの使い方」に。Android では「ホーム画面にインストール」ボタンが出ていれば、押すだけで追加できます。今の状態（ブラウザで開いているか、アプリとして起動中か）もここに出ます</dd>
             <dt>ラジオの通信量</dt><dd>今日と今月、ラジオで使った通信量の目安。聴いた時間から 128kbps として計算します（1時間でおよそ 58MB）。「うち電波」は Android でモバイル回線（ギガ）を使っていた分。日付・月が変わると 0 から数え直します<br><small>DISC の曲はスマホの中にあるので、通信量はかかりません</small></dd>
             <dt>今日の音楽</dt><dd>今日聴いた時間・曲数・平均テンポ（BPM）と、1週間分の棒グラフ。毎日21時に、その日の記録が1段目に流れます（その日に1分以上聴いたとき）</dd>
             <dt>設定のバックアップ</dt><dd>「設定を書き出す」で、ラジオのプリセット・表示や音の設定・聴いた曲の履歴を1つのファイルに保存。「設定を読み込む」で元に戻せます。機種変更のときや、友達に同じ設定を渡すときに。入れた曲は含まれません。いまの設定を最初に戻したいだけなら、各タブの一番下の「このタブを最初の設定に戻す」が手軽です</dd>
@@ -4137,7 +4131,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126154913';                                 // stamped by build.ps1
+const APP_VER = '20261126175939';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
