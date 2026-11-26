@@ -930,7 +930,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <ol class="hsteps">
             <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません<br>Android のアプリで曲を選ぶ画面から戻るときは、画面のいちばん下の端から上へ（ジェスチャー操作なら左右の端から内側へ）スワイプすると戻るボタンが出ます</small></li>
             <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">SRC</b> でラジオが聴けます</small></li>
-            <li><b class="kb">DISP</b> か画面タップで、ディスプレイの柄を切り替え</li>
+            <li><b class="kb">DISP</b> で、ディスプレイの柄を切り替え<br><small>ROOM・STAGE・LINE DANCE・DJ BOOTH では、画面をタップすると動物をなでられます</small></li>
             <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
           </ol>
           <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
@@ -1022,7 +1022,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
           <dl class="help">
-            <dt>DISP / 画面タップ</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）。ROOM・STAGE・LINE DANCE・DJ BOOTH では、画面を<b>長押し</b>すると動物をなでられます（柄は切り替わりません）。柄の一覧と説明は「ディスプレイ」のページに</dd>
+            <dt>DISP</dt><dd>ディスプレイの柄を切り替え（⚙「表示」で並べた順）。画面をタップしても柄は変わりません。ROOM・STAGE・LINE DANCE・DJ BOOTH では、画面を<b>タップ</b>すると動物をなでられます。柄の一覧と説明は「ディスプレイ」のページに</dd>
             <dt>通信・電池の小窓</dt><dd>電波・Wi-Fi・電池の表示をどこに出すか。ボタンの絵が置き場所です（画面の中・右・左・電波 左／電池 右・電波 右／電池 左・表示しない）</dd>
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります</dd>
@@ -1037,15 +1037,15 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="hpage" data-h="disp" hidden>
           <h3>ディスプレイの柄</h3>
-          <p class="rnote" style="margin:0 0 8px">全部で11種類。DISP か画面タップで順に切り替わり、⚙「表示」で選んだり並べ替えたりできます。</p>
+          <p class="rnote" style="margin:0 0 8px">全部で11種類。DISP で順に切り替わり、⚙「表示」で選んだり並べ替えたりできます。</p>
           <dl class="help">
             <dt>BEACH</dt><dd>ヤシの木の浜辺。時刻に合わせて朝日・昼・夕日・月夜に変わります</dd>
             <dt>TURNTABLE</dt><dd>窓辺で回るレコード。窓の外は時刻と今の天気（雨の日は雨）に合わせて変わります</dd>
             <dt>CASSETTE</dt><dd>回るカセットテープ。テープの巻きは曲の進み具合に合わせて移ります</dd>
-            <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。画面を長押しするとなでられます。季節によってはサンタ帽などの衣装と、ツリーや門松などの飾りも。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「キャラクター」タブで7種類から</dd>
+            <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。画面をタップするとなでられます。季節によってはサンタ帽などの衣装と、ツリーや門松などの飾りも。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「キャラクター」タブで7種類から</dd>
             <dt>STAGE</dt><dd>ステージで動物が大きく踊ります。左右からスポットライト、床は音に合わせて光り、踊りが変わると紙吹雪。踊りは10種類（左右に揺れる・ジャンプ・手拍子・ディスコ・くるっと回る・スクワット・手を振る・シャッフル・ロボット など）で、8拍ごとに変わります。なつき度が上がると、ブレイクダンス・側転・ハートのポーズも加わります（⚙「キャラクター」）</dd>
             <dt>LINE DANCE</dt><dd>同じ動物が3匹でラインダンス。上でミラーボールが回ります。そろって踊る・順番にずれて踊る（ウェーブ）・左右が鏡写し・真ん中がソロで両側は手拍子、の4つの並びが16拍ごとに変わります</dd>
-            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面を長押しするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
+            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
@@ -1059,8 +1059,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
             <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
             <dt>名前</dt><dd>⚙「キャラクター」の動物の下の欄で、動物に名前（10文字まで）を付けられます。名前は、なつき度の欄（「ミケ のなつき度」）、レベルアップのお知らせ、なでたとき（「ミケ ♥」）に出ます</dd>
-            <dt>なつき度</dt><dd>曲を一緒に聴いた時間（1分で1pt）と、なでた回数（1回3pt）で、ハートが1〜5個に増えます（30・120・300・600pt で次へ）。♥3 でブレイクダンス、♥4 で側転、♥5 で両手のハートのポーズを、STAGE・LINE DANCE で踊るようになります。レベルが上がると1段目に「♥ LEVEL UP」<br><small>先に見たいときは、アドレスの最後に ?bond=5</small></dd>
-            <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面を長押しすると（パソコンでは、画面の上でマウスのボタンを押したまま半秒ほど）、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回なでると、くるくる回ります（スマホが少しブルッと震えます）</dd>
+            <dt>なつき度</dt><dd>曲を一緒に聴いた時間（1分で1pt）と、なでた回数（1回3pt。続けてタップしても数えるのは4秒に1回）で、ハートが1〜5個に増えます（30・120・300・600pt で次へ）。♥3 でブレイクダンス、♥4 で側転、♥5 で両手のハートのポーズを、STAGE・LINE DANCE で踊るようになります。レベルが上がると1段目に「♥ LEVEL UP」<br><small>先に見たいときは、アドレスの最後に ?bond=5</small></dd>
+            <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面をタップすると（パソコンではクリック。長押しでもOK）、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回タップすると、くるくる回ります（スマホが少しブルッと震えます）</dd>
             <dt>天気で着替える</dt><dd>はじめから ON。右上の天気マークと同じ天気で、雨の日は傘、雪の日はマフラー、30℃以上の日はうちわを持ちます。季節の衣装や誕生日の帽子と一緒に着られます。天気は位置情報を許可していると分かります<br><small>先に見たいときは、アドレスの最後に ?wxwear=rain（ほかに snow・hot）</small></dd>
             <dt>どこで会える？</dt><dd>ディスプレイの ROOM（部屋で暮らす）と、STAGE・LINE DANCE・DJ BOOTH（音楽に合わせて踊る）。ディスプレイは DISP か ⚙「表示」で切り替えます。くわしくは「ディスプレイ」のページへ</dd>
           </dl>
@@ -1558,7 +1558,8 @@ on('#prev', () => step(-1));
 on('#next', () => step(1));
 $('#file').addEventListener('change', e => { ensureAudio(); addFiles(e.target.files); e.target.value = ''; });
 on('#dispBtn', () => setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true));
-on('#disp', e => { if(dispLong){ dispLong = false; return; } if(e.target.id !== 'seek') setSkin(ORDER[(ORDER.indexOf(skin)+1) % ORDER.length], true); });
+// a tap on the screen pets the animal (ROOM / STAGE / LINE DANCE / DJ BOOTH); the display itself changes with DISP only
+on('#disp', e => { if(dispLong){ dispLong = false; return; } if(e.target.id !== 'seek' && PET_SKINS.includes(skin)) petLove(); });
 on('#illBtn', () => setIllum(ILLUMS[(ILLUMS.indexOf(illum)+1) % ILLUMS.length], true));
 /* KEY LOCK: a clear layer over everything so nothing reacts in a pocket; hold LOCK ~1.5 s to release */
 let locked = false, holdStart = 0, holdRAF = 0, hintT = 0;
@@ -3159,7 +3160,7 @@ function setWear(v, announce){
 document.querySelectorAll('#wearChips .chip').forEach(b => b.addEventListener('click', () => setWear(b.dataset.ww === '1', true)));
 setWear(wearOn, false);
 
-/* ---------------- なでる: hold the screen on ROOM / STAGE / LINE DANCE / DJ BOOTH; hearts, a jump, and a spin if you keep at it ---------------- */
+/* ---------------- なでる: tap (or hold) the screen on ROOM / STAGE / LINE DANCE / DJ BOOTH; hearts, a jump, and a spin if you keep at it ---------------- */
 var petAt = -99, petN = 0, dispLong = false, dispHold = 0;
 const PET_SKINS = ['vfdroom', 'vfdstage', 'vfdline', 'vfddj'];
 function petLove(){
@@ -3167,7 +3168,8 @@ function petLove(){
   petN = now - petAt < 4 ? petN + 1 : 1; petAt = now;
   try{ navigator.vibrate && navigator.vibrate(15); }catch(e){}
   if(skin === 'vfdroom'){ try{ rmState = 'greet'; rmUntil = rmT + 3; rmFace = 0; }catch(e){} }
-  bondAdd('pets', 1); if(petName) flash(petName + '  ♥', 900);
+  if(now - (petLove.bondAt || -99) >= 4){ petLove.bondAt = now; bondAdd('pets', 1); }   // taps in a row count once every 4 s toward なつき度
+  if(petName) flash(petName + '  ♥', 900);
 }
 function petting(){ return performance.now()/1000 - petAt < 2.5; }
 function petPose(i){
@@ -4158,7 +4160,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126183829';                                 // stamped by build.ps1
+const APP_VER = '20261126183956';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
