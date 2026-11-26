@@ -4131,7 +4131,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126175939';                                 // stamped by build.ps1
+const APP_VER = '20261126180110';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4945,7 +4945,7 @@ function restoreRadio(){                         // back on the radio, ready to 
   $('#srcl').textContent = 'RADIO'; $('#trk').textContent = chLabel(radioCh);
   setTitle(radioNow.name); updateUI();
 }
-setSkin(SKINS.includes(skin) ? skin : ORDER[0], false); setIllum(illum, false);   // reopen on the last display setVol(vol, false); installState(); renderList();
+setSkin(SKINS.includes(skin) ? skin : ORDER[0], false); setIllum(illum, false); setVol(vol, false); installState(); renderList();   // reopen on the last display
 renderMarq(titleText); fit(); setWeather(weatherMode, false);
 if(store.get('src', 'disc') === 'radio') restoreRadio();
 loadLibrary();
