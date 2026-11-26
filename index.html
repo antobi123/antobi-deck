@@ -768,7 +768,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>SRC・ラジオ</h3>
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
-            <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。上の段に局名、一番下のバーに局名と ♪ 曲名（曲名を公開している局のみ）が出ます</dd>
+            <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。上の段に局名、一番下のバーに ♪ 局名と曲名（曲名を公開している局のみ）が出ます</dd>
             <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
             <dt>局のロゴ</dt><dd>ラジオを聴いているとき、ロック画面や車のディスプレイに局のロゴが出ます（ロゴの無い局は局名の画像）</dd>
@@ -1212,7 +1212,7 @@ function renderMarq(t, still){
 const fmt = s => { s = Math.max(0, Math.floor(s||0)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
 function updateUI(){
   const on = isActive();
-  root.classList.toggle('radio', mode === 'radio'); if(mode === 'radio' && radioNow) setPnow(radioNow.name + (radioNow.nowTitle ? ' ─ ♪ ' + radioNow.nowTitle : radioNow.genre ? ' ─ ' + radioNow.genre : ''));
+  root.classList.toggle('radio', mode === 'radio'); if(mode === 'radio' && radioNow) setPnow('♪ ' + radioNow.name + (radioNow.nowTitle ? ' ─ ' + radioNow.nowTitle : radioNow.genre ? ' ─ ' + radioNow.genre : ''));
   $('#playIcon').innerHTML = on ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4v16l13-8z"/>';
   const ind = (id, v) => $(id).classList.toggle('on', !!v);
   ind('#iSt', on); ind('#iLoud', loud); ind('#iAtt', att); ind('#iRdm', shuffle); ind('#iRep', repeat !== 'off'); ind('#iScn', scan);
@@ -1532,7 +1532,7 @@ async function pollMeta(){
   const st = radioNow, t = await nowPlaying(st);
   if(mode !== 'radio' || radioNow !== st || !t || t === st.nowTitle) return;
   st.nowTitle = t; addHist(t, st.name);
-  setPnow(st.name + ' ─ ♪ ' + t);
+  setPnow('♪ ' + st.name + ' ─ ' + t);
   mediaMeta();
 }
 function startMeta(){ clearInterval(metaTimer); if(radioNow) radioNow.nowTitle = ''; updateUI(); setTimeout(pollMeta, 1500); metaTimer = setInterval(pollMeta, 20000); }
@@ -2910,7 +2910,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126095948';                                 // stamped by build.ps1
+const APP_VER = '20261126100057';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
