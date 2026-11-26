@@ -187,6 +187,10 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
   background:linear-gradient(180deg,var(--b1),var(--b2) 50%,var(--b3) 100%);
   box-shadow:0 0 0 2px #55575e, inset 0 1px 0 #fff, 0 2px 4px rgba(0,0,0,.4);
   display:grid; place-items:center; font:800 12px/1 var(--font-logo); letter-spacing:.16em; color:var(--btext); text-shadow:0 1px 0 var(--lshadow)}
+/* the name in chrome letters: a polished-metal gradient with a dark edge so it reads on every panel colour */
+.badge .chrome{background:linear-gradient(180deg,#ffffff 0%,#dfe2e8 34%,#7a7f89 50%,#3e424a 56%,#b8bcc5 74%,#f6f7f9 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:none; font-weight:900; font-size:13px;
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.7)) drop-shadow(0 -.5px 0 rgba(255,255,255,.35))}
 
 /* lit open/close bars */
 .bar{top:14px; width:252px; height:30px; border:0; border-radius:18px 18px 9px 9px; color:var(--illum);
@@ -479,7 +483,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 
       <div class="model">ATB-900MJ</div>
       <div class="dsp">DIGITAL SIGNAL PROCESSOR <b>DSP</b></div>
-      <div class="badge">ANTOBi</div>
+      <div class="badge"><span class="chrome">ANTOBi</span></div>
       <label class="bar l" for="file" id="loadBar" style="display:grid;place-items:center;cursor:pointer">▲ DISC LOAD</label>
       <button class="bar r" id="setupBar">SETUP ⚙</button>
 
@@ -3660,7 +3664,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126140724';                                 // stamped by build.ps1
+const APP_VER = '20261126140954';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
