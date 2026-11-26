@@ -400,6 +400,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 #stat.left{left:115px}
 #stat.off{display:none}
 #statChips .chip svg{display:block; width:84px; height:48px; margin:0 auto 4px}
+#ringChips .chip svg{display:block; width:84px; height:48px; margin:0 auto 4px}
 #stat.sig{height:72px}
 #stat.sig svg{height:68px}
 #stat2{display:none; height:66px}
@@ -628,8 +629,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <section data-tab="look">
         <h3>左右の楕円のリング</h3>
         <div class="chips" id="ringChips">
-          <button class="chip" data-ring="1">光る</button>
-          <button class="chip" data-ring="0">光らない</button>
+          <button class="chip" data-ring="0"><svg viewBox="0 0 52 30" aria-hidden="true"><rect x="1" y="2" width="50" height="26" rx="5" fill="#26282e" stroke="#4a4c53"/><rect x="13" y="6" width="26" height="18" rx="2" fill="#021311"/><ellipse cx="7" cy="15" rx="6.2" ry="13" fill="#3a3c43" stroke="#8a8c93" stroke-width=".8"/><rect x="5.4" y="9" width="3.2" height="9" rx="1.6" fill="#7a7c83"/><ellipse cx="45" cy="15" rx="6.2" ry="13" fill="#3a3c43" stroke="#8a8c93" stroke-width=".8"/><rect x="43.4" y="9" width="3.2" height="9" rx="1.6" fill="#7a7c83"/></svg>光らない</button>
+          <button class="chip" data-ring="1"><svg viewBox="0 0 52 30" aria-hidden="true"><rect x="1" y="2" width="50" height="26" rx="5" fill="#26282e" stroke="#4a4c53"/><rect x="13" y="6" width="26" height="18" rx="2" fill="#021311"/><ellipse cx="7" cy="15" rx="6.2" ry="13" fill="#3a3c43" stroke="#8a8c93" stroke-width=".8"/><ellipse cx="7" cy="15" rx="4.6" ry="11.2" fill="none" stroke="var(--illum)" stroke-width="1.3" style="filter:drop-shadow(0 0 1.5px var(--illum))"/><rect x="5.4" y="9" width="3.2" height="9" rx="1.6" fill="#7a7c83"/><ellipse cx="45" cy="15" rx="6.2" ry="13" fill="#3a3c43" stroke="#8a8c93" stroke-width=".8"/><ellipse cx="45" cy="15" rx="4.6" ry="11.2" fill="none" stroke="var(--illum)" stroke-width="1.3" style="filter:drop-shadow(0 0 1.5px var(--illum))"/><rect x="43.4" y="9" width="3.2" height="9" rx="1.6" fill="#7a7c83"/></svg>光る</button>
         </div>
         <p class="rnote">VOLUME・SEEK のまわりの輪。光るときはキー照明の色になります。</p>
       </section>
@@ -962,8 +963,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面とお店のロゴの画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
             <dt>時計</dt><dd>⚙「時計・電力・タイマー」タブで、右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
-            <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で光らせないこともできます）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
-            <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光る」（はじめはこれ、キー照明の色）か「光らない」か。楕円の面はパネルと同じ色・質感です</dd>
+            <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
+            <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
             <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます</dd>
           </dl>
         </div>
@@ -3098,7 +3099,7 @@ function setRing(v, announce){
   document.querySelectorAll('#ringChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.ring === '1') === v));
 }
 document.querySelectorAll('#ringChips .chip').forEach(b => b.addEventListener('click', () => setRing(b.dataset.ring === '1', true)));
-setRing(store.get('ring', true) !== false, false);
+setRing(store.get('ring', false) === true, false);
 /* display colour: 標準 keeps each display's own colours; purple / blue / red / green recolour every display's tubes
    (the record-shop logos keep their own colours, their spectrum follows). CLUB on 標準 is purple. */
 const DCOLORS = ['std', 'purple', 'blue', 'red', 'green'];
@@ -3566,7 +3567,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126140103';                                 // stamped by build.ps1
+const APP_VER = '20261126140222';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
