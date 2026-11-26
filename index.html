@@ -591,7 +591,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-sleep="90">90分</button>
           <button class="chip" data-sleep="end">この曲が終わったら</button>
         </div>
-        <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップすると明るく戻ります。</p>
+        <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップするか、もう一度再生すると明るく戻ります。</p>
       </section>
       <section data-tab="night">
         <h3>目覚まし <span id="alarmLeft" style="float:right"></span></h3>
@@ -748,7 +748,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・操作音・自動で再開</dd>
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし</dd>
             <dt>使い方</dt><dd>このページ</dd>
-            <dt>アプリ</dt><dd>インストール・設定のバックアップ</dd>
+            <dt>アプリ</dt><dd>インストール・友達に教える・設定のバックアップ・更新のお知らせ</dd>
           </dl>
         </div>
         <div class="hpage" data-h="play" hidden>
@@ -765,6 +765,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>プレイリスト</dt><dd>「＋ 新しいリスト」で名前（「ドライブ用」「おやすみ用」など）を付けて作り、曲の右の <b>＋</b> をタップして入れます（✓ をもう一度で外す）。終わったら「選び終わり」。リストの名前を選ぶとその曲だけを再生し、画面の LIST が光ります。「曲を選ぶ」でいつでも出し入れ、「名前を変える」「このリストを消す」も（曲そのものは消えません）。10個まで</dd>
             <dt>検索</dt><dd>⚙「曲」の検索欄に曲名・アーティスト・アルバムの一部を入れると、一覧がしぼり込まれます。タップでその曲を再生</dd>
             <dt>並べ替え</dt><dd>「入れた順」「曲名順」「アーティスト順」（同じアーティストはアルバムごと）。並べた順番がそのまま再生の順番になります</dd>
+            <dt>曲が終わったら</dt><dd>自動で次の曲へ（REP が全曲なら最後の曲のあと最初に戻り、オフなら最後の曲で止まります）。スマホが次の曲へ進めなかったときも、数秒で自動で次の曲へ進みます</dd>
             <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
             <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
           </dl>
@@ -790,7 +791,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>1〜6 ボタン</h3>
           <table class="htab">
             <tr><th></th><th>DISC 中</th></tr>
-            <tr><td>1</td><td>SCROLL　曲名のスクロール表示 ON/OFF</td></tr>
+            <tr><td>1</td><td>SCROLL　曲名のスクロール表示 ON/OFF（ON は長い曲名だけ流れ、OFF は長い曲名を小さい文字にして収めます）</td></tr>
             <tr><td>2</td><td>SCN　イントロスキャン（各曲の頭10秒ずつ）</td></tr>
             <tr><td>3</td><td>RDM　ランダム再生</td></tr>
             <tr><td>4</td><td>REP　リピート（全曲 → 1曲 → オフ）</td></tr>
@@ -803,6 +804,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>画面の見かた</h3>
           <dl class="help">
             <dt>右上</dt><dd>今の時刻。その下に日付（2026/11/26 のように年から）・曜日・今いる場所の天気マーク（☀ ☾ ☁ ☂ ❄ ⚡）<br><small>天気は位置情報を許可すると表示されます</small></dd>
+            <dt>1段目</dt><dd>左から DISC／RADIO、曲名（ラジオは局名）、曲の番号（ラジオは FM1-3 など）、時刻。長い曲名は流れて表示されます（1 ボタンの SCROLL で切り替え）</dd>
             <dt>2段目の文字</dt><dd>ON のものが光ります。ST・LOUD・ATT・RDM・FAV（★ だけ再生）・LIST（プレイリスト再生）・REP・SCN・LOCK、SLP（おやすみ中）、ALM（目覚ましON）</dd>
           </dl>
           <h3 style="margin-top:16px">見た目の設定（⚙「表示」）</h3>
@@ -873,7 +875,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>時計の表示</dt><dd>右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に</dd>
-            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面タップで明るく戻ります</dd>
+            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります</dd>
             <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります。「鳴る前は画面を暗く」（はじめはこちら）か「暗くしない」も選べます</dd>
           </dl>
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
@@ -2915,7 +2917,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126100714';                                 // stamped by build.ps1
+const APP_VER = '20261126101201';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
