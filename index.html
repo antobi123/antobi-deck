@@ -222,6 +222,15 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .rk button:active{background:rgba(0,0,0,.14)}
 
 .strip{height:5px; border-radius:3px; background:var(--illum); box-shadow:0 0 10px var(--illum), 0 0 22px var(--illumglow); opacity:.9}
+:root{--pulse:0}
+:root.pulse .strip{box-shadow:0 0 calc(10px + var(--pulse)*26px) var(--illum), 0 0 calc(22px + var(--pulse)*34px) var(--illumglow); filter:brightness(calc(1 + var(--pulse)*.7))}
+:root.pulse .wing::after{box-shadow:0 0 calc(12px + var(--pulse)*26px) var(--illumglow), 0 0 3px var(--illumglow), inset 0 0 calc(12px + var(--pulse)*20px) var(--illumglow)}
+:root.pulsebig.noring .wing::after{display:block; opacity:var(--pulse)}
+:root.pulse .bar{filter:brightness(calc(1 + var(--pulse)*.4))}
+#plist .bt{flex:none; min-width:30px; text-align:right; font:12px/1 var(--font-seg); color:var(--illum); font-variant-numeric:tabular-nums; opacity:.85}
+.avrow{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0}
+.avrow input, .avrow select{background:#0c0d11; color:var(--fg); border:1px solid var(--line); border-radius:8px; padding:7px 8px; font:13px var(--font-ui); min-width:0}
+.avrow input[type="text"]{flex:1; min-width:120px}
 :root.dimmed .disp, :root.dimmed .k, :root.dimmed .bar, :root.dimmed .strip, :root.dimmed .k.src{filter:brightness(.55)}   /* 夜のディマー */
 
 .portrait-hint{position:fixed; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 18px); text-align:center; color:var(--muted); font:13px var(--font-ui); display:none}
@@ -642,6 +651,15 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <p class="rnote">VOLUME・SEEK のまわりの輪。光るときはキー照明の色になります。</p>
       </section>
       <section data-tab="look">
+        <h3>拍に合わせて光る</h3>
+        <div class="chips" id="pulseChips">
+          <button class="chip" data-pl="off">OFF</button>
+          <button class="chip" data-pl="soft">控えめ</button>
+          <button class="chip" data-pl="big">派手</button>
+        </div>
+        <p class="rnote">曲の拍（右下の BPM）に合わせて、キー下の光る線・左右の楕円のリング・上のバーがドンドンと明るくなります。派手は光らせていないリングも拍で光ります。運転中にまぶしいときは OFF に。</p>
+      </section>
+      <section data-tab="look">
         <h3>通信・電池の小窓</h3>
         <div class="chips" id="statChips">
           <button class="chip" data-sp="in"><svg viewBox="0 0 52 30" aria-hidden="true"><rect x="1" y="1" width="50" height="28" rx="6" fill="#1a1c22" stroke="#4a4c53"/><rect x="10" y="5" width="32" height="20" rx="2" fill="#021311"/><rect x="23.4" y="9.5" width="1.3" height="2" fill="#5ff6e6"/><rect x="25.35" y="8" width="1.3" height="3.5" fill="#5ff6e6"/><rect x="27.3" y="6.5" width="1.3" height="5" fill="#5ff6e6"/><rect x="29.5" y="8" width="5.5" height="3" rx=".4" fill="none" stroke="#5ff6e6" stroke-width=".6"/><rect x="30.3" y="8.8" width="3" height="1.4" fill="#5ff6e6"/><rect x="36.5" y="8.6" width="4" height="1.6" fill="rgba(95,246,230,.35)"/></svg>画面の中</button>
@@ -670,6 +688,11 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-cs="0">OFF</button>
         </div>
         <p class="rnote">12月はサンタ帽、年末年始は鉢巻き、春は桜、夏はサングラス、ハロウィンは魔女の帽子。季節になると動物が自動で着替えて、そばにクリスマスツリー・門松・桜・ひまわり・かぼちゃのランタンが飾られます。</p>
+        <h3 style="margin-top:14px">誕生日・記念日</h3>
+        <div class="avrow"><input type="date" id="av0d" aria-label="日付1"><input type="text" id="av0n" maxlength="16" placeholder="名前（なくてもOK）" aria-label="名前1"><select id="av0k" aria-label="種類1"><option value="bd">誕生日</option><option value="an">記念日</option></select></div>
+        <div class="avrow"><input type="date" id="av1d" aria-label="日付2"><input type="text" id="av1n" maxlength="16" placeholder="名前（なくてもOK）" aria-label="名前2"><select id="av1k" aria-label="種類2"><option value="bd">誕生日</option><option value="an">記念日</option></select></div>
+        <div class="avrow"><input type="date" id="av2d" aria-label="日付3"><input type="text" id="av2n" maxlength="16" placeholder="名前（なくてもOK）" aria-label="名前3"><select id="av2k" aria-label="種類3"><option value="bd">誕生日</option><option value="an">記念日</option></select></div>
+        <p class="rnote">その日は動物がパーティー帽をかぶってケーキと一緒に踊り、1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が流れます。年は関係なく、毎年その月日に。3つまで。</p>
       </section>
       <section data-tab="fx">
         <h3>夜のディマー</h3>
@@ -820,7 +843,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="pltools" id="plTools" hidden><button class="mini" id="plEdit">曲を選ぶ</button><button class="mini" id="plRen">名前を変える</button><button class="mini" id="plDel">このリストを消す</button></div>
         <p class="rnote" id="plHint" hidden></p>
         <div class="rsearch" style="margin-top:6px"><input id="lq" type="search" placeholder="曲名・アーティスト・アルバムで検索" enterkeyhint="search"></div>
-        <div class="chips" id="sortChips" style="margin:8px 0 10px"><button class="chip" data-sort="add">入れた順</button><button class="chip" data-sort="title">曲名順</button><button class="chip" data-sort="artist">アーティスト順</button></div>
+        <div class="chips" id="sortChips" style="margin:8px 0 10px"><button class="chip" data-sort="add">入れた順</button><button class="chip" data-sort="title">曲名順</button><button class="chip" data-sort="artist">アーティスト順</button><button class="chip" data-sort="tempo">テンポ順</button></div>
+        <div class="chips" id="nextChips" style="margin:0 0 10px"><button class="chip" data-nx="0">次の曲：いつもどおり</button><button class="chip" data-nx="1">次の曲：テンポが近い曲</button></div>
         <div class="row">
           <label class="pbtn pri" for="file" style="cursor:pointer">曲を追加</label>
           <button class="pbtn warn" id="clearBtn">全部消す</button>
@@ -897,10 +921,10 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </ul>
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
-            <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・左右の楕円のリング・通信・電池の小窓</dd>
-            <dt>キャラクター</dt><dd>動物のキャラクター（7種類）・季節の衣装と飾り</dd>
+            <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・左右の楕円のリング・拍に合わせて光る・通信・電池の小窓</dd>
+            <dt>キャラクター</dt><dd>動物のキャラクター（7種類）・季節の衣装と飾り・誕生日・記念日</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
-            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリストと曲順・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
+            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリストと曲順・検索・並べ替え（テンポ順も）・次の曲をテンポで選ぶ・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴（★ で残せる）</dd>
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・ブースト・操作音・自動で再開</dd>
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・電池が少ないときの自動省電力・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
@@ -922,7 +946,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>★ だけ再生</dt><dd>⚙「曲」の上で「★ お気に入り」を選ぶと、★ の曲だけを順番（RDM ならランダム）に再生し、一覧も ★ の曲だけになります。その間は画面の FAV が光ります。「すべての曲」で元に戻ります</dd>
             <dt>プレイリスト</dt><dd>「＋ 新しいリスト」で名前（「ドライブ用」「おやすみ用」など）を付けて作り、曲の右の <b>＋</b> をタップして入れます（✓ をもう一度で外す）。終わったら「選び終わり」。リストの名前を選ぶとその曲だけを再生し、画面の LIST が光ります。「曲を選ぶ」でいつでも出し入れ、「名前を変える」「このリストを消す」も（曲そのものは消えません）。10個まで</dd>
             <dt>検索</dt><dd>⚙「曲」の検索欄に曲名・アーティスト・アルバムの一部を入れると、一覧がしぼり込まれます。タップでその曲を再生</dd>
-            <dt>並べ替え</dt><dd>「入れた順」「曲名順」「アーティスト順」（同じアーティストはアルバムごと）。並べた順番がそのまま再生の順番になります</dd>
+            <dt>並べ替え</dt><dd>「入れた順」「曲名順」「アーティスト順」（同じアーティストはアルバムごと）「テンポ順」（ゆっくりな曲から。テンポが分からない曲は最後）。並べた順番がそのまま再生の順番になります</dd>
+            <dt>曲のテンポ</dt><dd>曲を20秒ほど流すと、右下の BPM がその曲のテンポとして覚えられ、一覧の曲名の右に「120」のように出ます。もう一度流すと少しずつ正確に</dd>
+            <dt>次の曲：テンポが近い曲</dt><dd>⚙「曲」の「次の曲：テンポが近い曲」にすると、今の曲とテンポの近い曲を次に選んで、ノリを途切れさせずにつなぎます（最近流した曲は続けて選ばれません。テンポがまだ分からない曲もときどき混ぜて、覚えていきます）。「いつもどおり」で元の順番に</dd>
             <dt>曲が終わったら</dt><dd>自動で次の曲へ（REP が全曲なら最後の曲のあと最初に戻り、オフなら最後の曲で止まります）。スマホが次の曲へ進めなかったときも、数秒で自動で次の曲へ進みます</dd>
             <dt>曲を1つ外す</dt><dd>⚙「曲」の一覧で、曲の右の <b>✕</b> を押して「外す？」になったらもう一度。スマホの中のファイルは消えません</dd>
             <dt>FNC / SETUP ⚙</dt><dd>この画面を開く</dd>
@@ -979,6 +1005,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
+            <dt>拍に合わせて光る</dt><dd>はじめは OFF。「控えめ」「派手」にすると、曲の拍（右下の BPM）に合わせて、キー下の光る線・左右の楕円のリング・上のバーがドンドンと明るくなります。派手は光らせていないリングも拍で光ります。運転中にまぶしいときは OFF に</dd>
           </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
@@ -1004,6 +1031,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます</dd>
             <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
+            <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
             <dt>どこで会える？</dt><dd>ディスプレイの ROOM（部屋で暮らす）と、STAGE・LINE DANCE・DJ BOOTH（音楽に合わせて踊る）。ディスプレイは DISP か ⚙「表示」で切り替えます。くわしくは「ディスプレイ」のページへ</dd>
           </dl>
         </div>
@@ -1433,7 +1461,8 @@ function renderList(){
     const nm = document.createElement('span'); nm.className = 'tt';
     const tb = document.createElement('b'); tb.textContent = t.title || t.name; nm.append(tb);
     if(t.artist || t.album){ const sm = document.createElement('small'); sm.textContent = [t.artist, t.album].filter(Boolean).join(' · '); nm.append(sm); }
-    b.append(n, cv, nm); b.addEventListener('click', () => { playIndex(i); closeSheet(); });
+    const bt = document.createElement('span'); bt.className = 'bt'; bt.textContent = songBpm(t) || ''; bt.title = 'BPM';
+    b.append(n, cv, nm, bt); b.addEventListener('click', () => { playIndex(i); closeSheet(); });
     const fv = document.createElement('button'); fv.className = 'fav' + (favs.has(t.key) ? ' on' : ''); fv.textContent = favs.has(t.key) ? '★' : '☆'; fv.setAttribute('aria-label', 'お気に入り');
     fv.addEventListener('click', e => { e.stopPropagation(); toggleFav(i); });
     const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕'; del.setAttribute('aria-label', 'この曲を外す');
@@ -2905,6 +2934,80 @@ function drawVFDRoom(dt){
   g.drawImage(vbDim, 0, 0, W, H);
   drawLit();
 }
+/* ---------------- 拍に合わせて光る: the light bars, the oval rings and the long keys swell with each beat ----------------
+   OFF (the default) / 控えめ / 派手. 派手 also flashes an unlit ring on the beat. */
+var pulseMode = store.get('pulse', 'off'), pulseV = 0, pulseSet = -1;
+function beatPulse(){ if(pulseMode !== 'off') pulseV = 1; }
+function pulseTick(dt){
+  pulseV = pulseMode === 'off' ? 0 : Math.max(0, pulseV - dt*3.2);
+  const v = Math.round(pulseV*(pulseMode === 'big' ? 1 : .5)*100)/100;
+  if(v !== pulseSet){ pulseSet = v; root.style.setProperty('--pulse', v); }
+}
+function setPulse(v, announce){
+  pulseMode = ['off', 'soft', 'big'].includes(v) ? v : 'off';
+  root.classList.toggle('pulse', pulseMode !== 'off'); root.classList.toggle('pulsebig', pulseMode === 'big');
+  document.querySelectorAll('#pulseChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.pl === pulseMode));
+  if(announce){ store.set('pulse', pulseMode); flash('BEAT LIGHT  ' + ({ off: 'OFF', soft: 'SOFT', big: 'BIG' })[pulseMode], 900); }
+}
+document.querySelectorAll('#pulseChips .chip').forEach(b => b.addEventListener('click', () => setPulse(b.dataset.pl, true)));
+setPulse(pulseMode, false);
+
+/* ---------------- 曲のテンポ: each song's BPM is remembered once it has played a while; テンポ順 and "next: a similar tempo" ---------------- */
+var bpmMap = store.get('bpmMap', {}) || {}, nextTempo = store.get('nextTempo', false) === true, tempoHist = [];
+function songBpm(t){ return t && bpmMap && bpmMap[t.key] || 0; }
+function rememberBpm(v){                                   // called once a second while a steady tempo is shown
+  if(mode !== 'file' || !tracks[idx] || audio.currentTime < 20 || dnIv.length < 8) return;
+  const k = tracks[idx].key, old = bpmMap[k] || 0;
+  if(Math.abs(old - v) < 2) return;
+  bpmMap[k] = old ? Math.round(old + (v - old)*.5) : v; store.set('bpmMap', bpmMap);
+  const row = document.querySelector(`#plist li[data-key="${CSS.escape(k)}"] .bt`); if(row) row.textContent = bpmMap[k];
+}
+function setNextTempo(v, announce){
+  nextTempo = v; if(announce){ store.set('nextTempo', v); flash(v ? 'NEXT  SIMILAR TEMPO' : 'NEXT  IN ORDER', 1100); }
+  document.querySelectorAll('#nextChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.nx === '1') === v));
+}
+document.querySelectorAll('#nextChips .chip').forEach(b => b.addEventListener('click', () => setNextTempo(b.dataset.nx === '1', true)));
+setNextTempo(nextTempo, false);
+// the next song close in tempo to this one (songs not heard yet are tried now and then, so they get a tempo too)
+function pickByTempo(pool){
+  const cur = songBpm(tracks[idx]); if(!cur) return -1;
+  tempoHist.push(tracks[idx].key); if(tempoHist.length > Math.min(15, pool.length - 1)) tempoHist.shift();
+  let cand = pool.filter(i => i !== idx && !tempoHist.includes(tracks[i].key));
+  if(!cand.length) cand = pool.filter(i => i !== idx);
+  if(!cand.length) return -1;
+  const score = i => { const b = songBpm(tracks[i]); return b ? Math.abs(b - cur) : 12 + Math.random()*20; };
+  cand.sort((a, b) => score(a) - score(b));
+  const near = cand.filter(i => score(i) <= score(cand[0]) + 3);
+  return near[Math.floor(Math.random()*near.length)];
+}
+
+/* ---------------- 誕生日・記念日: on the day the animal wears a party hat and holds a cake, and the top line says so ---------------- */
+var annivs = store.get('annivs', []) || [];
+const ANNIV_FAKE = new URLSearchParams(location.search).get('anniv');     // ?anniv=bd or ?anniv=an previews the day
+function annivToday(){
+  if(ANNIV_FAKE) return { k: ANNIV_FAKE === 'an' ? 'an' : 'bd', n: '' };
+  const d = new Date(), md = String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  return annivs.find(a => a && a.d && a.d.slice(5) === md) || null;
+}
+function annivMsg(){
+  const a = annivToday(); if(!a) return;
+  flash((a.k === 'an' ? 'HAPPY ANNIVERSARY' : 'HAPPY BIRTHDAY') + (a.n ? '  ' + a.n : ''), 6000);
+}
+function renderAnniv(){
+  for(let i=0;i<3;i++){
+    const a = annivs[i] || {}, d = $('#av' + i + 'd'), n = $('#av' + i + 'n'), k = $('#av' + i + 'k'); if(!d) continue;
+    d.value = a.d || ''; n.value = a.n || ''; k.value = a.k || 'bd';
+  }
+}
+function saveAnniv(){
+  annivs = [0, 1, 2].map(i => ({ d: $('#av' + i + 'd').value, n: $('#av' + i + 'n').value.trim().slice(0, 16), k: $('#av' + i + 'k').value }));
+  store.set('annivs', annivs);
+  if(annivToday()) annivMsg();
+}
+[0, 1, 2].forEach(i => ['d', 'n', 'k'].forEach(f => { const el = $('#av' + i + f); if(el) el.addEventListener('change', saveAnniv); }));
+renderAnniv();
+setTimeout(annivMsg, 7000); setInterval(annivMsg, 15*60e3);
+
 /* ---------------- 季節の衣装: the animal dresses for the season (ROOM and the dance displays) ----------------
    12/1-12/25 Santa hat, 12/30-1/7 a New Year headband, 3/25-4/10 a cherry blossom, 7/20-8/31 sunglasses,
    10/20-10/31 a witch's hat. ?costume=santa (or newyear / sakura / summer / halloween) previews one. */
@@ -2912,6 +3015,7 @@ var costumeOn = store.get('costume', true) !== false;
 const COSTUME_FAKE = new URLSearchParams(location.search).get('costume');
 function costumeNow(){
   if(COSTUME_FAKE) return COSTUME_FAKE;
+  if(annivToday()) return 'party';                       // a birthday / anniversary wins over the season (and over OFF)
   if(!costumeOn) return '';
   const d = new Date(), m = d.getMonth() + 1, day = d.getDate(), md = m*100 + day;
   if(md >= 1201 && md <= 1225) return 'santa';
@@ -2928,6 +3032,9 @@ function costumeDraw(P, G, A, front){
     for(let x=1;x<=9;x++) P(x, -1, G);                                   // the white fur brim
     for(let x=2;x<=8;x++) P(x, -2, A); for(let x=4;x<=8;x++) P(x, -3, A); for(let x=7;x<=9;x++) P(x, -4, A);
     P(10, -4, G); P(10, -5, G); P(11, -4, G);                            // the pompom
+  } else if(c === 'party'){                                              // a striped party hat
+    for(let x=3;x<=7;x++) P(x, -1, A); for(let x=4;x<=6;x++){ P(x, -2, A); P(x, -3, A); } P(5, -4, A);
+    P(4, -1, G); P(6, -1, G); P(5, -3, G); P(5, -5, G); P(4, -5, G); P(6, -5, G); P(5, -6, G);
   } else if(c === 'newyear'){
     for(let x=0;x<=10;x++) P(x, 1, A);                                   // a headband with the knot at the side
     P(11, 0, A); P(12, -1, A); P(11, 2, A); P(12, 3, A);
@@ -2951,6 +3058,12 @@ setCostume(costumeOn, false);
    Christmas tree, kadomatsu, a cherry tree, a sunflower, a jack-o'-lantern. (cx, by) = centre and floor; returns false off season. */
 function seasonProp(cx, by){
   const c = costumeNow(), t = performance.now()/1000, G = '#0f0', A = '#f00';
+  if(c === 'party'){                                                       // a cake with three candles
+    for(let y=0;y<3;y++) for(let x=-4;x<=4;x++) ddot(cx + x, by - y, y === 1 && x % 2 ? G : A);
+    for(let x=-4;x<=4;x+=2) ddot(cx + x, by - 3, G);
+    [-2, 0, 2].forEach((x, i) => { ddot(cx + x, by - 4, G); ddot(cx + x, by - 5, G); if(Math.sin(t*9 + i*2) > -.5) ddot(cx + x, by - 6, A); });
+    return true;
+  }
   if(c === 'santa'){
     for(let r=0;r<12;r++){ const hw = Math.round((11 - r)/2.4), y = by - 3 - r; for(let x=-hw;x<=hw;x++) if((x + r) % 2 === 0 || Math.abs(x) === hw) ddot(cx + x, y, G); }
     ddot(cx, by - 1, A); ddot(cx, by - 2, A); for(let x=-2;x<=2;x++) ddot(cx + x, by, A);                       // trunk and pot
@@ -3020,7 +3133,7 @@ function bpmShow(){
   if(performance.now() - bpmAt < 1000) return; bpmAt = performance.now();
   const el = $('#pbpm'); if(!el) return;
   let txt = '--- BPM', on = false;
-  if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = Math.round(dnShown) + ' BPM'; on = true; }
+  if(dnState.playing && dnT - dnReal < 3 && dnIv.length >= 4){ const b = 60/dnPeriod; dnShown = dnShown ? dnShown + (b - dnShown)*.35 : b; txt = Math.round(dnShown) + ' BPM'; on = true; rememberBpm(Math.round(dnShown)); }
   else if(!dnState.playing){ dnShown = 0; dnIv.length = 0; }
   if(el.textContent !== txt) el.textContent = txt; el.classList.toggle('off', !on);
 }
@@ -3072,7 +3185,7 @@ function dnHit(auto){
     if(dnIv.length >= 4){ const m = [...dnIv].sort((a, b) => a - b)[dnIv.length >> 1]; dnPeriod += (m - dnPeriod)*.5; }   // the median of the last beats, so a missed or extra kick does not throw it
     dnReal = dnT;
   }
-  dnLast = dnT; dnBeat++;
+  dnLast = dnT; dnBeat++; beatPulse();
   if(dnBeat % 8 === 0){ dnMove = dnPick(DN_MOVES, dnMove); dnDj = dnPick(DN_DJ, dnDj); }
   if(dnBeat % 16 === 0) dnForm = dnPick(DN_FORMS, dnForm);
 }
@@ -3738,7 +3851,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126142440';                                 // stamped by build.ps1
+const APP_VER = '20261126143030';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3877,15 +3990,16 @@ function sortTracks(){
   const cur = tracks[idx], rT = resumeIdx >= 0 ? tracks[resumeIdx] : null, cmp = (a, b) => a.localeCompare(b, 'ja', { numeric: true, sensitivity: 'base' });
   const ttl = t => t.title || t.name;
   tracks.sort(sortMode === 'title' ? (a, b) => cmp(ttl(a), ttl(b)) || a.seq - b.seq
+    : sortMode === 'tempo' ? (a, b) => (!songBpm(a) - !songBpm(b)) || songBpm(a) - songBpm(b) || a.seq - b.seq
     : sortMode === 'artist' ? (a, b) => (!a.artist - !b.artist) || cmp(a.artist, b.artist) || cmp(a.album, b.album) || cmp(ttl(a), ttl(b)) || a.seq - b.seq
     : (a, b) => a.seq - b.seq);
   if(cur) idx = tracks.indexOf(cur); if(rT) resumeIdx = tracks.indexOf(rT);
   if(mode === 'file' && cur) $('#trk').textContent = '-' + String(idx + 1).padStart(2, '0');
 }
 function setSort(m, announce){
-  sortMode = ['add', 'title', 'artist'].includes(m) ? m : 'add'; if(announce) store.set('sort', sortMode);
+  sortMode = ['add', 'title', 'artist', 'tempo'].includes(m) ? m : 'add'; if(announce) store.set('sort', sortMode);
   document.querySelectorAll('#sortChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.sort === sortMode));
-  if(announce){ sortTracks(); renderList(); flash('SORT  ' + ({ add: 'ADDED', title: 'TITLE', artist: 'ARTIST' })[sortMode], 900); }
+  if(announce){ sortTracks(); renderList(); flash('SORT  ' + ({ add: 'ADDED', title: 'TITLE', artist: 'ARTIST', tempo: 'TEMPO' })[sortMode], 900); }
 }
 document.querySelectorAll('#sortChips .chip').forEach(b => b.addEventListener('click', () => setSort(b.dataset.sort, true)));
 $('#lq').addEventListener('input', e => { lq = e.target.value.trim().toLowerCase(); renderList(); });
@@ -3893,6 +4007,7 @@ $('#lq').addEventListener('input', e => { lq = e.target.value.trim().toLowerCase
 function pickNext(dir, auto){
   const fp = selPool(), pool = fp.length ? fp : tracks.map((_, i) => i), N = tracks.length;
   if(!N) return -1;
+  if(nextTempo && dir > 0 && pool.length > 1){ const n = pickByTempo(pool); if(n >= 0) return n; }   // 次の曲：テンポが近い曲
   if(shuffle && pool.length > 1){ let n; do{ n = pool[Math.floor(Math.random()*pool.length)]; } while(n === idx); return n; }
   if(curList() && fp.length){                             // a named playlist: its own order
     const ord = listOrder(), p = ord.indexOf(idx);
@@ -4508,7 +4623,7 @@ function frame(now){
   if(now - last < 1000/(ecoNow() ? 15 : 30) - 4){ requestAnimationFrame(frame); return; }   // 30 frames a second is plenty for the dot matrix (and keeps the phone cool)
   const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
-  try{ dnState = dnTick(dt); bpmShow(); }catch(e){}
+  try{ dnState = dnTick(dt); bpmShow(); pulseTick(dt); }catch(e){}
   g.setTransform(DPR,0,0,DPR,0,0);
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
