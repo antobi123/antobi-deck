@@ -483,20 +483,20 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       <!-- left column -->
       <button class="k" id="dispBtn" style="left:22px;top:16px;width:58px;height:30px">DISP</button>
       <span class="lbl" style="left:86px;top:27px">● SKIN</span>
-      <div class="rk" id="volRk" style="left:9px;top:160px;height:136px">
+      <div class="rk" id="volRk" style="left:9px;top:146px;height:136px">
         <button data-d="1" aria-label="音量を上げる">∧</button><button data-d="-1" aria-label="音量を下げる">∨</button>
       </div>
-      <span class="lbl c" style="left:39px;top:303px">VOLUME</span>
+      <span class="lbl c" style="left:39px;top:292px">VOLUME</span>
       <button class="k" id="attBtn" style="left:13px;top:315px;width:52px;height:26px">ATT</button>
       <button class="k" id="illBtn" style="left:13px;top:346px;width:52px;height:26px">ILLUMI</button>
 
       <!-- right column -->
       <button class="k src" id="srcBtn" style="right:20px;top:14px;width:62px;height:36px">SRC</button>
       <span class="lbl" style="right:90px;top:27px">PWR OFF ●</span>
-      <div class="rk" id="seekRk" style="right:9px;top:160px;height:136px">
+      <div class="rk" id="seekRk" style="right:9px;top:146px;height:136px">
         <button data-d="1" aria-label="10秒進む">∧</button><button data-d="-1" aria-label="10秒戻る">∨</button>
       </div>
-      <span class="lbl c" style="left:921px;top:303px">SEEK</span>
+      <span class="lbl c" style="left:921px;top:292px">SEEK</span>
       <button class="k" id="fncBtn" style="right:13px;top:315px;width:52px;height:26px">FNC</button>
       <button class="k" id="listBtn" style="right:13px;top:346px;width:52px;height:26px">LIST</button>
 
@@ -3547,7 +3547,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126135113';                                 // stamped by build.ps1
+const APP_VER = '20261126135200';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
