@@ -928,7 +928,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="start">
           <h3>はじめに</h3>
           <ol class="hsteps">
-            <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません</small></li>
+            <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません<br>Android のアプリで曲を選ぶ画面から戻るときは、画面のいちばん下の端から上へ（ジェスチャー操作なら左右の端から内側へ）スワイプすると戻るボタンが出ます</small></li>
             <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">SRC</b> でラジオが聴けます</small></li>
             <li><b class="kb">DISP</b> か画面タップで、ディスプレイの柄を切り替え</li>
             <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
@@ -3954,6 +3954,23 @@ function showTour(only){                                      // only = 'app': j
 }
 $('#tourAgain') && $('#tourAgain').addEventListener('click', () => { closeSheet(); showTour(); });
 
+/* Android, full-screen app: the phone's song picker opens with the back button hidden too.
+   Before it opens, a short card says how to bring the back button out (swipe in from the bottom edge). */
+document.querySelectorAll('label[for="file"]').forEach(l => l.addEventListener('click', e => {
+  if(IOS || !/Android/i.test(navigator.userAgent) || !standalone() || store.get('pickHint', true) === false || $('#tour')) return;
+  e.preventDefault();
+  const ov = document.createElement('div'); ov.id = 'tour';
+  ov.innerHTML = `<div class="tcard"><div class="tkey">▲ DISC LOAD</div><h3>曲を選ぶ画面から戻るには</h3><p>次に出る曲を選ぶ画面では、全画面のため<b>戻るボタンが隠れています</b>。<br>画面の<b>いちばん下の端から上へ</b>（ジェスチャー操作のときは<b>左右の端から内側へ</b>）スワイプすると、戻るボタンが出てきます。<br><small>曲を選ぶときは、曲を長押しするとまとめて選べます。選んだら右上の「選択」や「開く」を押してね。</small></p>`
+    + `<label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;color:var(--muted)"><input type="checkbox" data-t="never">次から表示しない</label>`
+    + `<div class="tbtns"><button class="pbtn" data-t="cancel">やめる</button><button class="pbtn pri" data-t="go">曲を選ぶ</button></div></div>`;
+  ov.addEventListener('click', ev => {
+    const b = ev.target.closest('button[data-t]'); if(!b) return;
+    if(ov.querySelector('[data-t="never"]').checked) store.set('pickHint', false);
+    ov.remove(); if(b.dataset.t === 'go') $('#file').click();
+  });
+  document.body.appendChild(ov);
+}));
+
 /* ホーム画面に追加のお知らせ: a small bar at the bottom while the app is opened in the browser.
    Android: 「追加する」 opens the phone's own install screen. iPhone: it shows the picture of where to tap.
    「あとで」 hides it for a week. */
@@ -4131,7 +4148,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126180110';                                 // stamped by build.ps1
+const APP_VER = '20261126180531';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
