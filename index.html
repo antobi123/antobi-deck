@@ -127,16 +127,17 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .glass{left:96px; top:64px; width:768px; height:348px; border-radius:24px;
   background:linear-gradient(180deg,#0c0c13,#020204);
   box-shadow: 0 0 0 3px #3b3c43, 0 0 0 6px var(--ring), 0 0 0 7px #6a6c73, inset 0 0 36px rgba(0,0,0,.95);}
-/* the side ovals: machined aluminium (the panel colour), turned rings, a spun sheen and a line lit in the key colour */
-.wing{top:56px; width:150px; height:364px; border-radius:50%;
-  --sheen: conic-gradient(from 20deg at 50% 50%, rgba(255,255,255,.16), rgba(255,255,255,0) 12%, rgba(0,0,0,.14) 25%, rgba(255,255,255,0) 38%, rgba(255,255,255,.16) 50%, rgba(255,255,255,0) 62%, rgba(0,0,0,.14) 75%, rgba(255,255,255,0) 88%, rgba(255,255,255,.16));
-  --rings: repeating-radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.13) 0 1px, rgba(0,0,0,.08) 1.5px 2px, transparent 2.5px 6px);
-  background: var(--rings), var(--sheen), radial-gradient(ellipse at 38% 30%, var(--w1) 0%, var(--w2) 30%, var(--w3) 62%, var(--w4) 100%);
-  box-shadow: 0 0 0 2px #4a4c53, 0 0 0 4px #17181c, 0 0 0 5px #6a6c73, 0 8px 16px rgba(0,0,0,.5), inset 0 -10px 20px rgba(0,0,0,.3), inset 0 8px 14px rgba(255,255,255,.18);}
-.wing::after{content:""; position:absolute; inset:8px; border-radius:50%; border:2px solid var(--illum); pointer-events:none;
-  box-shadow:0 0 8px var(--illumglow), inset 0 0 8px var(--illumglow); opacity:.9; transition:border-color .4s, box-shadow .4s}
+/* the side ovals: a black face in a rim of the panel's metal, a ring lit in the key colour, and cooling slits at the top */
+.wing{top:56px; width:150px; height:364px; border-radius:50%; box-sizing:border-box; border:5px solid transparent;
+  background: radial-gradient(ellipse at 40% 28%, #2a2c33 0%, #131418 55%, #07080a 100%) padding-box,
+              linear-gradient(160deg, var(--w1), var(--w3) 45%, var(--w1) 70%, var(--w4)) border-box;
+  box-shadow: 0 0 0 1px #2a2b30, 0 8px 16px rgba(0,0,0,.5), inset 0 -10px 20px rgba(0,0,0,.5), inset 0 6px 12px rgba(255,255,255,.06);}
+.wing::before{content:""; position:absolute; left:50%; top:22px; width:46px; height:34px; transform:translateX(-50%); pointer-events:none;
+  background:repeating-linear-gradient(180deg, #000 0 3px, rgba(255,255,255,.07) 3px 4px, transparent 4px 9px); border-radius:3px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 120%, #000 55%, transparent 72%); mask-image:radial-gradient(ellipse at 50% 120%, #000 55%, transparent 72%)}
+.wing::after{content:""; position:absolute; inset:9px; border-radius:50%; border:3px solid var(--illum); pointer-events:none;
+  box-shadow:0 0 12px var(--illumglow), 0 0 3px var(--illumglow), inset 0 0 12px var(--illumglow); transition:border-color .4s, box-shadow .4s}
 .wing.l{left:-36px} .wing.r{right:-36px}
-.wing.r{background: var(--rings), var(--sheen), radial-gradient(ellipse at 62% 30%, var(--w1) 0%, var(--w2) 30%, var(--w3) 62%, var(--w4) 100%)}
 
 /* display */
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
@@ -3546,7 +3547,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126134741';                                 // stamped by build.ps1
+const APP_VER = '20261126134857';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
