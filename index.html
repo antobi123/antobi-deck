@@ -661,12 +661,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="penguin"><span class="pet">🐧</span>ペンギン</button>
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
-        <h3 style="margin-top:14px">季節の衣装</h3>
+        <h3 style="margin-top:14px">季節の衣装と飾り</h3>
         <div class="chips" id="costumeChips">
           <button class="chip" data-cs="1">ON</button>
           <button class="chip" data-cs="0">OFF</button>
         </div>
-        <p class="rnote">12月はサンタ帽、年末年始は鉢巻き、春は桜、夏はサングラス、ハロウィンは魔女の帽子。季節になると動物が自動で着替えます。</p>
+        <p class="rnote">12月はサンタ帽、年末年始は鉢巻き、春は桜、夏はサングラス、ハロウィンは魔女の帽子。季節になると動物が自動で着替えて、そばにクリスマスツリー・門松・桜・ひまわり・かぼちゃのランタンが飾られます。</p>
       </section>
       <section data-tab="fx">
         <h3>夜のディマー</h3>
@@ -975,7 +975,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
-            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます。⚙「表示」の「季節の衣装」が ON（はじめから）なら、12/1〜25 はサンタ帽、12/30〜1/7 は鉢巻き、3/25〜4/10 は桜、7/20〜8/31 はサングラス、10/20〜31 は魔女の帽子に自動で着替えます</dd>
+            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます。⚙「表示」の「季節の衣装と飾り」が ON（はじめから）なら、12/1〜25 はサンタ帽、12/30〜1/7 は鉢巻き、3/25〜4/10 は桜、7/20〜8/31 はサングラス、10/20〜31 は魔女の帽子に自動で着替えます。そばにはクリスマスツリー・門松・桜の木・ひまわり・かぼちゃのランタンが飾られます（ROOM は観葉植物の代わりに）</dd>
           </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
@@ -2802,8 +2802,10 @@ function drawVFDRoom(dt){
   for(let x=88;x<=112;x++){ dot(x, 20, G); dot(x, 29, G); } for(let y=20;y<=29;y++){ dot(88, y, G); dot(112, y, G); } line(92, 20, 95, 17, G); line(95, 17, 105, 17, G); line(105, 17, 108, 20, G);   // boombox + handle
   [[94, 25], [106, 25]].forEach(([x, y]) => { const r = 2.6 + rmPulse*1.4; for(let a=0;a<Math.PI*2;a+=.4) dot(x + Math.cos(a)*r, y + Math.sin(a)*r*.9, G); dot(x, y, A); });   // speakers thump
   for(let i=0;i<8;i++){ const lv = st.v[i*2] > .25; dot(97 + i, 22, lv ? A : K); if(st.v[i*2] > .55) dot(97 + i, 21, A); }   // the LEDs = spectrum
+  if(!seasonProp(124, 37)){
   for(let y=27;y<=37;y++) dot(124 + Math.sin(y*.6)*.4, y, G); [[-3,-4],[3,-5],[-4,-1],[4,-2],[0,-7]].forEach(([dx, dy], i) => line(124, 30, 124 + dx + Math.sin(rmT + i)*.4, 30 + dy, G));
   for(let x=120;x<=128;x++) dot(x, 37, A); dot(121, 36, A); dot(127, 36, A);
+  }
   // behavior: walk to a spot, then do something there for a while
   // now and then a friend drops by: it walks in from the right, they greet and play (or dance together to the music), then it waves and goes home
   if(!rmFr && rmT > rmFrNext && !(night && !playing)){
@@ -2931,6 +2933,46 @@ function setCostume(v, announce){
 }
 document.querySelectorAll('#costumeChips .chip').forEach(b => b.addEventListener('click', () => setCostume(b.dataset.cs === '1', true)));
 setCostume(costumeOn, false);
+
+/* ---------------- 季節の飾り: a prop for the season beside the animal (same dates as the costumes) ----------------
+   Christmas tree, kadomatsu, a cherry tree, a sunflower, a jack-o'-lantern. (cx, by) = centre and floor; returns false off season. */
+function seasonProp(cx, by){
+  const c = costumeNow(), t = performance.now()/1000, G = '#0f0', A = '#f00';
+  if(c === 'santa'){
+    for(let r=0;r<12;r++){ const hw = Math.round((11 - r)/2.4), y = by - 3 - r; for(let x=-hw;x<=hw;x++) if((x + r) % 2 === 0 || Math.abs(x) === hw) ddot(cx + x, y, G); }
+    ddot(cx, by - 1, A); ddot(cx, by - 2, A); for(let x=-2;x<=2;x++) ddot(cx + x, by, A);                       // trunk and pot
+    ddot(cx, by - 16, A); ddot(cx - 1, by - 15, A); ddot(cx + 1, by - 15, A); ddot(cx, by - 15, A); ddot(cx, by - 14, A);   // star
+    [[-2, -5], [2, -7], [-1, -9], [1, -4], [0, -11], [-3, -4], [3, -5]].forEach(([x, y], i) => { if(Math.sin(t*3 + i*1.7) > 0) ddot(cx + x, by + y, A); });   // lights
+    return true;
+  }
+  if(c === 'newyear'){
+    for(let y=0;y<4;y++) for(let x=-4;x<=4;x++) if(y % 2 === 0 || Math.abs(x) === 4 || x % 2 === 0) ddot(cx + x, by - y, A);   // the straw-wrapped base
+    [[-2, 11], [0, 13], [2, 9]].forEach(([x, h]) => { for(let y=4;y<=h;y++) ddot(cx + x, by - y, G); ddot(cx + x + 1, by - h, G); });   // bamboo, cut on the slant
+    [[-4, -5], [-5, -6], [-3, -6], [-4, -7], [4, -5], [5, -6], [3, -6], [4, -7]].forEach(([x, y]) => ddot(cx + x, by + y, G));        // pine
+    ddot(cx - 3, by - 8, A); ddot(cx + 3, by - 9, A);                                                                                   // plum blossoms
+    return true;
+  }
+  if(c === 'sakura'){
+    for(let y=0;y<7;y++) ddot(cx, by - y, A); ddot(cx - 1, by - 5, A); ddot(cx + 1, by - 6, A);
+    for(let y=-4;y<=4;y++) for(let x=-6;x<=6;x++) if(x*x/36 + y*y/16 <= 1 && (x*3 + y*5) % 4 === 0) ddot(cx + x, by - 11 + y, (x + y) % 3 ? G : A);
+    for(let i=0;i<3;i++){ const p = (t*.25 + i/3) % 1; ddot(cx - 5 + i*4 + Math.sin(t*2 + i)*2, by - 8 + p*8, A); }                 // falling petals
+    return true;
+  }
+  if(c === 'summer'){
+    for(let y=0;y<10;y++) ddot(cx, by - y, G); ddot(cx - 1, by - 4, G); ddot(cx - 2, by - 5, G); ddot(cx + 1, by - 6, G); ddot(cx + 2, by - 7, G);
+    for(let a=0;a<Math.PI*2;a+=.5) ddot(cx + Math.cos(a)*3, by - 13 + Math.sin(a)*3, A);
+    ddot(cx, by - 13, G); ddot(cx - 1, by - 13, G); ddot(cx + 1, by - 13, G); ddot(cx, by - 12, G); ddot(cx, by - 14, G);
+    return true;
+  }
+  if(c === 'halloween'){
+    for(let y=-3;y<=3;y++) for(let x=-4;x<=4;x++) if(x*x/16 + y*y/9 <= 1) ddot(cx + x, by - 3 + y, A);
+    ddot(cx, by - 7, G); ddot(cx + 1, by - 8, G);
+    const lit = Math.sin(t*5) > -.6 ? G : '#000';                                                          // the face flickers like a candle
+    ddot(cx - 2, by - 4, lit); ddot(cx + 2, by - 4, lit); for(let x=-2;x<=2;x++) ddot(cx + x, by - 2, lit); ddot(cx - 1, by - 1, lit); ddot(cx + 1, by - 1, lit);
+    return true;
+  }
+  return false;
+}
 
 /* ---------------- おやすみ・目覚ましとダンス: sleepy in the last 90 s of the sleep timer, asleep after it, stretching when the alarm rings ---------------- */
 function dnSleep(){
@@ -3088,6 +3130,7 @@ function drawDanceStage(dt){
     });
     if(dnStageMove !== dnMove){ dnStageMove = dnMove; if(dnT > 2) dnConfetti(20, 112); }
   } else { dline(66, 0, 58, 36, DA, 3); dline(66, 0, 74, 36, DA, 3); }
+  seasonProp(12, 36); seasonProp(120, 36);
   dnPet(pet, 66 - 11, 37 - 22, 2, pose);
   dnConfDraw(dt, 37);
   if(sl === 'sleep' || sl === 'drowsy' && (dnT % 7) < 1.2) dnZzz(cx + 14, 12);
@@ -3105,6 +3148,7 @@ function drawDanceLine(dt){
   if(playing) for(let i=0;i<12;i++){ const a = spin + i*.52, r = 12 + (i*7) % 26; if(Math.sin(dnT*7 + i*1.3) > -.2) ddot(bx + Math.cos(a)*r*1.9, 9 + Math.abs(Math.sin(a*1.3))*r*.65, i % 3 ? DG : DA); }
   for(let x=0;x<VB_C;x++) ddot(x, 38, DG);
   for(let i=0;i<26;i++){ const h = playing ? Math.round(st.v[i % 16]*4) : 0; for(let y=0;y<h;y++) ddot(i*5 + 3, 43 - y, DG); }
+  seasonProp(10, 37); seasonProp(122, 37);
   [36, 66, 96].forEach((x, i) => {
     let pose;
     const sl = dnSleep();
@@ -3145,6 +3189,7 @@ function drawDanceDJ(dt){
   for(let a=Math.PI*1.08;a<=Math.PI*1.92;a+=.12) ddot(ox + 11 + Math.cos(a)*13, oy + 11 + Math.sin(a)*12, DA);     // headphones
   for(let y=0;y<5;y++){ ddot(ox - 1, oy + 7 + y, DA); ddot(ox, oy + 7 + y, DA); ddot(ox + 21, oy + 7 + y, DA); ddot(ox + 22, oy + 7 + y, DA); }
   vbg.fillStyle = DK; vbg.fillRect(32, 28, 69, 16);
+  seasonProp(26, 43); seasonProp(106, 43);
   for(let x=32;x<=100;x++){ ddot(x, 28, DG); ddot(x, 43, DG); } for(let y=28;y<=43;y++){ ddot(32, y, DG); ddot(100, y, DG); }
   [46, 86].forEach((cx, i) => {
     for(let a=0;a<Math.PI*2;a+=.3) ddot(cx + Math.cos(a)*9, 36 + Math.sin(a)*4, DG); ddot(cx, 36, DG);
@@ -3664,7 +3709,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126140954';                                 // stamped by build.ps1
+const APP_VER = '20261126141201';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
