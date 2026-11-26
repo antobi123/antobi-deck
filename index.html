@@ -770,12 +770,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・ROOM のキャラクター</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
-            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリスト・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
-            <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴</dd>
+            <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・プレイリストと曲順・検索・並べ替え・1曲ずつ外す・全部消す）</dd>
+            <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴（★ で残せる）</dd>
             <dt>サウンド</dt><dd>イコライザー・クロスフェード・音量をそろえる・ブースト・操作音・自動で再開</dd>
-            <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし</dd>
+            <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・省電力モード・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
             <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
-            <dt>使い方</dt><dd>このページ</dd>
+            <dt>使い方</dt><dd>このページ（「はじめての案内をもう一度見る」もここ）</dd>
             <dt>アプリ</dt><dd>インストール・友達に教える・設定のバックアップ・更新のお知らせ</dd>
           </dl>
         </div>
@@ -3067,7 +3067,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126114059';                                 // stamped by build.ps1
+const APP_VER = '20261126114453';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -3175,8 +3175,9 @@ function renderPlChips(){
 }
 function plHint(){
   const h = $('#plHint'), n = selPool().length;
-  h.hidden = !tracks.length || plSel === 'all' || (n > 0 && !plEditing);
+  h.hidden = !tracks.length || plSel === 'all' || (n > 0 && !plEditing && !curList());
   h.textContent = plEditing ? '＋ をタップした曲がこのリストに入ります（✓ でもう一度タップすると外れます）。終わったら「選び終わり」。'
+    : n > 0 && curList() ? '左の ≡ を上下にドラッグすると、曲順を変えられます（この順で再生します）。'
     : plSel === 'fav' ? 'まだ ★ の曲がありません。曲の ☆ をタップするか、LIST ボタンを長押しすると ★ になります（今はすべての曲を再生します）。'
     : 'このリストはまだ空です。「曲を選ぶ」で曲を入れてね（今はすべての曲を再生します）。';
 }
