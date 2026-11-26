@@ -757,7 +757,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>再生</h3>
           <dl class="help">
             <dt>◀◀ ▶ ▶▶</dt><dd>前の曲・再生／一時停止・次の曲（RADIO 中は前後の局）</dd>
-            <dt>VOLUME ∧∨</dt><dd>音量。長押しで連続して変わる</dd>
+            <dt>VOLUME ∧∨</dt><dd>音量（0〜40）。長押しで連続して変わる。40 がほかの音楽アプリと同じ大きさで、30 前後でもほぼ同じくらい、下のほうほど小さくなります（はじめは 30）</dd>
             <dt>SEEK ∧∨</dt><dd>DISC 中は10秒送り／戻し。RADIO 中は局の切り替え</dd>
             <dt>一番下のバー</dt><dd>DISC：曲の再生位置。指でなぞって好きな位置へ。右端の数字が再生時間<br>ラジオ：局名と、いま流れている曲名（曲名を出している局のみ。ほかは局名とジャンル）。長いと流れて表示されます。上の段にも局名が出ます</dd>
             <dt>ATT</dt><dd>一時的に音量をぐっと下げる（もう一度押すと戻る）</dd>
@@ -938,7 +938,7 @@ DEFAULTS.push(['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb' &&
 if(ORDER.length && DEFAULTS.some(d => ORDER.join() === d.slice(0, ORDER.length).join())) ORDER = [];
 SKINS.forEach(s => { if(!ORDER.includes(s)) ORDER.push(s); });
 let illum = store.get('illum','blue'); if(!ILLUMS.includes(illum)) illum = 'blue';
-let vol = store.get('vol', 28), att = false;
+let vol = store.get('vol', 30), att = false;
 let loud = store.get('loud', false), shuffle = store.get('shuffle', false), repeat = store.get('repeat', 'all');
 let scroll = store.get('scroll', true), scan = false;
 const tracks = []; let idx = -1;
@@ -988,7 +988,9 @@ function ensureAudio(){
   applyVol(); applyLoud();
 }
 let sleepFade = 1;   // the sleep timer and alarm fade, on top of the volume
-const volGain = v => Math.pow(v/40, 2);
+// VOLUME 0-40 → gain. 40 is the full level (the same as other apps); the curve stays loud through the upper half
+// (28 ≈ -2.5 dB, 20 ≈ -8 dB, 10 ≈ -21 dB) and only falls away quickly near the bottom, like a car stereo
+const volGain = v => v <= 0 ? 0 : Math.pow(10, -42*Math.pow(1 - Math.min(40, v)/40, 2.35)/20);
 function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1) * sleepFade, AC.currentTime, .03); try{ plain.volume = Math.min(1, volGain(vol) * (att ? .1 : 1) * sleepFade); }catch(e){} }
 function applyLoud(){ if(!lowS) return; lowS.gain.value = loud ? 9 : 0; highS.gain.value = loud ? 6 : 0; }
 
@@ -2924,7 +2926,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126103130';                                 // stamped by build.ps1
+const APP_VER = '20261126112901';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
