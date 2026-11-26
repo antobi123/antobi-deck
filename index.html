@@ -759,6 +759,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります</li>
           </ol>
           <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
+          <p class="rnote" style="margin:0 0 4px">初めて開いたときに出る案内です。曲を入れる・ラジオを聴く・自分好みにする・アプリとして使う（ブラウザで開いているときだけ）の順に出ます。</p>
           <h3 style="margin-top:16px">アプリとして使う（ホーム画面に追加）</h3>
           <ol class="hsteps">
             <li>Android（Chrome）：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><small>⚙「その他」の「ホーム画面にインストール」ボタンが出ていれば、それを押すだけでもOK</small></li>
@@ -897,9 +898,10 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="appx" hidden>
           <h3>その他（⚙「その他」）</h3>
           <dl class="help">
-            <dt>インストール</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます</dd>
+            <dt>アプリとして使う</dt><dd>ホーム画面に追加すると、全画面・横向きのアプリとして使えます。手順は「はじめに」のページに。Android では「ホーム画面にインストール」ボタンが出ていれば、押すだけで追加できます。今の状態（ブラウザで開いているか、アプリとして起動中か）もここに出ます</dd>
             <dt>設定のバックアップ</dt><dd>「設定を書き出す」で、ラジオのプリセット・表示や音の設定・聴いた曲の履歴を1つのファイルに保存。「設定を読み込む」で元に戻せます。機種変更のときや、友達に同じ設定を渡すときに。入れた曲は含まれません</dd>
             <dt>友達に教える</dt><dd>「友達に教える」でスマホの共有メニューが開き、LINE やメールでアプリのURLを送れます。「URLをコピー」で貼り付け用にも。送られるのはURLだけです</dd>
+            <dt>メモ</dt><dd>入れた曲はこの端末の中だけで再生され、どこにも送信されません</dd>
             <dt>新しいバージョン</dt><dd>アプリが更新されると、画面の上に「新しいバージョンがあります」と出ます。「更新する」を押すと、今の再生状態のまま最新版になります</dd>
           </dl>
         </div>
@@ -3077,7 +3079,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126114905';                                 // stamped by build.ps1
+const APP_VER = '20261126114954';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
