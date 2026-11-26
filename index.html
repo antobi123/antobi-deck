@@ -657,6 +657,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="penguin"><span class="pet">🐧</span>ペンギン</button>
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
         </div>
+        <h3 style="margin-top:14px">季節の衣装</h3>
+        <div class="chips" id="costumeChips">
+          <button class="chip" data-cs="1">ON</button>
+          <button class="chip" data-cs="0">OFF</button>
+        </div>
+        <p class="rnote">12月はサンタ帽、年末年始は鉢巻き、春は桜、夏はサングラス、ハロウィンは魔女の帽子。季節になると動物が自動で着替えます。</p>
       </section>
       <section data-tab="fx">
         <h3>夜のディマー</h3>
@@ -965,7 +971,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
-            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます</dd>
+            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます。⚙「表示」の「季節の衣装」が ON（はじめから）なら、12/1〜25 はサンタ帽、12/30〜1/7 は鉢巻き、3/25〜4/10 は桜、7/20〜8/31 はサングラス、10/20〜31 は魔女の帽子に自動で着替えます</dd>
           </dl>
         </div>
         <div class="hpage" data-h="disp" hidden>
@@ -977,7 +983,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「表示」の「動物のキャラクター」で7種類から</dd>
             <dt>STAGE</dt><dd>ステージで動物が大きく踊ります。左右からスポットライト、床は音に合わせて光り、踊りが変わると紙吹雪。踊りは10種類（左右に揺れる・ジャンプ・手拍子・ディスコ・くるっと回る・スクワット・手を振る・シャッフル・ロボット など）で、8拍ごとに変わります</dd>
             <dt>LINE DANCE</dt><dd>同じ動物が3匹でラインダンス。上でミラーボールが回ります。そろって踊る・順番にずれて踊る（ウェーブ）・左右が鏡写し・真ん中がソロで両側は手拍子、の4つの並びが16拍ごとに変わります</dd>
-            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は⚙「表示」の「動物のキャラクター」で選べます</small></dd>
+            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。左上の「128 BPM」は動物が踊っているテンポ（低音から読み取れないときは --）。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。動物は⚙「表示」の「動物のキャラクター」で選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
@@ -2843,6 +2849,7 @@ function drawVFDRoom(dt){
     else { dot(ox + 1, oy + 8, G); dot(ox + 9, oy + 8, G); }                                        // arms down
   } else for(let c=1;c<10;c++) dot(ox + c, oy + 7, G);                                              // curled up
   RM_PETS[sp].extra(ox, oy, { dot, G, A, K, t: rmT, walking, dancing, sleeping });                // ears, tail, whiskers…
+  costumeDraw((x, y, c) => dot(ox + x, oy + y, c), G, A, true);
   return { ox, oy };
   };
   const HEART = [[0,0],[1,1],[3,1],[4,0],[0,1],[4,1],[1,2],[2,3],[3,2]], NOTE = [[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]];
@@ -2879,6 +2886,80 @@ function drawVFDRoom(dt){
   g.drawImage(vbDim, 0, 0, W, H);
   drawLit();
 }
+/* ---------------- 季節の衣装: the animal dresses for the season (ROOM and the dance displays) ----------------
+   12/1-12/25 Santa hat, 12/30-1/7 a New Year headband, 3/25-4/10 a cherry blossom, 7/20-8/31 sunglasses,
+   10/20-10/31 a witch's hat. ?costume=santa (or newyear / sakura / summer / halloween) previews one. */
+var costumeOn = store.get('costume', true) !== false;
+const COSTUME_FAKE = new URLSearchParams(location.search).get('costume');
+function costumeNow(){
+  if(COSTUME_FAKE) return COSTUME_FAKE;
+  if(!costumeOn) return '';
+  const d = new Date(), m = d.getMonth() + 1, day = d.getDate(), md = m*100 + day;
+  if(md >= 1201 && md <= 1225) return 'santa';
+  if(md >= 1230 || md <= 107) return 'newyear';
+  if(md >= 325 && md <= 410) return 'sakura';
+  if(md >= 720 && md <= 831) return 'summer';
+  if(md >= 1020 && md <= 1031) return 'halloween';
+  return '';
+}
+// P(x, y, colour) draws in the animal's own 11 x 11 grid; front = false when it shows its back
+function costumeDraw(P, G, A, front){
+  const c = costumeNow();
+  if(c === 'santa'){
+    for(let x=1;x<=9;x++) P(x, -1, G);                                   // the white fur brim
+    for(let x=2;x<=8;x++) P(x, -2, A); for(let x=4;x<=8;x++) P(x, -3, A); for(let x=7;x<=9;x++) P(x, -4, A);
+    P(10, -4, G); P(10, -5, G); P(11, -4, G);                            // the pompom
+  } else if(c === 'newyear'){
+    for(let x=0;x<=10;x++) P(x, 1, A);                                   // a headband with the knot at the side
+    P(11, 0, A); P(12, -1, A); P(11, 2, A); P(12, 3, A);
+  } else if(c === 'sakura'){
+    P(8, -1, G); P(8, -2, A); P(7, -1, A); P(9, -1, A); P(7, -2, A); P(9, -2, A);
+  } else if(c === 'summer' && front){
+    [2, 3, 4, 6, 7, 8].forEach(x => { P(x, 2, G); P(x, 3, G); }); P(5, 2, G); P(1, 2, G); P(9, 2, G);
+  } else if(c === 'halloween'){
+    for(let x=-1;x<=11;x++) P(x, -1, A);
+    for(let x=2;x<=8;x++) P(x, -2, A); for(let x=3;x<=7;x++) P(x, -3, A); for(let x=4;x<=6;x++) P(x, -4, A); P(6, -5, A); P(7, -6, A);
+  }
+}
+function setCostume(v, announce){
+  costumeOn = v; if(announce){ store.set('costume', v); flash(v ? 'COSTUME  ON' : 'COSTUME  OFF', 900); }
+  document.querySelectorAll('#costumeChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.cs === '1') === v));
+}
+document.querySelectorAll('#costumeChips .chip').forEach(b => b.addEventListener('click', () => setCostume(b.dataset.cs === '1', true)));
+setCostume(costumeOn, false);
+
+/* ---------------- おやすみ・目覚ましとダンス: sleepy in the last 90 s of the sleep timer, asleep after it, stretching when the alarm rings ---------------- */
+function dnSleep(){
+  try{
+    if(alarmRing) return 'wake';
+    if(slept) return 'sleep';
+    if(sleepEnd && sleepEnd - Date.now() < 90e3) return 'drowsy';
+  }catch(e){}
+  return '';
+}
+function dnSleepPose(s, i){
+  const t = dnT + (i || 0)*.7;
+  if(s === 'sleep') return { arms: 'down', eyes: 'shut', squat: 1 };
+  if(s === 'wake') return { arms: 'up', eyes: 'happy', hop: (t*1.6) % 1 < .4 ? 1 : 0 };
+  const yawn = (t % 7) < 1.2;                                            // drowsy: a slow sway and now and then a yawn
+  return { arms: yawn ? 'up' : 'down', eyes: yawn || Math.sin(t*1.3) > .2 ? 'shut' : 'open', lean: Math.round(Math.sin(t*1.1)) };
+}
+function dnZzz(x, y){
+  const Z = [[0,0],[1,0],[2,0],[1,1],[0,2],[1,2],[2,2]];
+  for(let k=0;k<3;k++){ const p = (dnT*.4 + k/3) % 1; Z.forEach(([a, b]) => ddot(x + p*8 + a, y - p*10 + b, DG)); }
+}
+
+/* ---------------- BPM: the tempo the animal dances to, from the bass (-- when the sound gives no beat) ---------------- */
+const DN_FONT = { '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001',
+  '5': '111100111001111', '6': '111100111101111', '7': '111001001001001', '8': '111101111101111', '9': '111101111001111',
+  'B': '110101110101110', 'P': '110101110100100', 'M': '101111111101101', '-': '000000111000000', ' ': '000000000000000' };
+function dnText(s, x, y, c){ [...s].forEach((ch, i) => { const f = DN_FONT[ch] || DN_FONT[' ']; for(let k=0;k<15;k++) if(f[k] === '1') ddot(x + i*4 + k % 3, y + Math.floor(k/3), c); }); }
+function dnBpm(x, y){
+  let s = '--';
+  if(dnT - dnReal < 3){ let b = 60/dnPeriod; while(b < 70) b *= 2; while(b > 180) b /= 2; s = String(Math.round(b)); }
+  dnText(s.padStart(3, ' ') + ' BPM', x, y, DG);
+}
+
 /* ---------------- ダンスの3画面: STAGE / LINE DANCE / DJ BOOTH ----------------
    The animal chosen in 動物のキャラクター dances to the beat. The beat comes from the bass (and keeps time by itself
    when the sound gives none, e.g. a radio station the analyser cannot hear). Every 8 beats it changes to another move. */
@@ -2909,13 +2990,13 @@ const ddot = (x, y, c) => { vbg.fillStyle = c; vbg.fillRect(Math.round(x), Math.
 const dline = (x0, y0, x1, y1, c, gap) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) || 1; for(let i=0;i<=n;i+=(gap || 1)) ddot(x0 + (x1 - x0)*i/n, y0 + (y1 - y0)*i/n, c); };
 
 // the beat
-let dnT = 0, dnPulse = 0, dnBeat = 0, dnLast = 0, dnPeriod = .5, dnArm = true, dnMove = 'sway', dnForm = 'sync', dnDj = 'nod';
+let dnReal = -99, dnT = 0, dnPulse = 0, dnBeat = 0, dnLast = 0, dnPeriod = .5, dnArm = true, dnMove = 'sway', dnForm = 'sync', dnDj = 'nod';
 const DN_MOVES = ['sway', 'jump', 'lr', 'clap', 'disco', 'spin', 'squat', 'wave', 'shuffle', 'robot'];
 const DN_FORMS = ['sync', 'canon', 'mirror', 'solo'];
 const DN_DJ = ['nod', 'lean', 'scratch', 'handsup', 'ear', 'point'];
 const dnPick = (list, cur) => { let n; do{ n = list[Math.floor(Math.random()*list.length)]; } while(n === cur && list.length > 1); return n; };
-function dnHit(){
-  const p = dnT - dnLast; if(p > .25 && p < 1.2) dnPeriod += (p - dnPeriod)*.3;
+function dnHit(auto){
+  const p = dnT - dnLast; if(!auto){ if(p > .25 && p < 1.2) dnPeriod += (p - dnPeriod)*.3; dnReal = dnT; }
   dnLast = dnT; dnBeat++;
   if(dnBeat % 8 === 0){ dnMove = dnPick(DN_MOVES, dnMove); dnDj = dnPick(DN_DJ, dnDj); }
   if(dnBeat % 16 === 0) dnForm = dnPick(DN_FORMS, dnForm);
@@ -2927,7 +3008,7 @@ function dnTick(dt){
   if(playing){
     if(bass > .55 && dnArm && dnT - dnLast > .28){ dnHit(); dnArm = false; }
     if(bass < .4) dnArm = true;
-    if(dnT - dnLast > Math.max(.75, dnPeriod*1.6)) dnHit();              // keep time when the bass gives no beat
+    if(dnT - dnLast > Math.max(.75, dnPeriod*1.6)) dnHit(true);              // keep time when the bass gives no beat
   }
   return { st, playing, ph: Math.min(1, (dnT - dnLast)/Math.max(.3, dnPeriod)) };
 }
@@ -2971,6 +3052,7 @@ function dnPet(sp, x, y, s, pose){
     P(5 + lk, 4, DA); if(e !== 'shut'){ P(2, 4, DA); P(8, 4, DA); }
     RM_PETS[sp].extra(0, 0, { dot: (cx, cy, c) => P(cx, cy, c), G: DG, A: DA, K: DK, t: dnT, walking: false, dancing: true, sleeping: false });
   }
+  costumeDraw(P, DG, DA, e !== 'back');
   for(let r=7;r<=9;r++){ P(2, r, DG); P(8, r, DG); }
   const st = pose.step || 0;
   if(pose.squat){ P(1, 10, DG); P(2, 10, DG); P(8, 10, DG); P(9, 10, DG); }
@@ -2993,8 +3075,8 @@ function drawDanceStage(dt){
   for(let x=0;x<VB_C;x++) ddot(x, 37, DG);
   for(let i=0;i<11;i++){ const lv = playing ? Math.round(st.v[Math.min(15, i + 2)]*3.4) : 0; for(let r=0;r<lv;r++) for(let x=1;x<11;x+=2) ddot(i*12 + x + (r % 2), 43 - r*2, r > 1 ? DA : DG); }
   vbStars.slice(0, 8).forEach(([x, y, p]) => { if(Math.sin(dnT*1.5 + p) > .3) ddot(x, y % 8, DG); });
-  const pose = playing ? dnPose(dnMove, dnBeat, ph) : dnIdle(), cx = 66 + (pose.lean || 0)*2;
-  if(playing){
+  const sl = dnSleep(), pose = sl ? dnSleepPose(sl) : playing ? dnPose(dnMove, dnBeat, ph) : dnIdle(), cx = 66 + (pose.lean || 0)*2;
+  if(playing && sl !== 'sleep'){
     [3, 128].forEach((sx, i) => {
       const tx = cx + Math.sin(dnT*1.1 + i*2.4)*18;
       dline(sx, 0, tx - 4, 36, DA, 2); dline(sx, 0, tx + 4, 36, DA, 2);
@@ -3004,6 +3086,8 @@ function drawDanceStage(dt){
   } else { dline(66, 0, 58, 36, DA, 3); dline(66, 0, 74, 36, DA, 3); }
   dnPet(pet, 66 - 11, 37 - 22, 2, pose);
   dnConfDraw(dt, 37);
+  if(sl === 'sleep' || sl === 'drowsy' && (dnT % 7) < 1.2) dnZzz(cx + 14, 12);
+  if(playing) dnBpm(2, 1);
   if(playing && dnPulse > .5) [[cx - 20, 14], [cx + 18, 12]].forEach(([x, y]) => { ddot(x, y, DA); ddot(x, y - 1, DA); ddot(x + 1, y - 2, DA); ddot(x - 1, y, DA); });   // ♪
   vbEnd();
 }
@@ -3019,13 +3103,17 @@ function drawDanceLine(dt){
   for(let i=0;i<26;i++){ const h = playing ? Math.round(st.v[i % 16]*4) : 0; for(let y=0;y<h;y++) ddot(i*5 + 3, 43 - y, DG); }
   [36, 66, 96].forEach((x, i) => {
     let pose;
-    if(!playing) pose = Object.assign(dnIdle(), { lean: Math.round(Math.sin(dnT*.8 + i*.9)) });
+    const sl = dnSleep();
+    if(sl) pose = dnSleepPose(sl, i);
+    else if(!playing) pose = Object.assign(dnIdle(), { lean: Math.round(Math.sin(dnT*.8 + i*.9)) });
     else if(dnForm === 'canon'){ const t = dnBeat + ph - i*.5, b = Math.floor(t); pose = dnPose(dnMove, b, t - b); }
     else if(dnForm === 'mirror'){ pose = dnPose(dnMove, dnBeat, ph); if(i === 0) pose = dnMirror(pose); }
     else if(dnForm === 'solo' && i !== 1) pose = dnPose('clap', dnBeat, ph);
     else pose = dnPose(dnMove, dnBeat, ph);
     dnPet(pet, x - 5, 38 - 11, 1, pose);
   });
+  if(dnSleep() === 'sleep') dnZzz(74, 20);
+  if(playing) dnBpm(2, 1);
   vbEnd();
 }
 
@@ -3037,9 +3125,12 @@ function drawDanceDJ(dt){
     for(let c=0;c<3;c++){ const h = playing ? Math.round(st.v[c*3 + i*2]*12) : 0; for(let y=0;y<h;y++){ ddot(x0 + 3 + c*4, 41 - y*3, y > 8 ? DA : DG); ddot(x0 + 4 + c*4, 41 - y*3, y > 8 ? DA : DG); } }
     const r = 1 + (playing ? dnPulse*1.6 : 0); for(let a=0;a<Math.PI*2;a+=.5) ddot(x0 + 7.5 + Math.cos(a)*r, 9.5 + Math.sin(a)*r*.8, DG);
   }
-  const m = playing ? dnDj : 'dig', f = ph, b = dnBeat;
+  const sl = dnSleep(), m = sl ? 'z' + sl : playing ? dnDj : 'dig', f = ph, b = dnBeat;
   const pose = { arms: 'hold', eyes: 'open', lean: 0 }; let bob = 0;
-  if(m === 'nod'){ bob = f < .4 ? 1 : 0; pose.eyes = 'happy'; }
+  if(m === 'zsleep'){ pose.eyes = 'shut'; bob = 2; }
+  else if(m === 'zdrowsy'){ const z = dnSleepPose('drowsy'); pose.eyes = z.eyes; if(z.arms === 'up') pose.arms = 'up'; bob = Math.sin(dnT*1.1) > 0 ? 1 : 0; }
+  else if(m === 'zwake'){ pose.arms = 'up'; pose.eyes = 'happy'; bob = (dnT*1.6) % 1 < .4 ? 1 : 0; }
+  else   if(m === 'nod'){ bob = f < .4 ? 1 : 0; pose.eyes = 'happy'; }
   else if(m === 'lean'){ pose.lean = b % 2 ? 1 : -1; bob = f < .3 ? 1 : 0; }
   else if(m === 'scratch'){ bob = f < .4 ? 1 : 0; pose.eyes = 'shut'; }
   else if(m === 'handsup'){ pose.arms = 'up'; bob = f < .4 ? 1 : 0; pose.eyes = 'happy'; }
@@ -3058,6 +3149,8 @@ function drawDanceDJ(dt){
     ddot(cx + Math.cos(r)*6, 36 + Math.sin(r)*2.7, DA);
   });
   if(m === 'scratch') dline(ox + 4, oy + 16, 46, 34, DG);                                                           // a hand on the record
+  if(m === 'zsleep') dnZzz(ox + 24, oy + 2);
+  if(playing) dnBpm(4, 0);
   for(let x=60;x<=72;x+=2) ddot(x, 32, playing && st.v[(x/2) % 16] > .45 ? DA : DG);                          // the mixer's lights
   for(let x=60;x<=72;x+=4) ddot(x + (playing ? Math.round(Math.sin(dnT*2 + x)) : 0), 38, DG);
   vbEnd();
@@ -3567,7 +3660,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126140316';                                 // stamped by build.ps1
+const APP_VER = '20261126140724';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
