@@ -1060,7 +1060,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
             <dt>名前</dt><dd>⚙「キャラクター」の動物の下の欄で、動物に名前（10文字まで）を付けられます。名前は、なつき度の欄（「ミケ のなつき度」）、レベルアップのお知らせ、なでたとき（「ミケ ♥」）に出ます</dd>
             <dt>なつき度</dt><dd>曲を一緒に聴いた時間（1分で1pt）と、なでた回数（1回3pt）で、ハートが1〜5個に増えます（30・120・300・600pt で次へ）。♥3 でブレイクダンス、♥4 で側転、♥5 で両手のハートのポーズを、STAGE・LINE DANCE で踊るようになります。レベルが上がると1段目に「♥ LEVEL UP」<br><small>先に見たいときは、アドレスの最後に ?bond=5</small></dd>
-            <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面を長押しすると、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回なでると、くるくる回ります（スマホが少しブルッと震えます）</dd>
+            <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面を長押しすると（パソコンでは、画面の上でマウスのボタンを押したまま半秒ほど）、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回なでると、くるくる回ります（スマホが少しブルッと震えます）</dd>
             <dt>天気で着替える</dt><dd>はじめから ON。右上の天気マークと同じ天気で、雨の日は傘、雪の日はマフラー、30℃以上の日はうちわを持ちます。季節の衣装や誕生日の帽子と一緒に着られます。天気は位置情報を許可していると分かります<br><small>先に見たいときは、アドレスの最後に ?wxwear=rain（ほかに snow・hot）</small></dd>
             <dt>どこで会える？</dt><dd>ディスプレイの ROOM（部屋で暮らす）と、STAGE・LINE DANCE・DJ BOOTH（音楽に合わせて踊る）。ディスプレイは DISP か ⚙「表示」で切り替えます。くわしくは「ディスプレイ」のページへ</dd>
           </dl>
@@ -4158,7 +4158,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126183237';                                 // stamped by build.ps1
+const APP_VER = '20261126183829';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
