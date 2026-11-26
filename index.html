@@ -237,7 +237,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .pbody h3{margin:0 0 10px; font:700 12px var(--font-print); letter-spacing:.18em; color:var(--muted)}
 .ptop{position:sticky; top:0; z-index:2; background:var(--panel); border-bottom:1px solid var(--line)}
 .ptop .phead{position:static; border-bottom:0; padding-bottom:8px}
-.ptabs{display:flex; gap:4px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none}
+.ptabs{display:flex; flex-wrap:wrap; gap:5px 4px; padding:0 14px 12px}   /* on a narrow phone the tabs go onto a second row instead of hiding off the edge */
 .ptabs button, .hnav button{flex:none; border:1px solid var(--line); background:#14151a; color:var(--muted); border-radius:999px; padding:7px 15px; font:700 12px var(--font-ui)}
 .ptabs button[aria-pressed="true"]{color:#06070a; background:var(--illum); border-color:transparent; box-shadow:0 0 12px var(--illumglow)}
 .ptabs button{padding:7px 9px; letter-spacing:0}
@@ -3717,7 +3717,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261126141509';                                 // stamped by build.ps1
+const APP_VER = '20261126141830';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
