@@ -875,6 +875,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-ar="0">OFF</button>
         </div>
         <p class="rnote">電話がかかってきたときや、ほかのアプリが音を鳴らしたときに止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません。</p>
+        <h3 style="margin-top:14px">開いたら続きを再生</h3>
+        <div class="chips" id="autoStartChips">
+          <button class="chip" data-as="1">ON</button>
+          <button class="chip" data-as="0">OFF</button>
+        </div>
+        <p class="rnote">アプリを開いたとき、前回閉じたときに流れていた曲（止まった所から）やラジオの局を自動で再生します。止めてから閉じたときは再生しません。スマホによっては最初にタップが必要で、そのときは1段目にお知らせが出ます。</p>
       </section>
       <section data-tab="music" id="listSec">
         <h3>プレイリスト <span id="count" style="float:right">0 TRACKS</span></h3>
@@ -1103,6 +1109,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ブースト</dt><dd>はじめは OFF。+3dB・+6dB にすると、VOLUME 40 よりさらに大きく（ほかのアプリより大きく）鳴ります。音割れ防止と一緒に効くので割れにくくなりますが、迫力のある曲では少し音が詰まって聞こえることがあります。iPhone で画面を消しているときや、一部のラジオ局では効きません</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの、やわらかく澄んだ「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整（つまみはロックしてあり、「タップで調整」で動かせます。15秒触らないと自動でロック）</dd>
             <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
+            <dt>開いたら続きを再生</dt><dd>はじめから ON。アプリを開いたとき、前回閉じたときに流れていた曲（止まった所から）やラジオの局を自動で再生します。止めてから閉じたときは再生しません。スマホによっては音を出す前にタップが必要で、そのときは1段目に「画面をタップすると続きから再生」と出ます</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
         </div>
@@ -3164,7 +3171,7 @@ var petName = String(store.get('petName', '') || '').slice(0, 10);
 const RESET_KEYS = {
   look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos'],
   chara: ['pet', 'costume', 'wxwear', 'petName'],
-  sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'loud'],
+  sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'autoStart', 'loud'],
   night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
   fx: ['dimmer2', 'boot2'],
   music: ['sort', 'nextTempo', 'plSel', 'pickHint']
@@ -4239,7 +4246,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127102953';                                 // stamped by build.ps1
+const APP_VER = '20261127103904';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4249,8 +4256,10 @@ $('#updBtn').addEventListener('click', () => {
 });
 /* after 「更新する」: start again what was playing (the song from where it was, or the station). A phone that wants a tap
    before any sound gets a note on the top line, and the first tap on the screen starts it. */
-function updResume(){
-  const w = store.get('updResume', ''); if(!w) return; store.set('updResume', '');
+function updResume(){                                     // also on an ordinary start: 開いたら続きを再生
+  const upd = store.get('updResume', ''); store.set('updResume', '');
+  const w = upd || (autoStart && store.get('wasPlaying', '')); if(!w) return;
+  if(w === 'radio' && mode !== 'radio') return;             // the app opened on DISC after all
   const i0 = resumeIdx, at0 = resumeAt;
   const go = () => {
     ensureAudio();
@@ -4260,9 +4269,9 @@ function updResume(){
   go();
   setTimeout(() => {
     const el = w === 'radio' ? radioEl() : audio;
-    if(!el.paused && AC && AC.state === 'running'){ flash('UPDATED  ▸ RESUME', 1500); return; }
+    if(!el.paused && AC && AC.state === 'running'){ flash(upd ? 'UPDATED  ▸ RESUME' : 'RESUME', 1500); return; }
     audio.pause(); try{ plain.pause(); }catch(e){} updateUI();
-    flash('UPDATED ── 画面をタップすると続きから再生', 6000);
+    flash((upd ? 'UPDATED ── ' : '') + '画面をタップすると続きから再生', 6000);
     const once = e => {
       document.removeEventListener('pointerdown', once, true);
       if(e.target.closest && e.target.closest('button, input, label, a, select')) return;   // a key: let it do its own job (▶ plays)
@@ -4319,14 +4328,22 @@ function makeStationArt(st){                               // 512 x 512: the sho
    so it is recognised and the sound is tried again every few seconds until it can play (for up to 20 minutes). */
 var autoResume = store.get('autoResume', true) !== false, intr = null;
 [audio, plain, xaudio].forEach(el => {
-  const p = el.pause.bind(el); el.pause = () => { el._byApp = Date.now(); intr = null; p(); };
+  const p = el.pause.bind(el); el.pause = () => { el._byApp = Date.now(); intr = null; if(nowEl() === el) store.set('wasPlaying', ''); p(); };   // stopped by you (or the app): not playing at the next start
   el.addEventListener('pause', () => {
     if(!autoResume || el.ended || Date.now() - (el._byApp || 0) < 1500) return;
     if(!((mode === 'file' && el === audio) || (mode === 'radio' && radioNow && el === radioEl()))) return;
     intr = { el, at: Date.now() };
   });
-  el.addEventListener('playing', () => { if(intr && intr.el === el) intr = null; });
+  el.addEventListener('playing', () => { if(intr && intr.el === el) intr = null; if(nowEl() === el) store.set('wasPlaying', mode === 'radio' ? 'radio' : 'file'); });
 });
+function nowEl(){ return mode === 'file' ? (bgHand === 'file' ? plain : audio) : mode === 'radio' && radioNow ? radioEl() : null; }   // the player making the sound now
+var autoStart = store.get('autoStart', true) !== false;
+function setAutoStart(v, announce){
+  autoStart = v; if(announce){ store.set('autoStart', v); flash(v ? 'AUTO START  ON' : 'AUTO START  OFF', 900); }
+  document.querySelectorAll('#autoStartChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.as === '1') === v));
+}
+document.querySelectorAll('#autoStartChips .chip').forEach(b => b.addEventListener('click', () => setAutoStart(b.dataset.as === '1', true)));
+setAutoStart(autoStart, false);
 function tryResume(){
   if(!intr) return;
   const el = intr.el, age = Date.now() - intr.at;
