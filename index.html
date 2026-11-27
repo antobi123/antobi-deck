@@ -4322,7 +4322,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127140956';                                 // stamped by build.ps1
+const APP_VER = '20261127141045';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5130,6 +5130,7 @@ function shFriend(){                                          // the friend in t
   return others[n % others.length];
 }
 function drawVFDShuto(dt){
+  if(DEMO && shT === 0) shSpd = 96;                                                              // ?demo (screenshots): already cruising
   shT += dt; vbBegin();
   const G = DG, A = DA, K = DK;
   const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3, playing = isActive() || DEMO;
