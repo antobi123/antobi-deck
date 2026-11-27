@@ -39,6 +39,7 @@
 :root[data-skin="vfdtape"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdroom"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
 :root[data-skin="vfdstage"], :root[data-skin="vfdline"], :root[data-skin="vfddj"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.13); --glow:rgba(95,246,230,.55); --screen:#021311; }
+:root[data-skin="vfdshuto"]{ --lit:#8cf0ff; --lit2:#ffb347; --dimt:rgba(140,240,255,.11); --glow:rgba(140,240,255,.5); --screen:#020a12; }
 :root[data-skin="vfddrive"]{ --lit:#7fd8ff; --lit2:#ffb347; --dimt:rgba(127,216,255,.12); --glow:rgba(127,216,255,.5); --screen:#020814; }
 :root[data-skin="vfdclub"]{ --lit:#4fb4ff; --lit2:#ff3fd0; --dimt:rgba(190,80,255,.14); --glow:rgba(130,100,255,.6); --screen:#0c0218; }
 :root[data-skin="vfdmine"]{ --lit:#5ff6e6; --lit2:#ffa24a; --dimt:rgba(95,246,230,.16); --glow:rgba(95,246,230,.55); --screen:#021311; }
@@ -136,7 +137,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .disp{left:148px; top:72px; width:664px; height:332px; border-radius:12px; overflow:hidden; background:var(--screen); color:var(--lit); transition:background .5s}
 .disp::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
   background:linear-gradient(172deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 30%, transparent 31%);}
-:root[data-skin="vfdmine"] .disp::before, :root[data-skin="vfddrive"] .disp::before, :root[data-skin="vfdclub"] .disp::before, :root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfdroom"] .disp::before, :root[data-skin="vfdstage"] .disp::before, :root[data-skin="vfdline"] .disp::before, :root[data-skin="vfddj"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+:root[data-skin="vfdmine"] .disp::before, :root[data-skin="vfddrive"] .disp::before, :root[data-skin="vfdshuto"] .disp::before, :root[data-skin="vfdclub"] .disp::before, :root[data-skin="vfd"] .disp::before, :root[data-skin="vfdb"] .disp::before, :root[data-skin="vfdrec"] .disp::before, :root[data-skin="vfdtape"] .disp::before, :root[data-skin="vfdroom"] .disp::before, :root[data-skin="vfdstage"] .disp::before, :root[data-skin="vfdline"] .disp::before, :root[data-skin="vfddj"] .disp::before, :root[data-skin="vfdshuffle"] .disp::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);}
 .tline{position:relative; z-index:1; display:flex; align-items:center; gap:14px; height:48px; padding:6px 16px 0; font:31px/1 var(--font-seg); letter-spacing:.06em; text-shadow:0 0 10px var(--glow)}
 #srcl{flex:none; font-size:26px}
@@ -327,6 +328,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .sw.vfdstage{background:linear-gradient(115deg,transparent 46%,#ffa24a 47% 49%,transparent 50%) 0 0/50% 100% no-repeat,linear-gradient(65deg,transparent 46%,#ffa24a 47% 49%,transparent 50%) 100% 0/50% 100% no-repeat,radial-gradient(circle at 50% 48%,#5ff6e6 0 6px,#021311 7px 8px,transparent 9px),linear-gradient(#5ff6e6,#5ff6e6) 50% 86%/100% 1px no-repeat,#021311}
 .sw.vfdline{background:radial-gradient(circle at 50% 16%,#5ff6e6 0 3px,transparent 4px),radial-gradient(circle at 22% 62%,#5ff6e6 0 4px,transparent 5px),radial-gradient(circle at 50% 62%,#5ff6e6 0 4px,transparent 5px),radial-gradient(circle at 78% 62%,#5ff6e6 0 4px,transparent 5px),radial-gradient(circle at 30% 30%,#ffa24a 0 1px,transparent 2px),radial-gradient(circle at 72% 34%,#ffa24a 0 1px,transparent 2px),linear-gradient(#5ff6e6,#5ff6e6) 50% 86%/100% 1px no-repeat,#021311}
 .sw.vfddj{background:radial-gradient(ellipse at 50% 30%,transparent 0 6px,#ffa24a 7px 8px,transparent 9px),radial-gradient(circle at 50% 34%,#5ff6e6 0 5px,transparent 6px),linear-gradient(#5ff6e6,#5ff6e6) 50% 72%/60% 2px no-repeat,linear-gradient(#5ff6e6,#5ff6e6) 8% 90%/10% 60% no-repeat,linear-gradient(#5ff6e6,#5ff6e6) 92% 90%/10% 45% no-repeat,#021311}
+.sw.vfdshuto{background:linear-gradient(to top right,transparent 48%,#8cf0ff 49% 53%,transparent 54%) 0 100%/50% 62% no-repeat,linear-gradient(to top left,transparent 48%,#8cf0ff 49% 53%,transparent 54%) 100% 100%/50% 62% no-repeat,linear-gradient(#ffb347,#ffb347) 30% 82%/8% 10% no-repeat,linear-gradient(#ffb347,#ffb347) 70% 82%/8% 10% no-repeat,linear-gradient(90deg,#8cf0ff 0 1px,transparent 1px 6px) 0 20%/100% 30% repeat-x,#020a12}
 .sw.vfddrive{background:radial-gradient(ellipse at 30% 78%,#7fd8ff 0 2px,transparent 3px),radial-gradient(ellipse at 70% 78%,#7fd8ff 0 2px,transparent 3px),linear-gradient(#7fd8ff,#7fd8ff) 50% 66%/60% 3px no-repeat,linear-gradient(90deg,#ffb347 0 2px,transparent 2px 7px) 0 30%/100% 2px repeat-x,linear-gradient(#7fd8ff,#7fd8ff) 0 88%/100% 1px no-repeat,#020814}
 .sw.vfdclub{background:linear-gradient(transparent 0 30%,#0c0218 30%) 0 0/100% 100% no-repeat,repeating-linear-gradient(90deg,#ff3fd0 0 1px,transparent 1px 5px),repeating-linear-gradient(#ff3fd0 0 1px,transparent 1px 5px),linear-gradient(0deg,#4fb4ff 0 45%,transparent 45%),#0c0218;background-blend-mode:normal}
 .sw.vfddx{background:linear-gradient(180deg,transparent 30%,rgba(255,162,74,.9) 30% 36%,transparent 36% 50%,rgba(255,162,74,.9) 50% 56%,transparent 56%),repeating-linear-gradient(90deg,#5ff6e6 0 4px,#021311 4px 7px) 0 100%/100% 40% no-repeat,#021311}
@@ -616,6 +618,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-skin="vfdline"><span class="sw vfdline"></span>LINE DANCE<small>3匹でラインダンス</small></button>
           <button class="chip" data-skin="vfddj"><span class="sw vfddj"></span>DJ BOOTH<small>DJ ブースでノる</small></button>
           <button class="chip" data-skin="vfddrive"><span class="sw vfddrive"></span>CITY CRUISE<small>移ろう街を流して</small></button>
+          <button class="chip" data-skin="vfdshuto"><span class="sw vfdshuto"></span>SHUTOKO<small>首都高をオープンカーで</small></button>
           <button class="chip" data-skin="vfdclub"><span class="sw vfdclub"></span>CLUB<small>ネオンの3Dスペアナ</small></button>
           <button class="chip" data-skin="vfdmine"><span class="sw vfdmine"></span>MY PHOTO<small>自分の画像</small></button>
         </div>
@@ -1083,7 +1086,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         </div>
         <div class="hpage" data-h="disp" hidden>
           <h3>ディスプレイの柄</h3>
-          <p class="rnote" style="margin:0 0 8px">全部で11種類。DISP で順に切り替わり、⚙「表示」で選んだり並べ替えたりできます。</p>
+          <p class="rnote" style="margin:0 0 8px">全部で12種類。DISP で順に切り替わり、⚙「表示」で選んだり並べ替えたりできます。</p>
           <dl class="help">
             <dt>BEACH</dt><dd>ヤシの木の浜辺。時刻に合わせて朝日・昼・夕日・月夜に変わります</dd>
             <dt>TURNTABLE</dt><dd>窓辺で回るレコード。窓の外は時刻と今の天気（雨の日は雨）に合わせて変わります</dd>
@@ -1094,6 +1097,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。2枚のレコードは本物の LP と同じ 33⅓ 回転で回ります。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
+            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーで首都高を走ります（後ろから見た景色）。道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>MY PHOTO</dt><dd>自分で登録した画像がドット風に光る画面。「使う」にした画像が2枚以上あると、ランダムで切り替わります</dd>
           </dl>
@@ -1213,11 +1217,11 @@ const store = {
 const FIRST_RUN = (() => { try{ for(let i = 0; i < localStorage.length; i++) if((localStorage.key(i) || '').startsWith('mdeck.')) return false; return true; }catch(e){ return false; } })();
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdstage','vfdline','vfddj','vfdclub','vfddrive','vfd','vfdmine'], SKIN_NAME = {vfdstage:'STAGE', vfdline:'LINE DANCE', vfddj:'DJ BOOTH', vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfd:'SPECTRUM', vfdb:'BEACH', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random','auto','off'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdstage','vfdline','vfddj','vfdclub','vfddrive','vfdshuto','vfd','vfdmine'], SKIN_NAME = {vfdshuto:'SHUTOKO', vfdstage:'STAGE', vfdline:'LINE DANCE', vfddj:'DJ BOOTH', vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfd:'SPECTRUM', vfdb:'BEACH', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random','auto','off'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
-const ADDED = ['vfdrec', 'vfdtape', 'vfdroom', 'vfdclub', 'vfddrive', 'vfdmine', 'vfdstage', 'vfdline', 'vfddj'];                       // displays added later, oldest first
+const ADDED = ['vfdrec', 'vfdtape', 'vfdroom', 'vfdclub', 'vfddrive', 'vfdmine', 'vfdstage', 'vfdline', 'vfddj', 'vfdshuto'];                       // displays added later, oldest first
 const DEFAULTS = ADDED.map((_, k) => SKINS.filter(s => !ADDED.slice(k).includes(s)));
 DEFAULTS.push(['vfd','vfdb', ...SKINS.filter(s => s !== 'vfd' && s !== 'vfdb' && !ADDED.includes(s))]);   // the very first default (VFD first)
 if(ORDER.length && DEFAULTS.some(d => ORDER.join() === d.slice(0, ORDER.length).join())) ORDER = [];
@@ -3286,7 +3290,7 @@ setWear(wearOn, false);
 
 /* ---------------- なでる: tap (or hold) the screen on ROOM / STAGE / LINE DANCE / DJ BOOTH; hearts, a jump, and a spin if you keep at it ---------------- */
 var petAt = -99, petN = 0, dispLong = false, dispHold = 0;
-const PET_SKINS = ['vfdroom', 'vfdstage', 'vfdline', 'vfddj'];
+const PET_SKINS = ['vfdroom', 'vfdstage', 'vfdline', 'vfddj', 'vfdshuto'];
 function petLove(){
   const now = performance.now()/1000;
   petN = now - petAt < 4 ? petN + 1 : 1; petAt = now;
@@ -3528,7 +3532,8 @@ function dnZzz(x, y){
 /* ---------------- BPM: the tempo the animal dances to, from the bass (-- when the sound gives no beat) ---------------- */
 const DN_FONT = { '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001',
   '5': '111100111001111', '6': '111100111101111', '7': '111001001001001', '8': '111101111101111', '9': '111101111001111',
-  'B': '110101110101110', 'P': '110101110100100', 'M': '101111111101101', '-': '000000111000000', ' ': '000000000000000' };
+  'B': '110101110101110', 'P': '110101110100100', 'M': '101111111101101', '-': '000000111000000', ' ': '000000000000000',
+  'K': '101110100110101', 'H': '101101111101101', '/': '001001010100100' };
 function dnText(s, x, y, c){ [...s].forEach((ch, i) => { const f = DN_FONT[ch] || DN_FONT[' ']; for(let k=0;k<15;k++) if(f[k] === '1') ddot(x + i*4 + k % 3, y + Math.floor(k/3), c); }); }
 const BPM_DBG = new URLSearchParams(location.search).has('bpmdebug');
 var dnState = { st: { v: new Array(16).fill(0) }, playing: false, ph: 0 }, bpmAt = 0;
@@ -4306,7 +4311,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127134642';                                 // stamped by build.ps1
+const APP_VER = '20261127135556';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5062,6 +5067,114 @@ function drawVFDClub(dt){
    slowly far behind (its lit windows follow the spectrum), street lamps, the guard rail and the lane marks rush past.
    Quiet, it slows to an easy cruise. */
 let drT = 0, drPulse = 0, drSpeed = .6, drFar = 0, drNear = 0, drWheel = 0;
+/* ---------------- 首都高 (SHUTOKO): the chosen animal drives an open car up an elevated city expressway, seen from behind ----------------
+   A pseudo-3D road bending left and right, a concrete wall on the left, a guard rail with reflectors on the right,
+   towers on both sides and the far skyline. The time of day sets the sky (sun / big low sun / moon and stars) and how
+   much of the city is lit. Bottom right: the speedometer. With 車速で音量 on and GPS moving it shows the real speed;
+   otherwise the car cruises with the music and slows to a stop when it stops. */
+let shT = 0, shTrav = 0, shSpd = 0, shPulse = 0, shCurve = 0;
+function drawVFDShuto(dt){
+  shT += dt; vbBegin();
+  const G = DG, A = DA, K = DK;
+  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3, playing = isActive() || DEMO;
+  shPulse += (bass - shPulse)*.25;
+  const real = svc !== 'off' && Date.now() - svcAt < 15000;
+  const want = real ? svcKmh : playing ? 84 + shPulse*26 + Math.sin(shT*.11)*14 : 0;
+  shSpd += (want - shSpd)*Math.min(1, dt*(real ? 2 : .6));
+  shTrav += dt*shSpd/3.6*.32;
+  shCurve += (Math.sin(shT*.09)*.9 + Math.sin(shT*.031)*.5 - shCurve)*Math.min(1, dt*.5);
+  const hash = n => { const s = Math.sin(n*12.9898 + 4.1)*43758.5453; return s - Math.floor(s); };
+  const HY = 13, F = 10, CH = 3, VPX = 66;
+  const bend = z => shCurve*z*z*.012;
+  const sx = (xw, z) => VPX + (xw + bend(z))*F/z, sy = (yw, z) => HY + (CH - yw)*F/z;
+  // time of day (sunrise and sunset move with the seasons, as on CITY CRUISE)
+  const h = vbHour(), doy = vbDayOfYear();
+  const dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365), rise = 11.6 - dayLen/2, set = 11.6 + dayLen/2;
+  const day = h >= rise && h < set, sp = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*sp);
+  const low = day && el < .3, lights = day ? (low ? .55 : .12) : 1;
+  // sky
+  if(!day || low) [[6,2],[19,5],[33,1],[47,4],[85,3],[99,6],[112,2],[127,5]].forEach(([x, y], i) => { if((!day || i % 3 === 0) && Math.sin(shT*1.1 + i*2.3) > -.3) ddot(x, y, G); });
+  const sunX = 14 + sp*104, sunY = HY - 1 - el*10;
+  if(low){ for(let y=-5;y<=5;y++) for(let x=-5;x<=5;x++) if(x*x + y*y <= 25 && ((Math.round(sunY + y) + Math.floor(shT*1.4)) % 3 !== 0 || y < -2)) ddot(sunX + x, sunY + y, A); }
+  else if(day){ for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5) ddot(sunX + x, sunY + y, A); [[0,4,12],[70,2,10]].forEach(([o, y, w]) => { const x = ((o + shT*1.2) % (VB_C + w)) - w; for(let i=0;i<w;i+=2) ddot(x + i, y, G); }); }
+  else { for(let y=-2;y<=2;y++) for(let x=-2;x<=2;x++) if(x*x + y*y <= 5 && (x - 1.2)**2 + (y + .8)**2 > 3.5) ddot(sunX + x, sunY + y, A); }
+  // the far skyline along the horizon, drifting with the bends
+  const sky0 = Math.floor(shCurve*18);
+  for(let x=0;x<VB_C;x++){
+    const c = Math.floor((x - sky0)/5), hg = 2 + Math.floor(hash(c*1.7)*6), m = ((x - sky0) % 5 + 5) % 5;
+    ddot(x, HY - hg, G);
+    if(m === 0) for(let y=HY - hg;y<HY;y++) ddot(x, y, G);
+    if(lights > .3 && m === 2 && hash(c*9.1 + Math.floor(shT*.2)) < lights*.6) ddot(x, HY - 1 - Math.floor(hash(c*3.3)*(hg - 1)), A);
+  }
+  // towers on both sides, far to near
+  const step = 4.2, base = Math.floor(shTrav/step), frac = shTrav/step - base;
+  for(let k=12;k>=0;k--){
+    const id = base + k, z = (k + 1 - frac)*step*.9; if(z < .9) continue;
+    const side = hash(id*1.3) < .5 ? -1 : 1, xw = side*(9.5 + hash(id*3.1)*5), w = 2.5 + hash(id*7.7)*3, hw = 4 + hash(id*11.3)*16;
+    const l = Math.round(sx(xw - w/2, z)), r = Math.round(sx(xw + w/2, z)), t = Math.round(sy(hw, z)), b = Math.min(43, Math.round(sy(0, z)));
+    if(r < 0 || l > VB_C - 1 || t > b) continue;
+    vbg.fillStyle = K; vbg.fillRect(l, t, r - l + 1, b - t + 1);
+    for(let y=Math.max(0, t);y<=b;y++){ ddot(l, y, G); ddot(r, y, G); }
+    dline(l, t, r, t, G);
+    const gx = Math.max(2, Math.round(1.2*F/z)), gy = Math.max(2, Math.round(1.1*F/z));
+    for(let y=t + 2;y<b - 1;y+=gy) for(let x=l + 2;x<r - 1;x+=gx){
+      const lit = hash(id*31 + (x - l)*7 + (y - t)*13) < lights*(playing ? .55 + st.v[Math.min(15, Math.max(0, Math.floor(x/VB_C*16)))]*.4 : .5);
+      if(lit) ddot(x, y, hash(id + y - t) > .75 ? G : A); else if(day && !low && (x + y) % 3 === 0) ddot(x, y, G);   // by day the glass catches the light
+    }
+    if(hw > 15 && Math.sin(shT*2.4 + id) > .2) ddot((l + r)/2, t - 1, A);                         // aircraft warning light
+  }
+  // the road surface: edges, lane dashes rushing by
+  for(let y=HY + 1;y<VB_R;y++){
+    const z = CH*F/(y - HY); vbg.fillStyle = K;
+    const a = Math.round(sx(-6.8, z)), b = Math.round(sx(6.8, z)); vbg.fillRect(a, y, b - a + 1, 1);   // the deck hides what is behind it
+    ddot(sx(-6, z), y, G); ddot(sx(6, z), y, G);
+    if(((z + shTrav) % 4 + 4) % 4 < 1.8){ ddot(sx(-2, z), y, G); ddot(sx(2, z), y, G); }
+  }
+  // left: the concrete wall (top edge and joints); right: the guard rail, its posts and orange reflectors
+  let pw = null, pr = null;
+  for(let z=30;z>=1;z-=.5){
+    const w = [sx(-6.9, z), sy(1.1, z)], rr = [sx(6.9, z), sy(.9, z)];
+    if(pw){ dline(pw[0], pw[1], w[0], w[1], G); dline(pr[0], pr[1], rr[0], rr[1], G); }
+    pw = w; pr = rr;
+  }
+  for(let k=0;k<14;k++){
+    const z = 1 + k*2.2 - ((shTrav % 2.2) + 2.2) % 2.2; if(z < .9) continue;
+    const x = sx(6.9, z), y0 = sy(0, z), y1 = sy(.9, z); dline(x, y1, x, Math.min(43, y0), G); ddot(x, y1 - 1, A);
+    if(k % 3 === 0){ const xl = sx(-6.9, z); dline(xl, sy(1.1, z), xl, Math.min(43, sy(0, z)), G, 2); }
+  }
+  // tall lamps over the road: lit from dusk to dawn
+  for(let k=0;k<5;k++){
+    const z = 2 + k*7 - ((shTrav % 7) + 7) % 7; if(z < 1.2) continue;
+    const x = sx(-6.9, z), top = sy(4.8, z), arm = sx(-4.2, z);
+    dline(x, sy(1.1, z), x, top, G); dline(x, top, arm, top, G); ddot(arm, top + 1, (day && !low) ? G : A);
+  }
+  // the car, from behind, leaning a little into the bends; the animal at the wheel (we see the back of its head)
+  const cx = 66 - Math.round(shCurve*3), bob = playing && shPulse > .45 ? 1 : 0, pet2 = petting();
+  dline(cx - 13, 31, cx - 12, 29, G); dline(cx + 13, 31, cx + 12, 29, G); dline(cx - 12, 29, cx + 12, 29, G);   // the windscreen frame ahead of the driver
+  ddot(cx - 15, 29, G); ddot(cx - 14, 29, G); ddot(cx + 14, 29, G); ddot(cx + 15, 29, G);          // door mirrors
+  const ox = cx - 5, oy = 21 - bob - (pet2 && (shT*3) % 1 < .5 ? 1 : 0);
+  vbg.fillStyle = K; vbg.fillRect(ox, oy, 11, 9);
+  RM_PETS[pet].head.forEach((row, r) => { for(let c=0;c<11;c++) if(row[c] === '#') ddot(ox + c, oy + r, G); });
+  try{ RM_PETS[pet].extra(ox, oy, { dot: ddot, G, A, K, t: shT, walking: false, dancing: false, sleeping: false }); }catch(e){}
+  costumeDraw((x, y, c) => ddot(ox + x, oy + y, c), G, A, false);
+  dline(ox, oy + 7, ox + 10, oy + 7, G);                                                          // shoulders
+  if(pet2){ dline(ox - 1, oy + 6, ox - 2, oy + 2, G); dline(ox + 11, oy + 6, ox + 12, oy + 2, G); petHearts(cx, oy - 2); }   // petted: both arms up
+  vbg.fillStyle = K; vbg.fillRect(cx - 17, 31, 35, 13);
+  dline(cx - 15, 31, cx + 15, 31, G); ddot(cx - 16, 32, G); ddot(cx + 16, 32, G);                    // the rear deck
+  for(let y=32;y<=39;y++){ ddot(cx - 17, y, G); ddot(cx + 17, y, G); }
+  dline(cx - 17, 40, cx + 17, 40, G);                                                              // bumper
+  for(let x=0;x<4;x++) for(let y=0;y<2;y++){ ddot(cx - 15 + x, 34 + y, A); ddot(cx + 12 + x, 34 + y, A); }   // tail lights
+  dline(cx - 4, 36, cx + 4, 36, G); dline(cx - 4, 38, cx + 4, 38, G); ddot(cx - 4, 37, G); ddot(cx + 4, 37, G);   // number plate
+  if(playing && Math.sin(shT*20) > 0) ddot(cx + 10, 41, A);                                        // exhaust flicker
+  for(const wx of [cx - 16, cx + 13]) for(let x=0;x<4;x++) for(let y=41;y<44;y++) if((x + y + Math.floor(shTrav*6)) % 2) ddot(wx + x, y, G);   // tyres turning
+  // the speedometer, bottom right
+  const kmh = Math.max(0, Math.round(shSpd)), gx0 = 124, gy0 = 37, R = 6;      // kept above the bottom text row
+  vbg.fillStyle = K; vbg.fillRect(101, 29, 31, 10);
+  for(let a=0;a<=16;a++){ const ang = Math.PI*(1 + a/16), on = a/16 <= Math.min(1, kmh/180); ddot(gx0 + Math.cos(ang)*R, gy0 + Math.sin(ang)*R, on ? (a > 12 ? A : G) : (a % 4 === 0 ? G : K)); }
+  const na = Math.PI*(1 + Math.min(1, kmh/180)); dline(gx0, gy0, gx0 + Math.cos(na)*(R - 1), gy0 + Math.sin(na)*(R - 1), A);
+  dnText(String(kmh).padStart(3, ' '), 105, 29, G); dnText('KM/H', 101, 35, G);
+  vbEnd();
+}
 function drawVFDDrive(dt){
   drT += dt;
   const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3;
@@ -5180,7 +5293,7 @@ function frame(now){
   g.setTransform(DPR,0,0,DPR,0,0);
   glowUsed = false; glowMain = false; glowSoft = 0;
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
-    if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
+    if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdshuto') drawVFDShuto(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
   if(glowMain && !glowUsed && W*DPR >= 1){                     // spectrum screens: the whole picture, shrunk, with the dark parts pushed to black
     const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
