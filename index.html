@@ -4199,7 +4199,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127093006';                                 // stamped by build.ps1
+const APP_VER = '20261127093304';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4975,10 +4975,27 @@ function drawVFDDrive(dt){
 /* ---------------- loop ---------------- */
 let last = performance.now();
 const PERF = new URLSearchParams(location.search).has('perf');   // ?perf writes the average time a frame takes into <html data-perf>
+/* how often the screen is drawn: 30 a second (15 when saving power) while something moves; when nothing plays and
+   nothing was touched for a few seconds, 8 a second is plenty for the clock and the idle motion; with the screen
+   asleep after the sleep timer, 2. The next frame is booked with a timer, so a 120 Hz phone is not woken 120 times
+   a second just to skip. */
+let busyAt = 0, touchAt = 0;
+document.addEventListener('pointerdown', () => { touchAt = performance.now(); }, { capture: true, passive: true });
+function frameRate(){
+  if(slept) return 2;
+  const n = performance.now();
+  if(isActive() || bootT < BOOT_LEN || seeking || petting() || n - touchAt < 4000) busyAt = n;
+  return n - busyAt < 3000 ? (ecoNow() ? 15 : 30) : 8;         // the spectrum settles for 3 s after a stop
+}
+function nextFrame(){
+  const wait = 1000/frameRate() - (performance.now() - last) - 6;
+  if(wait > 4) setTimeout(() => requestAnimationFrame(frame), wait); else requestAnimationFrame(frame);
+}
 function frame(now){
-  if(now - last < 1000/(ecoNow() ? 15 : 30) - 4){ requestAnimationFrame(frame); return; }   // 30 frames a second is plenty for the dot matrix (and keeps the phone cool)
+  const fr = frameRate();
+  if(now - last < 1000/fr - 4){ nextFrame(); return; }
   const pf0 = PERF ? performance.now() : 0;
-  const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
+  const dt = Math.min(Math.max(.05, 1.5/fr), (now - last)/1000); last = now; T += dt;
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   try{ dnState = dnTick(dt); bpmShow(); pulseTick(dt); }catch(e){}
   g.setTransform(DPR,0,0,DPR,0,0);
@@ -4998,7 +5015,7 @@ function frame(now){
   if(d.getSeconds() % 30 === 0) wxUpdate();
   if(!seeking){ const pr = Math.round(dur ? cur/dur*1000 : 0); if(pr !== frame.pr){ frame.pr = pr; seek.value = pr; seek.style.setProperty('--p', pr/10 + '%'); } }
   if(PERF){ frame.pa = (frame.pa || 0) + performance.now() - pf0; frame.pn = (frame.pn || 0) + 1; if(frame.pn >= 8){ root.dataset.perf = skin + ' ' + (frame.pa/frame.pn).toFixed(2) + 'ms'; frame.pa = frame.pn = 0; } }
-  requestAnimationFrame(frame);
+  nextFrame();
 }
 
 /* ---------------- boot ---------------- */
