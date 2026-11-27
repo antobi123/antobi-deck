@@ -1141,7 +1141,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>時計の表示</dt><dd>右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>時報</dt><dd>はじめは OFF。ON にすると、毎正時に「ピッ・ピッ・ピッ・ポーン」と鳴って、1段目に時刻が出ます。鳴る間は曲の音が少し下がります。ON にしたときに一度鳴らして聞かせます</dd>
-            <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に<br><small>設定に関係なく、再生が止まって何も触っていないときや、おやすみタイマーで止まった後は、画面の描き直しを自動で減らして電池を節約します（触るとすぐ元の滑らかさに）</small></dd>
+            <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に<br><small>設定に関係なく、再生が止まって何も触っていないとき、再生中でも音のない所（曲の頭や終わりの無音）が続くとき、おやすみタイマーで止まった後は、画面の描き直しを自動で減らして電池を節約します（触るとすぐ元の滑らかさに）</small></dd>
             <dt>電池が少ないときは自動で省電力</dt><dd>はじめから ON。電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。1段目の「BATTERY LOW」のあとに「▸ ECO」と出ます。暗い間も画面をタップすると30秒だけ元の明るさに戻ります。充電を始めると元の明るさに戻ります<br><small>Android のみ（iPhone は電池の残りが分からないため）</small></dd>
             <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、（タップすると30秒だけ元の明るさ）最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります。「おやすみに流すラジオ」で局を選んでおくと、おやすみモードを始めたときにその局に切り替わります（「そのまま」なら今のまま）</dd>
             <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります。「鳴る前は画面を暗く」（はじめはこちら）か「暗くしない」も選べます。「目覚ましのラジオ局」で鳴らす局を選べます（はじめは最後に聴いた局）</dd>
@@ -1847,7 +1847,7 @@ async function metaVia(kind, u){
   if(glowMain && !glowUsed && W*DPR >= 1){                     // spectrum screens: the whole picture, shrunk, with the dark parts pushed to black
     const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
     if(glowC.width !== gw || glowC.height !== gh){ glowC.width = gw; glowC.height = gh; }
-    glowX.clearRect(0, 0, gw, gh); glowX.filter = 'contrast(2.2)'; glowX.imageSmoothingEnabled = true; glowX.drawImage(cv, 0, 0, gw, gh); glowX.filter = 'none';
+    glowX.clearRect(0, 0, gw, gh); glowX.filter = 'contrast(2.2)' + (glowSoft ? ' blur(' + glowSoft.toFixed(1) + 'px)' : ''); glowX.imageSmoothingEnabled = true; glowX.drawImage(cv, 0, 0, gw, gh); glowX.filter = 'none';
     glowUsed = true;
   }
   if(glowUsed !== glowShown){ glowShown = glowUsed; glowC.classList.toggle('off', !glowUsed); }   // a display without the halo (or power saving) hides it
@@ -2168,7 +2168,7 @@ function dimGrid(cols, rows, x0, y0, cw, ch, solo){
   g.globalAlpha = 1;
 }
 // the lit segments' glow: no blur per segment any more; the finished screen is shrunk into the halo canvas instead (see frame)
-let glowMain = false;
+let glowMain = false, glowSoft = 0;
 const litOn = (solo, col) => { g.globalAlpha = solo ? 1 : .9; g.shadowBlur = 0; if(!ecoNow()) glowMain = true; };
 const litOff = () => { g.shadowBlur = 0; g.globalAlpha = 1; };
 
@@ -2273,7 +2273,7 @@ function specFall(solo){
   const cw = (W - SPX*2)/n, ch = (H - SPT - SPB)/rows;
   if(T - fall.t > .07){ fall.t = T; fall.rows.unshift(Float32Array.from(st.v)); if(fall.rows.length > rows) fall.rows.pop(); }
   dimGrid(n, rows, SPX, SPT, cw, ch, solo);
-  g.shadowBlur = 4; g.shadowColor = C.lit;
+  g.shadowBlur = 0; if(!ecoNow()) glowMain = true;
   fall.rows.forEach((row, r) => {
     const age = 1 - r/rows;
     for(let i=0;i<n;i++){
@@ -2632,7 +2632,7 @@ function drawLogoArt(c, L, a){
   const lx = (W - lw)/2, ly = 4 + (H - 22 - lh)/2;
   c.save();
   c.globalAlpha = Math.max(0, Math.min(1, (.55 + L.pulse*.35 + Math.sin(T*9)*.015)*a));   // tube shimmer, brightens on the beat
-  c.shadowBlur = 14 + L.pulse*10; c.shadowColor = col;
+  glowMain = true; glowSoft = Math.max(glowSoft, 2.5 + L.pulse*2);   // the tube glow comes from the halo canvas (blurred there), not a blur on every draw
   if(L.wobble){                                    // slow liquid wobble, drawn in horizontal slices
     const sl = 48, sh = L.cv.height/sl, dh = lh/sl;
     for(let i=0;i<sl;i++){
@@ -4290,7 +4290,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127113223';                                 // stamped by build.ps1
+const APP_VER = '20261127113921';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5107,12 +5107,13 @@ const PERF = new URLSearchParams(location.search).has('perf');   // ?perf writes
    nothing was touched for a few seconds, 8 a second is plenty for the clock and the idle motion; with the screen
    asleep after the sleep timer, 2. The next frame is booked with a timer, so a 120 Hz phone is not woken 120 times
    a second just to skip. */
-let busyAt = 0, touchAt = 0;
+let busyAt = 0, touchAt = 0, loudAt = 0;
 document.addEventListener('pointerdown', () => { touchAt = performance.now(); }, { capture: true, passive: true });
 function frameRate(){
   if(slept) return 2;
   const n = performance.now();
-  if(isActive() || bootT < BOOT_LEN || seeking || petting() || n - touchAt < 4000) busyAt = n;
+  const quiet = isActive() && analyser && !radioPlain && n - loudAt > 1500;   // playing, but silent for a while (a song's start or end, a pause in a talk show)
+  if(isActive() && !quiet || bootT < BOOT_LEN || seeking || petting() || n - touchAt < 4000) busyAt = n;
   return n - busyAt < 3000 ? (ecoNow() ? 15 : 30) : 8;         // the spectrum settles for 3 s after a stop
 }
 function nextFrame(){
@@ -5124,10 +5125,10 @@ function frame(now){
   if(now - last < 1000/fr - 4){ nextFrame(); return; }
   const pf0 = PERF ? performance.now() : 0;
   const dt = Math.min(Math.max(.05, 1.5/fr), (now - last)/1000); last = now; T += dt;
-  if(isActive() && analyser) analyser.getByteFrequencyData(freq);
+  if(isActive() && analyser){ analyser.getByteFrequencyData(freq); for(let i=0;i<freq.length;i+=6) if(freq[i] > 14){ loudAt = now; break; } }   // any sound at all keeps it smooth
   try{ dnState = dnTick(dt); bpmShow(); pulseTick(dt); }catch(e){}
   g.setTransform(DPR,0,0,DPR,0,0);
-  glowUsed = false; glowMain = false;
+  glowUsed = false; glowMain = false; glowSoft = 0;
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
