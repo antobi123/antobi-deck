@@ -663,6 +663,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-spec="needle"><span class="sw sp-needle"></span>NEEDLE<small>針のメーター</small></button>
           <button class="chip" data-spec="spark"><span class="sw sp-spark"></span>SPARK<small>火花</small></button>
         </div>
+        <h3 style="margin-top:14px">曲のジャケットを背景に</h3>
+        <div class="chips" id="jacketChips">
+          <button class="chip" data-jk="1">ON</button>
+          <button class="chip" data-jk="0">OFF</button>
+        </div>
+        <p class="rnote">曲を聴いているとき、SPECTRUM の画面のうしろに、その曲のジャケット（曲ファイルに入っている画像）をディスプレイの色で表示します。低音に合わせて少し明るくなります。ジャケットの無い曲やラジオでは出ません。</p>
       </section>
       <section data-tab="look">
         <h3>キー照明</h3>
@@ -1088,7 +1094,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります</dd>
             <dt>パネルの色</dt><dd>本体の色（VOLUME・SEEK のボタン、左右の楕円の縁、ANTOBi のバッジも同じ色味に）。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
-            <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
+            <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面に出ます。DISC 中は 6 ボタンでも順に切り替え。曲を聴いているときは、うしろにその曲のジャケットがディスプレイの色で浮かびます（⚙「表示」の「曲のジャケットを背景に」で OFF にもできます）</dd>
             <dt>時計</dt><dd>⚙「時計・電力・タイマー」タブで、右上の時計を24時間か12時間（AM/PM）に。時報（毎正時のピッ・ピッ・ピッ・ポーン）も同じタブで。目覚ましの画面も同じ表示になります</dd>
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。<b>OFF</b> にするとキーの光が消え、文字はグレーで読めます（光る線やリングも消灯）。押すたびに次の色へ。⚙「表示」からも選べます。<b>AUTO</b> は時間帯で色が変わります（5〜9時 白、9〜16時 青、16〜19時 アンバー、夜は赤）</dd>
@@ -2413,7 +2419,36 @@ function drawSpec(solo){
   if(spec === 'center') specCenter(solo); else if(spec === 'peak') specPeak(solo); else if(spec === 'meter') specMeter(solo);
   else if(spec === 'scope') specScope(solo); else if(spec === 'fall') specFall(solo); else if(spec === 'ring') specRing(solo); else if(spec === 'hill') specHill(solo); else if(spec === 'needle') specNeedle(solo); else if(spec === 'spark') specSpark(solo); else specBar(solo);
 }
-function drawVFD(){ g.fillStyle = C.screen; g.fillRect(0, 0, W, H); drawSpec(true); }
+function drawVFD(){
+  g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
+  if(jacketOn && mode === 'file' && tracks[idx] && tracks[idx].cover && drawJacket(tracks[idx].cover)) drawSpec(false);   // the song's cover glows behind
+  else drawSpec(true);
+}
+/* the song's cover art behind the SPECTRUM display: turned into the tubes' colour and coarse dots, like a picture on a
+   dot-matrix VFD, glowing a little brighter on the bass. Made once per song (and per display colour) and kept. */
+var jacketOn = store.get('jacket', true) !== false;
+const jk = { url: '', img: null, cv: document.createElement('canvas'), key: '', pulse: 0 };
+function drawJacket(url){
+  if(jk.url !== url){ jk.url = url; jk.key = ''; jk.img = new Image(); jk.img.src = url; }
+  if(!(jk.img.complete && jk.img.naturalWidth)) return false;
+  if(jk.key !== url + C.lit){                                    // the cover in the tube colour, 48 x 48 dots
+    jk.key = url + C.lit; const n = 48, x = jk.cv.getContext('2d'); jk.cv.width = jk.cv.height = n;
+    const iw = jk.img.naturalWidth, ih = jk.img.naturalHeight, s = Math.min(iw, ih);
+    x.filter = 'grayscale(1) contrast(1.25)'; x.drawImage(jk.img, (iw - s)/2, (ih - s)/2, s, s, 0, 0, n, n); x.filter = 'none';
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = C.lit; x.fillRect(0, 0, n, n);
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(jk.img, (iw - s)/2, (ih - s)/2, s, s, 0, 0, n, n); x.globalCompositeOperation = 'source-over';
+  }
+  const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3; jk.pulse += (bass - jk.pulse)*.15;
+  const sz = H - 30, x0 = (W - sz)/2, y0 = 8;
+  g.save(); g.imageSmoothingEnabled = false; g.globalAlpha = .38 + jk.pulse*.25; g.drawImage(jk.cv, x0, y0, sz, sz); g.restore();
+  return true;
+}
+function setJacket(v, announce){
+  jacketOn = v; if(announce){ store.set('jacket', v); flash(v ? 'COVER ART  ON' : 'COVER ART  OFF', 900); }
+  document.querySelectorAll('#jacketChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.jk === '1') === v));
+}
+document.querySelectorAll('#jacketChips .chip').forEach(b => b.addEventListener('click', () => setJacket(b.dataset.jk === '1', true)));
+setJacket(jacketOn, false);
 setSpec(spec, false);
 
 /* ---------------- weather for the window and beach scenes ----------------
@@ -3244,7 +3279,7 @@ var petName = String(store.get('petName', '') || '').slice(0, 10);
 /* ---------------- このタブを最初の設定に戻す: each settings tab gets a reset (two taps). Songs, playlists, photos, radio presets,
    birthdays, the bond and the records are kept; only that tab's settings go back to how they came. ---------------- */
 const RESET_KEYS = {
-  look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos'],
+  look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos', 'jacket'],
   chara: ['pet', 'costume', 'wxwear', 'petName', 'ride', 'duo'],
   sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'autoStart', 'svc', 'loud'],
   night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
@@ -4323,7 +4358,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127153856';                                 // stamped by build.ps1
+const APP_VER = '20261127162954';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
