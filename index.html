@@ -236,7 +236,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .resetsec{border-top:1px dashed var(--line); padding-top:14px; margin-top:6px}
 .resetsec .pbtn.arm{background:#a3262b; border-color:#ff6b6b; color:#fff}
 .bondv{display:flex; flex-direction:column; gap:4px; margin:4px 0 6px; font:700 13px var(--font-ui)}
-.bondv .hearts{color:#ff5fb0; font-size:20px; letter-spacing:3px; text-shadow:0 0 8px rgba(255,95,176,.6)}
+.bondv .hearts{color:#ff5fb0; font-size:17px; letter-spacing:2px; text-shadow:0 0 8px rgba(255,95,176,.6)}
 .bondv .hearts i{color:#3a3c43; font-style:normal; text-shadow:none}
 .bondv small{color:var(--muted); font:400 12px var(--font-ui)}
 .stToday{margin:4px 0 10px; font-size:13px}
@@ -1067,7 +1067,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
             <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
             <dt>名前</dt><dd>⚙「キャラクター」の動物の下の欄で、動物に名前（10文字まで）を付けられます。名前は、なつき度の欄（「ミケ のなつき度」）、レベルアップのお知らせ、なでたとき（「ミケ ♥」）に出ます</dd>
-            <dt>なつき度</dt><dd>曲を一緒に聴いた時間（1分で1pt）と、なでた回数（1回3pt。続けてタップしても数えるのは4秒に1回）で、ハートが1〜5個に増えます（30・120・300・600pt で次へ）。♥3 でブレイクダンス、♥4 で側転、♥5 で両手のハートのポーズを、STAGE・LINE DANCE で踊るようになります。レベルが上がると1段目に「♥ LEVEL UP」<br><small>先に見たいときは、アドレスの最後に ?bond=5</small></dd>
+            <dt>なつき度</dt><dd>曲を一緒に聴いた時間（1分で1pt）と、なでた回数（1回3pt。続けてタップしても数えるのは4秒に1回）で、レベルが1〜10に上がり、ハートが増えます（15・30・70・120・200・300・450・600・1000pt で次へ）。LV5 でブレイクダンス、LV7 で側転、LV9 で両手のハートのポーズを、STAGE・LINE DANCE で踊るようになります。レベルが上がると1段目に「♥ LEVEL UP LV7」のように出ます（新しい踊りを覚えたときは「NEW MOVE」）<br><small>先に見たいときは、アドレスの最後に ?bond=9（1〜10）</small></dd>
             <dt>なでる</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH で画面をタップすると（パソコンではクリック。長押しでもOK）、動物が両手を上げて喜び、ハートが出ます。4秒以内に続けて3回タップすると、くるくる回ります（スマホが少しブルッと震えます）</dd>
             <dt>天気で着替える</dt><dd>はじめから ON。右上の天気マークと同じ天気で、雨の日は傘、雪の日はマフラー、30℃以上の日はうちわを持ちます。季節の衣装や誕生日の帽子と一緒に着られます。天気は位置情報を許可していると分かります<br><small>先に見たいときは、アドレスの最後に ?wxwear=rain（ほかに snow・hot）</small></dd>
             <dt>どこで会える？</dt><dd>ディスプレイの ROOM（部屋で暮らす）と、STAGE・LINE DANCE・DJ BOOTH（音楽に合わせて踊る）。ディスプレイは DISP か ⚙「表示」で切り替えます。くわしくは「ディスプレイ」のページへ</dd>
@@ -2998,30 +2998,33 @@ function drawVFDRoom(dt){
   drawLit();
 }
 /* ---------------- なつき度: minutes of music together + times petted. More hearts, more dance moves ----------------
-   ♥1 0 pt · ♥2 30 · ♥3 120 (ブレイクダンス) · ♥4 300 (側転) · ♥5 600 (ハートのポーズ). 1 pt = 1 minute of music, a pet = 3 pt. */
+   10 levels: 0 · 15 · 30 · 70 · 120 (ブレイクダンス) · 200 · 300 (側転) · 450 · 600 (ハートのポーズ) · 1000 pt.
+   The moves come at the same points as when there were 5 levels. 1 pt = 1 minute of music, a pet = 3 pt. */
 var bond = store.get('bond', null) || { min: 0, pets: 0 };
-const BOND_LV = [0, 30, 120, 300, 600];
+const BOND_LV = [0, 15, 30, 70, 120, 200, 300, 450, 600, 1000], BOND_MAX = BOND_LV.length;
+const BOND_MOVE_LV = [5, 7, 9];                                 // the levels that learn a new move
+const bondUpMsg = l => '♥ LEVEL UP  ' + (petName ? petName + ' ' : '') + 'LV' + l + (BOND_MOVE_LV.includes(l) ? '  NEW MOVE' : l === BOND_MAX ? '  MAX' : '');
 function bondPts(){ return Math.floor(bond.min + bond.pets*3); }
 function bondLevel(){ const p = bondPts(); let l = 1; BOND_LV.forEach((v, i) => { if(p >= v) l = i + 1; }); return l; }
 function bondAdd(k, v){
   const before = bondLevel(); bond[k] = (bond[k] || 0) + v; if(!BOND_FAKE) store.set('bond', bond);
   const after = bondLevel();
-  if(after > before) flash('♥ LEVEL UP  ' + (petName ? petName + ' ' : '') + '♥'.repeat(after) + (after >= 3 ? '  NEW MOVE' : ''), 3500);
+  if(after > before) flash(bondUpMsg(after), 3500);
   renderBond();
 }
 function escHtml(s){ return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]); }
 function renderBond(){
   const el = $('#bondView'); if(!el) return;
   const l = bondLevel(), p = bondPts(), next = BOND_LV[l];
-  el.innerHTML = `<span class="hearts">${'♥'.repeat(l)}<i>${'♥'.repeat(5 - l)}</i></span> ${petName ? escHtml(petName) + ' の' : ''}なつき度 ${l}` + (next ? `<small>次まで あと ${next - p} pt（曲を一緒に聴くと1分1pt、なでると3pt）</small>` : '<small>いちばん仲よし！</small>');
+  el.innerHTML = `<span class="hearts">${'♥'.repeat(l)}<i>${'♥'.repeat(BOND_MAX - l)}</i></span> ${petName ? escHtml(petName) + ' の' : ''}なつき度 ${l} / ${BOND_MAX}` + (next ? `<small>次まで あと ${next - p} pt（曲を一緒に聴くと1分1pt、なでると3pt）</small>` : '<small>いちばん仲よし！</small>');
 }
 function dnMovesNow(){
   const l = bondLevel(), m = DN_MOVES.slice();
-  if(l >= 3) m.push('break'); if(l >= 4) m.push('cartwheel'); if(l >= 5) m.push('heart');
+  if(l >= 5) m.push('break'); if(l >= 7) m.push('cartwheel'); if(l >= 9) m.push('heart');
   return m;
 }
-const BOND_FAKE = +new URLSearchParams(location.search).get('bond') || 0;   // ?bond=5 previews the moves of that level
-if(BOND_FAKE) bond = { min: BOND_LV[Math.min(5, BOND_FAKE) - 1], pets: 0 };
+const BOND_FAKE = +new URLSearchParams(location.search).get('bond') || 0;   // ?bond=9 previews the moves of that level
+if(BOND_FAKE) bond = { min: BOND_LV[Math.min(BOND_MAX, BOND_FAKE) - 1], pets: 0 };
 
 /* ---------------- 今日の音楽: listening time, songs and average tempo per day (the last 7 days) ---------------- */
 var stats = store.get('stats', null) || { days: {} }, statLast = '', statT = Date.now();
@@ -3037,7 +3040,7 @@ function statTick(){
   Object.keys(stats.days).sort().slice(0, -7).forEach(x => delete stats.days[x]);   // keep a week
   store.set('stats', stats);
   bond.min += sec/60; if(!BOND_FAKE) store.set('bond', bond);
-  const l = bondLevel(); if(l > (statTick.lv || l)) flash('♥ LEVEL UP  ' + (petName ? petName + ' ' : '') + '♥'.repeat(l) + (l >= 3 ? '  NEW MOVE' : ''), 3500); statTick.lv = l;
+  const l = bondLevel(); if(l > (statTick.lv || l)) flash(bondUpMsg(l), 3500); statTick.lv = l;
   renderStats(); renderBond();
 }
 const fmtSec = s => { const m = Math.round(s/60); return m >= 60 ? Math.floor(m/60) + '時間' + (m % 60) + '分' : m + '分'; };
@@ -4199,7 +4202,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127093408';                                 // stamped by build.ps1
+const APP_VER = '20261127093640';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
