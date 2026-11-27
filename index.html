@@ -1108,7 +1108,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>音量をそろえる</dt><dd>はじめは OFF（ON にすると使えます）。曲ごと（ラジオは局ごと）の音の大きさを覚えて自動でならします。小さい曲は大きく、大きすぎる曲だけ少し下げるので、全体の音量はほとんど下がりません。初めての曲は20秒ほどで調整</dd>
             <dt>ブースト</dt><dd>はじめは OFF。+3dB・+6dB にすると、VOLUME 40 よりさらに大きく（ほかのアプリより大きく）鳴ります。音割れ防止と一緒に効くので割れにくくなりますが、迫力のある曲では少し音が詰まって聞こえることがあります。iPhone で画面を消しているときや、一部のラジオ局では効きません</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの、やわらかく澄んだ「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整（つまみはロックしてあり、「タップで調整」で動かせます。15秒触らないと自動でロック）</dd>
-            <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません</dd>
+            <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません<br><small>インスタなどで止まったときは、通知の音楽コントロールやロック画面の ▶ でも続きから再生できます（ラジオは局につなぎ直します）</small></dd>
             <dt>開いたら続きを再生</dt><dd>はじめから ON。アプリを開いたとき、前回閉じたときに流れていた曲（止まった所から）やラジオの局を自動で再生します。止めてから閉じたときは再生しません。スマホによっては音を出す前にタップが必要で、そのときは1段目に「画面をタップすると続きから再生」と出ます</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
@@ -1723,19 +1723,39 @@ function unlockPlain(){                       // iPhone lets a player start by i
   plain.play().then(() => { plain.pause(); if(!bgHand && mode !== 'radio') plain.removeAttribute('src'); }).catch(() => { plainUnlocked = false; });
 }
 document.addEventListener('pointerdown', unlockPlain, { capture: true });
-function handToPlain(){
-  if(!IOS || bgHand) return;
-  if(mode === 'file' && !audio.paused && tracks[idx]){
+function handToPlain(force){
+  if((!IOS && !force) || bgHand) return;
+  if(mode === 'file' && (force || !audio.paused) && tracks[idx]){
+
     const t = audio.currentTime; bgHand = 'file';
     plain.src = tracks[idx].url; plain.volume = Math.min(1, volGain(vol)*(att ? .1 : 1)*sleepFade);
     plain.addEventListener('loadedmetadata', () => { try{ plain.currentTime = t; }catch(e){} }, { once: true });
     plain.play().catch(() => {});
     audio.pause();
-  } else if(mode === 'radio' && !radioPlain && !audio.paused && radioNow){
+  } else if(mode === 'radio' && !radioPlain && (force || !audio.paused) && radioNow){
     bgHand = 'radio'; audio.pause(); radioPlain = true;
     plain.src = radioNow.url; plain.play().catch(() => {});
   }
 }
+/* ▶ on the notification / lock screen (e.g. after Instagram took the sound away): wake the audio graph and play again;
+   the radio joins its station fresh. If the sound still does not come back through the graph while the app is in the
+   background (the phone kept it asleep), hand it to the plain player like on iPhone; coming back to the app hands it back. */
+function remotePlay(){
+  ensureAudio(); intr = null;
+  if(mode === 'radio' && radioNow){ const el = radioEl(); el.src = radioNow.url; el.play().catch(() => radioReconnect()); }
+  else if(bgHand === 'file') plain.play().catch(() => {});
+  else if(mode === 'file' && tracks[idx]) audio.play().catch(() => {});
+  setTimeout(() => {
+    if(!document.hidden || bgHand) return;
+    const silent = !AC || AC.state !== 'running';
+    if((mode === 'file' || mode === 'radio' && !radioPlain) && (audio.paused || silent)) handToPlain(true);
+  }, 1500);
+}
+// the notification shows ▶ or ⏸ to match
+[audio, plain].forEach(el => {
+  el.addEventListener('playing', () => { try{ navigator.mediaSession.playbackState = 'playing'; }catch(e){} });
+  el.addEventListener('pause', () => { if(audio.paused && plain.paused) try{ navigator.mediaSession.playbackState = 'paused'; }catch(e){} });
+});
 function handBack(){
   if(!bgHand) return;
   const was = bgHand, playing = !plain.paused, t = plain.currentTime;
@@ -2042,7 +2062,7 @@ function mediaMeta(){
   try{
     const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO', cover: stationArt(radioNow) } : tracks[idx];   // radio: the station's logo
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
-    navigator.mediaSession.setActionHandler('play', () => { if(mode === 'radio'){ const el = radioEl(); if(el.paused){ if(!el.src) el.src = radioNow.url; el.play().catch(() => radioReconnect()); } } else if(bgHand === 'file') plain.play().catch(() => {}); else audio.play(); });
+    navigator.mediaSession.setActionHandler('play', remotePlay);
     navigator.mediaSession.setActionHandler('pause', () => { clearTimeout(rcTimer); rcTimer = 0; audio.pause(); plain.pause(); });
     navigator.mediaSession.setActionHandler('nexttrack', () => { if(bgHand === 'file'){ bgStep.manual = true; bgStep(1); } else step(1); });
     navigator.mediaSession.setActionHandler('previoustrack', () => { if(bgHand === 'file'){ bgStep.manual = true; bgStep(-1); } else step(-1); });
@@ -4246,7 +4266,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127103904';                                 // stamped by build.ps1
+const APP_VER = '20261127110038';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
