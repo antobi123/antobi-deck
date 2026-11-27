@@ -1844,6 +1844,12 @@ async function metaVia(kind, u){
     }
     if(kind === 'icy') return await icyTitle(u);
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
+  if(glowMain && !glowUsed && W*DPR >= 1){                     // spectrum screens: the whole picture, shrunk, with the dark parts pushed to black
+    const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
+    if(glowC.width !== gw || glowC.height !== gh){ glowC.width = gw; glowC.height = gh; }
+    glowX.clearRect(0, 0, gw, gh); glowX.filter = 'contrast(2.2)'; glowX.imageSmoothingEnabled = true; glowX.drawImage(cv, 0, 0, gw, gh); glowX.filter = 'none';
+    glowUsed = true;
+  }
   if(glowUsed !== glowShown){ glowShown = glowUsed; glowC.classList.toggle('off', !glowUsed); }   // a display without the halo (or power saving) hides it
   return null;
 }
@@ -2161,7 +2167,9 @@ function dimGrid(cols, rows, x0, y0, cw, ch, solo){
   for(let i=0;i<cols;i++) for(let s=0;s<rows;s++) g.fillRect(x0 + i*cw + 1, y0 + s*ch + 1, cw - 2, ch - 2);
   g.globalAlpha = 1;
 }
-const litOn = (solo, col) => { g.globalAlpha = solo ? 1 : .9; g.shadowBlur = ecoNow() ? 0 : 5; g.shadowColor = col || C.lit; };
+// the lit segments' glow: no blur per segment any more; the finished screen is shrunk into the halo canvas instead (see frame)
+let glowMain = false;
+const litOn = (solo, col) => { g.globalAlpha = solo ? 1 : .9; g.shadowBlur = 0; if(!ecoNow()) glowMain = true; };
 const litOff = () => { g.shadowBlur = 0; g.globalAlpha = 1; };
 
 // 1. BAR: classic bars with peak caps
@@ -2452,7 +2460,7 @@ const vbg = vbLow.getContext('2d', {willReadFrequently: true});
 // into a soft halo), then the sharp dots go on top. Much lighter on the phone than a canvas shadow blur every frame.
 // Now the small canvas is its own element over the display, stretched by the browser: no full-size blur pass per frame.
 const glowC = $('#vizGlow'), glowX = glowC.getContext('2d');
-let glowUsed = false, glowShown = false;
+let glowUsed = false, glowShown = true;
 function drawLit(){
   if(ecoNow()){ g.drawImage(vbLit, 0, 0, W, H); return; }   // power saving: no halo
   const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
@@ -4282,7 +4290,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127113101';                                 // stamped by build.ps1
+const APP_VER = '20261127113223';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5119,7 +5127,7 @@ function frame(now){
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   try{ dnState = dnTick(dt); bpmShow(); pulseTick(dt); }catch(e){}
   g.setTransform(DPR,0,0,DPR,0,0);
-  glowUsed = false;
+  glowUsed = false; glowMain = false;
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
