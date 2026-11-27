@@ -160,6 +160,9 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .ind{color:var(--dimt)}
 .ind.on{color:var(--lit2); text-shadow:0 0 7px var(--lit2)}
 #viz{position:relative; z-index:1; display:block; width:664px; height:244px}
+/* the tubes' halo: drawn at a quarter of the size and stretched by the browser (on the GPU), added on top like light */
+#vizGlow{position:absolute; z-index:2; left:0; top:0; width:664px; height:244px; pointer-events:none; mix-blend-mode:screen; opacity:.85}
+#vizGlow.off{display:none}
 #seek{position:absolute; z-index:4; left:16px; right:136px; bottom:4px; width:auto; height:16px; -webkit-appearance:none; appearance:none; background:transparent; --p:0%}
 #seek::-webkit-slider-runnable-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p)); box-shadow:0 0 6px var(--glow)}
 #seek::-moz-range-track{height:3px; background:linear-gradient(90deg,var(--lit) var(--p),var(--dimt) var(--p))}
@@ -218,10 +221,18 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 
 .strip{height:5px; border-radius:3px; background:var(--illum); box-shadow:0 0 10px var(--illum), 0 0 22px var(--illumglow); opacity:.9}
 :root{--pulse:0}
-:root.pulse .strip{box-shadow:0 0 calc(10px + var(--pulse)*26px) var(--illum), 0 0 calc(22px + var(--pulse)*34px) var(--illumglow); filter:brightness(calc(1 + var(--pulse)*.7))}
-:root.pulse .wing::after{box-shadow:0 0 calc(12px + var(--pulse)*26px) var(--illumglow), 0 0 3px var(--illumglow), inset 0 0 calc(12px + var(--pulse)*20px) var(--illumglow)}
+/* the beat light: each part has an extra glow layer drawn once; only its opacity follows the beat, which the GPU does
+   without repainting anything */
+.strip::after, .bar::after, .rglow{content:""; position:absolute; pointer-events:none; opacity:0; will-change:opacity}
+.strip::after{inset:0; border-radius:inherit; background:rgba(255,255,255,.55); box-shadow:0 0 36px var(--illum), 0 0 56px var(--illumglow)}
+.bar::after{inset:0; border-radius:inherit; background:var(--illum); mix-blend-mode:screen}
+.rglow{inset:9px; border-radius:50%; box-shadow:0 0 38px var(--illumglow), inset 0 0 32px var(--illumglow)}
+:root.pulse .strip::after, :root.pulse .rglow{opacity:var(--pulse)}
+:root.pulse .bar::after{opacity:calc(var(--pulse)*.22)}
+:root.noring .rglow{display:none}
+:root.pulsebig.noring .rglow{display:block}
 :root.pulsebig.noring .wing::after{display:block; opacity:var(--pulse)}
-:root.pulse .bar{filter:brightness(calc(1 + var(--pulse)*.4))}
+
 #plist .bt{flex:none; min-width:30px; text-align:right; font:12px/1 var(--font-seg); color:var(--illum); font-variant-numeric:tabular-nums; opacity:.85}
 .avrow{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0}
 .psearch{position:relative; padding:0 14px 10px}
@@ -491,7 +502,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <span class="ind" id="iRdm">RDM</span><span class="ind" id="iFav">FAV</span><span class="ind" id="iRep">REP</span><span class="ind" id="iScn">SCN</span><span class="ind" id="iLock">LOCK</span><span class="ind" id="iSlp">SLP</span><span class="ind" id="iAlm">ALM</span><svg id="statIn" class="stv" viewBox="0 0 104 14" aria-hidden="true"><g class="sCell"><rect class="sb" data-b="1" x="0" y="10" width="2.5" height="3"/><rect class="sb" data-b="2" x="3.5" y="7" width="2.5" height="6"/><rect class="sb" data-b="3" x="7" y="4" width="2.5" height="9"/><rect class="sb" data-b="4" x="10.5" y="1" width="2.5" height="12"/></g><text class="sNet" x="15" y="12" style="text-anchor:start">--</text><g class="sWifi" fill="none" stroke-width="1.6" stroke-linecap="round"><path class="sw" data-b="3" d="M37 6a10 10 0 0 1 14 0"/><path class="sw" data-b="2" d="M39.5 8.5a6.3 6.3 0 0 1 9 0"/><path class="sw" data-b="1" d="M42 11a2.6 2.6 0 0 1 4 0"/><circle class="swd" cx="44" cy="12.8" r="1.1"/></g><g class="sBat"><rect class="sbo" x="56" y="3" width="19" height="9" rx="1" fill="none" stroke-width="1.2"/><rect class="sbn" x="75" y="5.5" width="2" height="4"/><rect class="sg" data-b="1" x="57.5" y="4.5" width="3.5" height="6"/><rect class="sg" data-b="2" x="61.5" y="4.5" width="3.5" height="6"/><rect class="sg" data-b="3" x="65.5" y="4.5" width="3.5" height="6"/><rect class="sg" data-b="4" x="69.5" y="4.5" width="3.5" height="6"/><path class="sChg" d="M67 1.5l-4 6h3l-1.5 5.5 4.5-7h-3z"/></g><text class="sPct" x="80" y="12" style="text-anchor:start">--</text></svg>
 <span id="dateLine"></span>
         </div>
-        <canvas id="viz"></canvas>
+        <canvas id="viz"></canvas><canvas id="vizGlow" aria-hidden="true"></canvas>
         <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
         <span id="ptime">0:00</span>
         <span id="pbpm" class="off">---<small>BPM</small></span>
@@ -1177,7 +1188,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
 (() => {
 const $ = s => document.querySelector(s);
 const root = document.documentElement;
-const cv = $('#viz'), g = cv.getContext('2d');
+const cv = $('#viz'), g = cv.getContext('2d'), glowEl = $('#vizGlow');
 const marq = $('#marq'), marqbox = $('#marqbox');
 const store = {
   get(k, d){ try{ const v = localStorage.getItem('mdeck.'+k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
@@ -1833,6 +1844,7 @@ async function metaVia(kind, u){
     }
     if(kind === 'icy') return await icyTitle(u);
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
+  if(glowUsed !== glowShown){ glowShown = glowUsed; glowC.classList.toggle('off', !glowUsed); }   // a display without the halo (or power saving) hides it
   return null;
 }
 async function nowPlaying(st){
@@ -2085,6 +2097,7 @@ function fit(){
   $('#deck').style.setProperty('--s', S);
   DPR = Math.min(3, (window.devicePixelRatio || 1) * S * 1.0);
   cv.width = Math.round(VW*DPR); cv.height = Math.round(VH*DPR);
+  glowEl.style.left = cv.offsetLeft + 'px'; glowEl.style.top = cv.offsetTop + 'px';
 }
 new ResizeObserver(fit).observe($('#fit'));
 
@@ -2437,13 +2450,15 @@ const vbLow = document.createElement('canvas'); vbLow.width = VB_C; vbLow.height
 const vbg = vbLow.getContext('2d', {willReadFrequently: true});
 // The tubes' glow, made cheaply: the lit dots are shrunk to a quarter-size canvas and stretched back up (that smears them
 // into a soft halo), then the sharp dots go on top. Much lighter on the phone than a canvas shadow blur every frame.
-const glowC = document.createElement('canvas'), glowX = glowC.getContext('2d');
+// Now the small canvas is its own element over the display, stretched by the browser: no full-size blur pass per frame.
+const glowC = $('#vizGlow'), glowX = glowC.getContext('2d');
+let glowUsed = false, glowShown = false;
 function drawLit(){
+  if(ecoNow()){ g.drawImage(vbLit, 0, 0, W, H); return; }   // power saving: no halo
   const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
   if(glowC.width !== gw || glowC.height !== gh){ glowC.width = gw; glowC.height = gh; }
-  if(ecoNow()){ g.drawImage(vbLit, 0, 0, W, H); return; }   // power saving: no halo
   glowX.clearRect(0, 0, gw, gh); glowX.imageSmoothingEnabled = true; glowX.drawImage(vbLit, 0, 0, gw, gh);
-  g.save(); g.imageSmoothingEnabled = true; g.globalAlpha = .85; g.drawImage(glowC, -1, -1, W + 2, H + 2); g.restore();
+  glowUsed = true;
   g.drawImage(vbLit, 0, 0, W, H);
 }
 const vbLit = document.createElement('canvas'), vbl = vbLit.getContext('2d');
@@ -3301,10 +3316,11 @@ function opKeys(){
 /* ---------------- 拍に合わせて光る: the light bars, the oval rings and the long keys swell with each beat ----------------
    OFF / 控えめ (the default) / 派手. 派手 also flashes an unlit ring on the beat. */
 var pulseMode = store.get('pulse', 'soft'), pulseV = 0, pulseSet = -1;
+document.querySelectorAll('.wing').forEach(w => { const r = document.createElement('i'); r.className = 'rglow'; w.appendChild(r); });   // the rings' beat glow
 function beatPulse(){ if(pulseMode !== 'off') pulseV = 1; }
 function pulseTick(dt){
   pulseV = pulseMode === 'off' ? 0 : Math.max(0, pulseV - dt*3.2);
-  const v = Math.round(pulseV*(pulseMode === 'big' ? 1 : .5)*100)/100;
+  const v = Math.round(pulseV*(pulseMode === 'big' ? 1 : .5)*20)/20;     // in steps of 5 %: fewer style updates
   if(v !== pulseSet){ pulseSet = v; root.style.setProperty('--pulse', v); }
 }
 function setPulse(v, announce){
@@ -4266,7 +4282,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127110509';                                 // stamped by build.ps1
+const APP_VER = '20261127113101';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5103,6 +5119,7 @@ function frame(now){
   if(isActive() && analyser) analyser.getByteFrequencyData(freq);
   try{ dnState = dnTick(dt); bpmShow(); pulseTick(dt); }catch(e){}
   g.setTransform(DPR,0,0,DPR,0,0);
+  glowUsed = false;
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
