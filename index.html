@@ -700,6 +700,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="bear"><span class="pet">🐻</span>クマ</button>
           <button class="chip" data-pet="penguin"><span class="pet">🐧</span>ペンギン</button>
           <button class="chip" data-pet="hamster"><span class="pet">🐹</span>ハムスター</button>
+          <button class="chip" data-pet="fox"><span class="pet">🦊</span>キツネ</button>
+          <button class="chip" data-pet="panda"><span class="pet">🐼</span>パンダ</button>
+          <button class="chip" data-pet="frog"><span class="pet">🐸</span>カエル</button>
         </div>
         <div class="avrow"><input type="text" id="petName" maxlength="10" placeholder="名前を付ける（例：ミケ）" aria-label="動物の名前"></div>
         <h3 style="margin-top:14px">なつき度</h3>
@@ -959,7 +962,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">⚙ SETUP のタブ</h3>
           <dl class="help">
             <dt>表示</dt><dd>ディスプレイの柄と並び順・ディスプレイの色・パネルの色・スペアナ・キー照明・左右の楕円のリング・拍に合わせて光る・通信・電池の小窓</dd>
-            <dt>キャラクター</dt><dd>動物のキャラクター（7種類）・名前・なつき度・季節の衣装と飾り・天気で着替える・誕生日・記念日</dd>
+            <dt>キャラクター</dt><dd>動物のキャラクター（10種類）・名前・なつき度・季節の衣装と飾り・天気で着替える・誕生日・記念日</dd>
             <dt>マイ フォト</dt><dd>自分の画像を5枚まで登録</dd>
             <dt>曲</dt><dd>入れた曲の一覧（追加・★ お気に入り・♪ アップテンポ／ゆったり・プレイリストと曲順・検索・並べ替え（テンポ順も）・次の曲をテンポで選ぶ・1曲ずつ外す・全部消す）</dd>
             <dt>ラジオ</dt><dd>FM1〜FM3 のプリセット、局の検索、聴いた曲の履歴（★ で残せる）</dd>
@@ -1067,7 +1070,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
         <div class="hpage" data-h="chara" hidden>
           <h3>キャラクター（⚙「キャラクター」）</h3>
           <dl class="help">
-            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスターの7種類から選べます。下の欄で名前も付けられます</dd>
+            <dt>動物のキャラクター</dt><dd>ROOM・STAGE・LINE DANCE・DJ BOOTH に出てくる動物。オリジナル・ネコ・イヌ・ウサギ・クマ・ペンギン・ハムスター・キツネ・パンダ・カエルの10種類から選べます。下の欄で名前も付けられます</dd>
             <dt>季節の衣装と飾り</dt><dd>はじめから ON。12/1〜25 はサンタ帽とクリスマスツリー、12/30〜1/7 は鉢巻きと門松、3/25〜4/10 は桜の花と桜の木、7/20〜8/31 はサングラスとひまわり、10/20〜31 は魔女の帽子とかぼちゃのランタン。動物が自動で着替えて、そばに飾りが出ます（ROOM は観葉植物の代わりに）。OFF にすると衣装も飾りも出ません<br><small>季節を待たずに見たいときは、アドレスの最後に ?costume=santa（ほかに newyear・sakura・summer・halloween）を付けて開きます</small></dd>
             <dt>誕生日・記念日</dt><dd>日付と名前（なくてもOK）を3つまで登録。その日は季節の衣装より優先して、動物がパーティー帽をかぶり、そばにケーキ（ろうそくが揺れる）。1段目に「HAPPY BIRTHDAY 名前」（記念日は HAPPY ANNIVERSARY）が、開いたときと15分ごとに流れます。年は関係なく毎年その月日に<br><small>先に見たいときは、アドレスの最後に ?anniv=bd（記念日は ?anniv=an）</small></dd>
             <dt>名前</dt><dd>⚙「キャラクター」の動物の下の欄で、動物に名前（10文字まで）を付けられます。名前は、なつき度の欄（「ミケ のなつき度」）、レベルアップのお知らせ、なでたとき（「ミケ ♥」）に出ます</dd>
@@ -3718,7 +3721,15 @@ const RM_PETS = {
              extra(ox, oy, s){ const { dot, A } = s; dot(ox + 4, oy + 4, A); dot(ox + 6, oy + 4, A); dot(ox + 5, oy + 5, A);   // beak
                if(!s.sleeping){ dot(ox + 2, oy + 10, A); dot(ox + 3, oy + 10, A); dot(ox + 7, oy + 10, A); dot(ox + 8, oy + 10, A); } } },   // orange feet
   hamster: { name: 'ハムスター', head: [".#.......#.", "#.#######.#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
-             extra(ox, oy, s){ const { dot, A, G } = s; [[-1,3],[-1,4],[11,3],[11,4]].forEach(([x, y]) => dot(ox + x, oy + y, G)); dot(ox + 2, oy + 4, A); dot(ox + 8, oy + 4, A); } }   // puffy cheeks
+             extra(ox, oy, s){ const { dot, A, G } = s; [[-1,3],[-1,4],[11,3],[11,4]].forEach(([x, y]) => dot(ox + x, oy + y, G)); dot(ox + 2, oy + 4, A); dot(ox + 8, oy + 4, A); } },   // puffy cheeks
+  fox:     { name: 'キツネ', head: ["#.........#", "##.......##", "#.........#", "#.........#", ".#.......#.", "..#.....#..", "...#####..."],
+             extra(ox, oy, s){ const { dot, G, A, t } = s;                               // tall pointed ears and a big swishing tail with a light tip
+               dot(ox, oy - 1, G); dot(ox + 10, oy - 1, G);
+               if(!s.sleeping){ const w = Math.round(Math.sin(t*(s.dancing ? 6 : 2.5))); dot(ox + 10, oy + 9, G); dot(ox + 11, oy + 8, G); dot(ox + 12, oy + 8, G); dot(ox + 12, oy + 7 + w, G); dot(ox + 13, oy + 6 + w, A); } } },
+  panda:   { name: 'パンダ', head: ["##.......##", "##.#####.##", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, G } = s; [[2,2],[2,3],[8,2],[8,3]].forEach(([x, y]) => dot(ox + x, oy + y, G)); } },   // round black ears, patches round the eyes
+  frog:    { name: 'カエル', head: [".###...###.", "#...#.#...#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, A } = s; for(let x=3;x<=7;x++) dot(ox + x, oy + 5, A); } }   // eyes on top, a wide smile
 };
 let pet = store.get('pet', 'orig'); if(!RM_PETS[pet]) pet = 'orig';
 function setPet(p, announce){
@@ -4224,7 +4235,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127100127';                                 // stamped by build.ps1
+const APP_VER = '20261127101520';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
