@@ -669,7 +669,11 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-jk="mono">単色</button>
           <button class="chip" data-jk="off">OFF</button>
         </div>
-        <p class="rnote">曲を聴いているとき、SPECTRUM の画面のうしろに、その曲のジャケット（曲ファイルに入っている画像）をドットで表示します。カラーはジャケット本来の色、単色はディスプレイの色に染めて表示します。低音に合わせて少し明るくなります。ジャケットの無い曲やラジオでは出ません。</p>
+        <div class="chips" id="jkSeeChips" style="margin-top:8px">
+          <button class="chip" data-see="1">スペアナを透過</button>
+          <button class="chip" data-see="0">透過しない</button>
+        </div>
+        <p class="rnote">曲を聴いているとき、SPECTRUM の画面のうしろに、その曲のジャケット（曲ファイルに入っている画像）をドットで表示します。カラーはジャケット本来の色、単色はディスプレイの色に染めて表示します。「スペアナを透過」（はじめはこれ）にすると、スペアナのバーが半透明になって、バーの向こうにもジャケットが透けて見えます。低音に合わせて少し明るくなります。ジャケットの無い曲やラジオでは出ません。</p>
       </section>
       <section data-tab="look">
         <h3>キー照明</h3>
@@ -1095,7 +1099,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>並び替え</dt><dd>ディスプレイ右上の「並び替え」。一番上の柄が最初の柄になります</dd>
             <dt>ディスプレイの色</dt><dd>標準・パープル・ブルー・レッド・グリーン。全部の柄の色が変わります</dd>
             <dt>パネルの色</dt><dd>本体の色（VOLUME・SEEK のボタン、左右の楕円の縁、ANTOBi のバッジも同じ色味に）。シルバー・ブラック・ガンメタ・ゴールド・パールホワイト・メタリックレッド・メタリックブルー・メタリックピンク・ターコイズブルー・カーボン</dd>
-            <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面に出ます。DISC 中は 6 ボタンでも順に切り替え。曲を聴いているときは、うしろにその曲のジャケットがドットで浮かびます（⚙「表示」の「曲のジャケットを背景に」で カラー（はじめはこれ）・単色（ディスプレイの色）・OFF を選べます）</dd>
+            <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面に出ます。DISC 中は 6 ボタンでも順に切り替え。曲を聴いているときは、うしろにその曲のジャケットがドットで浮かびます（⚙「表示」の「曲のジャケットを背景に」で カラー（はじめはこれ）・単色（ディスプレイの色）・OFF を選べます。はじめはスペアナが半透明になってジャケットが透けて見えます。「透過しない」も選べます）</dd>
             <dt>時計</dt><dd>⚙「時計・電力・タイマー」タブで、右上の時計を24時間か12時間（AM/PM）に。時報（毎正時のピッ・ピッ・ピッ・ポーン）も同じタブで。目覚ましの画面も同じ表示になります</dd>
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
             <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。<b>OFF</b> にするとキーの光が消え、文字はグレーで読めます（光る線やリングも消灯）。押すたびに次の色へ。⚙「表示」からも選べます。<b>AUTO</b> は時間帯で色が変わります（5〜9時 白、9〜16時 青、16〜19時 アンバー、夜は赤）</dd>
@@ -2422,7 +2426,9 @@ function drawSpec(solo){
 }
 function drawVFD(){
   g.fillStyle = C.screen; g.fillRect(0, 0, W, H);
-  if(jacketMode !== 'off' && mode === 'file' && tracks[idx] && tracks[idx].cover && drawJacket(tracks[idx].cover)) drawSpec(false);   // the song's cover glows behind
+  const cov = jacketMode !== 'off' && mode === 'file' && tracks[idx] && tracks[idx].cover;
+  if(cov && jkSee && jkReady(cov)){ drawSpec(false); drawJacket(cov, true); }   // see-through bars: the cover laid over them, half clear
+  else if(cov && drawJacket(cov)) drawSpec(false);                                     // the song's cover glows behind the bars
   else drawSpec(true);
 }
 /* the song's cover art behind the SPECTRUM display, in coarse dots like a picture on a dot-matrix VFD, glowing a little
@@ -2430,7 +2436,8 @@ function drawVFD(){
 let jacketMode = store.get('jacket', 'color'); if(jacketMode === true) jacketMode = 'color'; if(jacketMode === false) jacketMode = 'off';
 if(!['off', 'mono', 'color'].includes(jacketMode)) jacketMode = 'color';
 const jk = { url: '', img: null, cv: document.createElement('canvas'), key: '', pulse: 0 };
-function drawJacket(url){
+function jkReady(url){ if(jk.url !== url){ jk.url = url; jk.key = ''; jk.img = new Image(); jk.img.src = url; } return jk.img.complete && jk.img.naturalWidth > 0; }
+function drawJacket(url, over){
   if(jk.url !== url){ jk.url = url; jk.key = ''; jk.img = new Image(); jk.img.src = url; }
   if(!(jk.img.complete && jk.img.naturalWidth)) return false;
   const color = jacketMode === 'color';
@@ -2443,7 +2450,7 @@ function drawJacket(url){
   }
   const st = bands(16), bass = (st.v[0] + st.v[1] + st.v[2])/3; jk.pulse += (bass - jk.pulse)*.15;
   const sz = H - 30, x0 = (W - sz)/2, y0 = 8;
-  g.save(); g.imageSmoothingEnabled = false; g.globalAlpha = (color ? .45 : .38) + jk.pulse*.25; g.drawImage(jk.cv, x0, y0, sz, sz); g.restore();
+  g.save(); g.imageSmoothingEnabled = false; g.globalAlpha = over ? .5 + jk.pulse*.15 : (color ? .45 : .38) + jk.pulse*.25; g.drawImage(jk.cv, x0, y0, sz, sz); g.restore();
   return true;
 }
 function setJacket(v, announce){
@@ -2452,6 +2459,13 @@ function setJacket(v, announce){
 }
 document.querySelectorAll('#jacketChips .chip').forEach(b => b.addEventListener('click', () => setJacket(b.dataset.jk, true)));
 setJacket(jacketMode, false);
+var jkSee = store.get('jkSee', true) !== false;                // the bars see-through over the cover
+function setJkSee(v, announce){
+  jkSee = v; if(announce){ store.set('jkSee', v); flash(v ? 'SEE-THROUGH  ON' : 'SEE-THROUGH  OFF', 900); }
+  document.querySelectorAll('#jkSeeChips .chip').forEach(b => b.setAttribute('aria-pressed', (b.dataset.see === '1') === v));
+}
+document.querySelectorAll('#jkSeeChips .chip').forEach(b => b.addEventListener('click', () => setJkSee(b.dataset.see === '1', true)));
+setJkSee(jkSee, false);
 setSpec(spec, false);
 
 /* ---------------- weather for the window and beach scenes ----------------
@@ -3282,7 +3296,7 @@ var petName = String(store.get('petName', '') || '').slice(0, 10);
 /* ---------------- このタブを最初の設定に戻す: each settings tab gets a reset (two taps). Songs, playlists, photos, radio presets,
    birthdays, the bond and the records are kept; only that tab's settings go back to how they came. ---------------- */
 const RESET_KEYS = {
-  look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos', 'jacket'],
+  look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos', 'jacket', 'jkSee'],
   chara: ['pet', 'costume', 'wxwear', 'petName', 'ride', 'duo'],
   sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'autoStart', 'svc', 'loud'],
   night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
@@ -4361,7 +4375,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127164331';                                 // stamped by build.ps1
+const APP_VER = '20261127165726';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
