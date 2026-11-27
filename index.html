@@ -3732,8 +3732,8 @@ const RM_PETS = {
                if(!s.sleeping){ const w = Math.round(Math.sin(t*(s.dancing ? 6 : 2.5))); dot(ox + 10, oy + 9, G); dot(ox + 11, oy + 8, G); dot(ox + 12, oy + 8, G); dot(ox + 12, oy + 7 + w, G); dot(ox + 13, oy + 6 + w, A); } } },
   panda:   { name: 'パンダ', head: ["##.......##", "##.#####.##", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
              extra(ox, oy, s){ const { dot, G } = s; [[2,2],[2,3],[8,2],[8,3]].forEach(([x, y]) => dot(ox + x, oy + y, G)); } },   // round black ears, patches round the eyes
-  frog:    { name: 'カエル', head: [".###...###.", "#...#.#...#", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
-             extra(ox, oy, s){ const { dot, A } = s; for(let x=3;x<=7;x++) dot(ox + x, oy + 5, A); } }   // eyes on top, a wide smile
+  frog:    { name: 'カエル', head: ["..##...##..", ".#..#.#..#.", "#.........#", "#.........#", "#.........#", ".#.......#.", "..#######.."],
+             extra(ox, oy, s){ const { dot, G, A } = s; dot(ox + 1, oy + 4, A); dot(ox + 9, oy + 4, A); dot(ox + 4, oy + 5, G); dot(ox + 6, oy + 5, G); } }   // round eye bumps on top, pink cheeks, a small smile
 };
 let pet = store.get('pet', 'orig'); if(!RM_PETS[pet]) pet = 'orig';
 function setPet(p, announce){
@@ -4239,7 +4239,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127101824';                                 // stamped by build.ps1
+const APP_VER = '20261127102246';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
