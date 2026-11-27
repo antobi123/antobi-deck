@@ -763,7 +763,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-ba="1">ON</button>
           <button class="chip" data-ba="0">OFF</button>
         </div>
-        <p class="rnote">電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。充電を始めると元に戻ります。Android のみ。</p>
+        <p class="rnote">電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。暗い間も画面をタップすると30秒だけ元の明るさに。充電を始めると元に戻ります。Android のみ。</p>
       </section>
       <section data-tab="night">
         <h3>おやすみモード <span id="sleepLeft" style="float:right"></span></h3>
@@ -776,7 +776,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-sleep="end">この曲が終わったら</button>
         </div>
         <div style="margin-top:10px"><span style="font:600 12px var(--font-ui); color:var(--muted)">おやすみに流すラジオ</span><select id="sleepSt" class="stsel" aria-label="おやすみに流すラジオ"></select></div>
-        <p class="rnote">画面を暗くして省電力で動きます。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップするか、もう一度再生すると明るく戻ります。</p>
+        <p class="rnote">画面を暗くして省電力で動きます。暗い間も画面をタップすると30秒だけ元の明るさに。時間が来ると最後の1分で音をゆっくり小さくして止めます（音量の設定はそのまま）。止まった後は画面をタップするか、もう一度再生すると明るく戻ります。</p>
       </section>
       <section data-tab="night">
         <h3>目覚まし <span id="alarmLeft" style="float:right"></span></h3>
@@ -1117,8 +1117,8 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>時計の表示</dt><dd>右上の時計を24時間か12時間（AM/PM）に。目覚ましの画面も同じ表示になります</dd>
             <dt>時報</dt><dd>はじめは OFF。ON にすると、毎正時に「ピッ・ピッ・ピッ・ポーン」と鳴って、1段目に時刻が出ます。鳴る間は曲の音が少し下がります。ON にしたときに一度鳴らして聞かせます</dd>
             <dt>省電力モード</dt><dd>はじめから ON。画面の動きを少し控えめにして、電池の減りとスマホの発熱を抑えます。OFF にすると光のにじみが付いた元の見た目に</dd>
-            <dt>電池が少ないときは自動で省電力</dt><dd>はじめから ON。電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。1段目の「BATTERY LOW」のあとに「▸ ECO」と出ます。充電を始めると元の明るさに戻ります<br><small>Android のみ（iPhone は電池の残りが分からないため）</small></dd>
-            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります。「おやすみに流すラジオ」で局を選んでおくと、おやすみモードを始めたときにその局に切り替わります（「そのまま」なら今のまま）</dd>
+            <dt>電池が少ないときは自動で省電力</dt><dd>はじめから ON。電池が 20％を切ると、画面を少し暗くして省電力モードで動きます（省電力モードを OFF にしていても）。1段目の「BATTERY LOW」のあとに「▸ ECO」と出ます。暗い間も画面をタップすると30秒だけ元の明るさに戻ります。充電を始めると元の明るさに戻ります<br><small>Android のみ（iPhone は電池の残りが分からないため）</small></dd>
+            <dt>おやすみモード</dt><dd>15・30・60・90分、または「この曲が終わったら」（DISC の曲の切れ目で止まります）。画面が暗くなり、（タップすると30秒だけ元の明るさ）最後の1分で音がゆっくり小さくなって止まります。止まった後は画面をタップするか、ロック画面やイヤホンから再生し直すと明るく戻ります。「おやすみに流すラジオ」で局を選んでおくと、おやすみモードを始めたときにその局に切り替わります（「そのまま」なら今のまま）</dd>
             <dt>目覚まし</dt><dd>時刻と、鳴らす音（ラジオ／曲）を選んで ON。時刻になると1分かけて音が大きくなり、画面に大きな <b>STOP</b>（止める）と <b>SNOOZE</b>（5分後にもう一度）が出ます。毎日同じ時刻に鳴ります。「鳴る前は画面を暗く」（はじめはこちら）か「暗くしない」も選べます。「目覚ましのラジオ局」で鳴らす局を選べます（はじめは最後に聴いた局）</dd>
           </dl>
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
@@ -4199,7 +4199,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127091843';                                 // stamped by build.ps1
+const APP_VER = '20261127093006';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
