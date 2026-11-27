@@ -919,9 +919,9 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
       </section>
       <section data-tab="help">
         <nav class="hnav" id="hnav">
-          <button data-h="appuse" aria-pressed="false">アプリの使い方</button><button data-h="start" aria-pressed="true">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="chara" aria-pressed="false">キャラクター</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
+          <button data-h="appuse" aria-pressed="true">アプリの使い方</button><button data-h="start" aria-pressed="false">はじめに</button><button data-h="play" aria-pressed="false">再生</button><button data-h="src" aria-pressed="false">SRC・ラジオ</button><button data-h="keys" aria-pressed="false">1〜6 ボタン</button><button data-h="look" aria-pressed="false">表示</button><button data-h="disp" aria-pressed="false">ディスプレイ</button><button data-h="chara" aria-pressed="false">キャラクター</button><button data-h="photo" aria-pressed="false">マイ フォト</button><button data-h="sound" aria-pressed="false">サウンド</button><button data-h="night" aria-pressed="false">時計・電力・タイマー</button><button data-h="fx" aria-pressed="false">ディマー・OP演出</button><button data-h="appx" aria-pressed="false">その他</button><button data-h="lock" aria-pressed="false">ロック</button>
         </nav>
-        <div class="hpage" data-h="appuse" hidden>
+        <div class="hpage" data-h="appuse">
           <h3>アプリとして使う（ホーム画面に追加）</h3>
           <div class="row" id="installRow" hidden><button class="pbtn pri" id="installBtn">ホーム画面にインストール</button></div>
           <p id="installState"></p>
@@ -932,7 +932,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           </ol>
           <p class="rnote" style="margin:4px 0 0">ブラウザで開いているときは、画面の下に「ホーム画面に追加すると、全画面のアプリとして使えます」というお知らせが出ます。「追加する」で Android はそのまま追加の画面へ、iPhone は押す場所の絵が出ます。「あとで」を押すと1週間出ません。</p>
         </div>
-        <div class="hpage" data-h="start">
+        <div class="hpage" data-h="start" hidden>
           <h3>はじめに</h3>
           <ol class="hsteps">
             <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません<br>Android のアプリで曲を選ぶ画面から戻るときは、画面のいちばん下の端から上へ（ジェスチャー操作なら左右の端から内側へ）スワイプすると戻るボタンが出ます</small></li>
@@ -962,7 +962,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>時計・電力・タイマー</dt><dd>時計の表示（24時間／12時間）・時報・省電力モード・電池が少ないときの自動省電力・おやすみモード・目覚まし（それぞれ流すラジオ局も選べる）</dd>
             <dt>ディマー・OP演出</dt><dd>夜のディマー・オープニング演出</dd>
             <dt>その他</dt><dd>今日の音楽・ラジオの通信量・友達に教える・設定のバックアップ・更新のお知らせ</dd>
-            <dt>使い方</dt><dd>このページ。左端の「アプリの使い方」にホーム画面への追加（インストール）、「はじめに」に「はじめての案内をもう一度見る」</dd>
+            <dt>使い方</dt><dd>このページ。開くと最初に左端の「アプリの使い方」が出ます。そこにホーム画面への追加（インストール）、「はじめに」に「はじめての案内をもう一度見る」</dd>
           </dl>
         </div>
         <div class="hpage" data-h="play" hidden>
@@ -3969,12 +3969,13 @@ const IOS_PIC = `<svg viewBox="0 0 320 128" role="img" aria-label="Safari の共
   </g></svg>`;
 // the first card, only while the app is still opened in the browser: how to put it on the home screen (iPhone gets the picture)
 function tourAppCard(){
+  const lead = 'いまは<b>ブラウザで開いています</b>。下の手順でホーム画面に追加すると、アプリとして使えます。<br>';
   if(IOS) return ['ホーム画面に追加', 'アプリとして使う',
-    'Safari の画面下にある<b>共有ボタン（□↑）</b>を押して、出てきたメニューから<b>「ホーム画面に追加」</b>を選びます。' + IOS_PIC
+    lead + 'Safari の画面下にある<b>共有ボタン（□↑）</b>を押して、出てきたメニューから<b>「ホーム画面に追加」</b>を選びます。' + IOS_PIC
     + '<small>共有ボタンが見当たらないときは、画面下の「⋯」の中にあります。メニューに無いときは、下にスクロールすると出てきます。</small><br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
-  return ['ホーム画面に追加', 'アプリとして使う', installEvt
+  return ['ホーム画面に追加', 'アプリとして使う', lead + (installEvt
     ? '下の<b>「ホーム画面にインストール」</b>を押して、出てきた画面で「インストール」を選ぶだけです。ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'
-    : '<b>Android（Chrome）</b>：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><b>iPhone（Safari）</b>：共有ボタン（□↑）→「ホーム画面に追加」<br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。'];
+    : '<b>Android（Chrome）</b>：メニュー「︙」→「ホーム画面に追加」または「アプリをインストール」<br><b>iPhone（Safari）</b>：共有ボタン（□↑）→「ホーム画面に追加」<br>ホーム画面のアイコンから開くと、全画面・横向きのアプリになります。')];
 }
 function showTour(only){                                      // only = 'app': just the home-screen card (from the banner)
   if($('#tour')) return;
@@ -4194,7 +4195,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127090916';                                 // stamped by build.ps1
+const APP_VER = '20261127091049';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
