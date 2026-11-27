@@ -267,6 +267,7 @@ button:focus-visible{outline:2px solid var(--illum); outline-offset:2px}
 .ptabs button, .hnav button{flex:none; border:1px solid var(--line); background:#14151a; color:var(--muted); border-radius:999px; padding:7px 15px; font:700 12px var(--font-ui)}
 .ptabs button[aria-pressed="true"]{color:#06070a; background:var(--illum); border-color:transparent; box-shadow:0 0 12px var(--illumglow)}
 .ptabs button{padding:7px 9px; letter-spacing:0}
+.ptabs button[data-tab="music"]{padding:7px 18px}   /* a one-letter tab is easy to miss: make it as wide as the others */
 .hnav{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px}
 .hnav button{padding:6px 12px; font-size:11.5px}
 .hnav button[aria-pressed="true"]{color:var(--fg); border-color:var(--illum); background:#22242b}
@@ -4198,7 +4199,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127091730';                                 // stamped by build.ps1
+const APP_VER = '20261127091843';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
