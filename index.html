@@ -1844,13 +1844,6 @@ async function metaVia(kind, u){
     }
     if(kind === 'icy') return await icyTitle(u);
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
-  if(glowMain && !glowUsed && W*DPR >= 1){                     // spectrum screens: the whole picture, shrunk, with the dark parts pushed to black
-    const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
-    if(glowC.width !== gw || glowC.height !== gh){ glowC.width = gw; glowC.height = gh; }
-    glowX.clearRect(0, 0, gw, gh); glowX.filter = 'contrast(2.2)' + (glowSoft ? ' blur(' + glowSoft.toFixed(1) + 'px)' : ''); glowX.imageSmoothingEnabled = true; glowX.drawImage(cv, 0, 0, gw, gh); glowX.filter = 'none';
-    glowUsed = true;
-  }
-  if(glowUsed !== glowShown){ glowShown = glowUsed; glowC.classList.toggle('off', !glowUsed); }   // a display without the halo (or power saving) hides it
   return null;
 }
 async function nowPlaying(st){
@@ -2632,7 +2625,14 @@ function drawLogoArt(c, L, a){
   const lx = (W - lw)/2, ly = 4 + (H - 22 - lh)/2;
   c.save();
   c.globalAlpha = Math.max(0, Math.min(1, (.55 + L.pulse*.35 + Math.sin(T*9)*.015)*a));   // tube shimmer, brightens on the beat
-  glowMain = true; glowSoft = Math.max(glowSoft, 2.5 + L.pulse*2);   // the tube glow comes from the halo canvas (blurred there), not a blur on every draw
+  // the tube glow: a small blurred copy of the logo, made once per colour and stretched under it (the picture itself stays sharp)
+  if(L.haloKey !== L.key){
+    const hw = Math.max(1, Math.round(L.cv.width/6)), hh = Math.max(1, Math.round(L.cv.height/6)), hc = L.halo || document.createElement('canvas'), hx = hc.getContext('2d');
+    hc.width = hw + 8; hc.height = hh + 8; hx.filter = 'blur(2px)'; hx.drawImage(L.cv, 4, 4, hw, hh); hx.filter = 'none';
+    L.halo = hc; L.haloKey = L.key; L.haloW = hw;
+  }
+  const ga = c.globalAlpha; c.globalAlpha = Math.min(1, ga*(.75 + L.pulse*.5)); const m = 4*lw/L.haloW;
+  c.drawImage(L.halo, lx - m, ly - m*lh/lw, lw + m*2, lh + m*2*lh/lw); c.globalAlpha = ga;
   if(L.wobble){                                    // slow liquid wobble, drawn in horizontal slices
     const sl = 48, sh = L.cv.height/sl, dh = lh/sl;
     for(let i=0;i<sl;i++){
@@ -4290,7 +4290,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127113921';                                 // stamped by build.ps1
+const APP_VER = '20261127114530';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5132,6 +5132,13 @@ function frame(now){
   try{   // a zero-size screen (app opened in the background, mid-rotation) must not stop the animation loop
     if(W*DPR >= 1) { if(bootT < BOOT_LEN) drawBoot(dt); else if(skin === 'vfdb') drawVFDBeach(dt); else if(skin === 'vfdrec') drawVFDTurntable(dt); else if(skin === 'vfdtape') drawVFDCassette(dt); else if(skin === 'vfdroom') drawVFDRoom(dt); else if(skin === 'vfdstage') drawDanceStage(dt); else if(skin === 'vfdline') drawDanceLine(dt); else if(skin === 'vfddj') drawDanceDJ(dt); else if(skin === 'vfdclub') drawVFDClub(dt); else if(skin === 'vfddrive') drawVFDDrive(dt); else if(skin === 'vfdmine') drawMine(dt); else if(skin === 'vfdshuffle') drawShuffle(dt); else if(LOGOS[skin]) drawVFDLogo(LOGOS[skin]); else drawVFD(); }
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
+  if(glowMain && !glowUsed && W*DPR >= 1){                     // spectrum screens: the whole picture, shrunk, with the dark parts pushed to black
+    const gw = Math.max(1, Math.round(W/4)), gh = Math.max(1, Math.round(H/4));
+    if(glowC.width !== gw || glowC.height !== gh){ glowC.width = gw; glowC.height = gh; }
+    glowX.clearRect(0, 0, gw, gh); glowX.filter = 'contrast(2.2)' + (glowSoft ? ' blur(' + glowSoft.toFixed(1) + 'px)' : ''); glowX.imageSmoothingEnabled = true; glowX.drawImage(cv, 0, 0, gw, gh); glowX.filter = 'none';
+    glowUsed = true;
+  }
+  if(glowUsed !== glowShown){ glowShown = glowUsed; glowC.classList.toggle('off', !glowUsed); }   // a display without the halo (or power saving) hides it
   let cur = 0, dur = 0;
   if(mode === 'file'){ cur = audio.currentTime; dur = audio.duration || 0; }
   else if(mode === 'radio'){ cur = radioEl().currentTime; }
