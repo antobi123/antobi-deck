@@ -1108,7 +1108,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。2枚のレコードは本物の LP と同じ 33⅓ 回転で回ります。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
-            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーかバイクで首都高を走ります（後ろから見た景色。乗り物は⚙「キャラクター」の「首都高の乗り物」で選べます）。雨や雪の日は画面に雨や雪が降り、オープンカーは幌（ほろ）を閉じます。クルマは「ふたり」にすると助手席に友達が乗ります（毎日ちがう動物。運転席は右）。ときどき2匹が顔を寄せて、吹き出し（♥・♪・！・？・…・にっこり）でおしゃべりします。道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
+            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーかバイクで首都高を走ります（後ろから見た景色。乗り物は⚙「キャラクター」の「首都高の乗り物」で選べます）。雨や雪の日は画面に雨や雪が降り、オープンカーは幌（ほろ）を閉じます。クルマは「ふたり」にすると助手席に友達が乗ります（毎日ちがう動物。運転席は右）。ときどき2匹が顔を寄せて、吹き出し（♥・♪・！・？・…・にっこり）でおしゃべりします。<br><small>季節の景色（季節の衣装が ON のとき、衣装と同じ期間）：お正月は遠くに富士山、桜の季節は花びらが舞い、夏の夜は花火、ハロウィンはコウモリとガードレールのかぼちゃ、クリスマスはビルの電飾と大きなツリー（24日・25日の夜は雪がちらつく）。おしゃべりにも季節の絵が混ざります。先に見たいときはアドレスの最後に ?costume=newyear（ほかに sakura・summer・halloween・santa）</small>道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>MY PHOTO</dt><dd>自分で登録した画像がドット風に光る画面。「使う」にした画像が2枚以上あると、ランダムで切り替わります</dd>
           </dl>
@@ -4322,7 +4322,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127140212';                                 // stamped by build.ps1
+const APP_VER = '20261127140706';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5098,7 +5098,7 @@ function setDuo(v, announce){
 }
 document.querySelectorAll('#duoChips .chip').forEach(b => b.addEventListener('click', () => setDuo(b.dataset.duo, true)));
 setDuo(shDuo, false);
-let shTalkNext = 8, shTalkUntil = 0, shTalkSay = [0, 1, 2, 3, 4];
+let shTalkNext = 8, shTalkUntil = 0, shTalkSay = [];
 const SH_SAY = [
   [[0,0],[1,1],[3,1],[4,0],[0,1],[4,1],[1,2],[2,3],[3,2]],             // ♥
   [[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]],                         // ♪
@@ -5107,6 +5107,24 @@ const SH_SAY = [
   [[0,3],[2,3],[4,3]],                                                 // …
   [[0,0],[4,0],[0,2],[1,3],[2,3],[3,3],[4,2]]                          // a smile
 ];
+shTalkSay = SH_SAY.slice(0, 5);
+const SH_SAY_SEASON = {                                                // the season's own chat
+  santa:     [[[2,0],[1,1],[2,1],[3,1],[0,2],[1,2],[2,2],[3,2],[4,2],[2,3]],                                   // a tree
+              [[1,0],[3,0],[0,1],[1,1],[2,1],[3,1],[4,1],[0,2],[2,2],[4,2],[0,3],[1,3],[2,3],[3,3],[4,3]]],     // a present
+  newyear:   [[[2,0],[1,1],[3,1],[0,2],[4,2],[0,3],[1,3],[2,3],[3,3],[4,3]],                                   // Mt Fuji
+              [[2,0],[0,1],[1,1],[2,1],[3,1],[4,1],[1,2],[2,2],[3,2],[2,3]]],                                  // the first sunrise
+  sakura:    [[[2,0],[0,1],[1,1],[3,1],[4,1],[2,2],[1,3],[3,3]]],                                              // a blossom
+  summer:    [[[2,0],[0,1],[2,1],[4,1],[1,2],[3,2],[0,3],[2,3],[4,3]],                                          // fireworks
+              [[2,0],[0,1],[1,1],[2,1],[3,1],[4,1],[1,2],[2,2],[3,2],[2,3]]],                                  // the sun
+  halloween: [[[2,0],[1,1],[2,1],[3,1],[0,2],[1,2],[3,2],[4,2],[1,3],[2,3],[3,3]],                              // a pumpkin
+              [[1,0],[2,0],[3,0],[0,1],[2,1],[4,1],[0,2],[1,2],[2,2],[3,2],[4,2],[0,3],[2,3],[4,3]]]             // a ghost
+};
+function shSeason(){                                                   // like costumeNow(), but a birthday does not replace the scenery
+  if(['santa', 'newyear', 'sakura', 'summer', 'halloween'].includes(COSTUME_FAKE)) return COSTUME_FAKE;
+  if(COSTUME_FAKE || !costumeOn) return '';
+  const d = new Date(), md = (d.getMonth() + 1)*100 + d.getDate();
+  return md >= 1201 && md <= 1225 ? 'santa' : (md >= 1230 || md <= 107) ? 'newyear' : (md >= 325 && md <= 410) ? 'sakura' : (md >= 720 && md <= 831) ? 'summer' : (md >= 1020 && md <= 1031) ? 'halloween' : '';
+}
 function shFriend(){                                          // the friend in the passenger seat: another animal, a new one each day
   const others = Object.keys(RM_PETS).filter(k => k !== pet), d = new Date(), n = d.getFullYear()*372 + d.getMonth()*31 + d.getDate();
   return others[n % others.length];
@@ -5130,6 +5148,11 @@ function drawVFDShuto(dt){
   const dayLen = 12 + 2.4*Math.cos(2*Math.PI*(doy - 172)/365), rise = 11.6 - dayLen/2, set = 11.6 + dayLen/2;
   const day = h >= rise && h < set, sp = day ? (h - rise)/dayLen : (((h - set) % 24) + 24) % 24/(24 - dayLen), el = Math.sin(Math.PI*sp);
   const low = day && el < .3, lights = day ? (low ? .55 : .12) : 1;
+  // the seasons (with 季節の衣装 on, same dates as the costumes): New Year = Mt Fuji on the skyline; spring = cherry petals;
+  // summer = fireworks over the city at night; Halloween = bats and pumpkins on the rail; Christmas = twinkling lights,
+  // a big tree, and a light snow on the nights of the 24th and 25th
+  const season = shSeason(), xmas = season === 'santa', md = (new Date().getMonth() + 1)*100 + new Date().getDate();
+  const flurry = xmas && (!day || low) && (COSTUME_FAKE === 'santa' || md >= 1224);
   // sky
   if(!day || low) [[6,2],[19,5],[33,1],[47,4],[85,3],[99,6],[112,2],[127,5]].forEach(([x, y], i) => { if((!day || i % 3 === 0) && Math.sin(shT*1.1 + i*2.3) > -.3) ddot(x, y, G); });
   const sunX = 14 + sp*104, sunY = HY - 1 - el*10;
@@ -5144,6 +5167,28 @@ function drawVFDShuto(dt){
     if(m === 0) for(let y=HY - hg;y<HY;y++) ddot(x, y, G);
     if(lights > .3 && m === 2 && hash(c*9.1 + Math.floor(shT*.2)) < lights*.6) ddot(x, HY - 1 - Math.floor(hash(c*3.3)*(hg - 1)), A);
   }
+  const tx = ((96 - sky0) % VB_C + VB_C) % VB_C;
+  if(xmas){                                                                                         // the big Christmas tree on the skyline
+    const ty = HY - 12;
+    vbg.fillStyle = K; for(let r=0;r<11;r++) vbg.fillRect(tx - Math.floor(r/2), ty + r, Math.floor(r/2)*2 + 1, 1);
+    for(let r=1;r<11;r++){ const w = Math.floor(r/2); ddot(tx - w, ty + r, G); ddot(tx + w, ty + r, G); }
+    dline(tx - 5, ty + 10, tx + 5, ty + 10, G); ddot(tx, ty + 11, G); ddot(tx, ty + 12, G);
+    for(let k=0;k<7;k++){ const r = 3 + (k*5) % 7, w = Math.floor(r/2), x = tx - w + 1 + (k*3) % Math.max(1, w*2 - 1); if((k + Math.floor(shT*2)) % 3) ddot(x, ty + r, A); }   // twinkling baubles
+    ddot(tx, ty - 1, A); ddot(tx - 1, ty, A); ddot(tx + 1, ty, A); ddot(tx, ty, A);              // the star on top
+  } else if(season === 'newyear'){                                                                 // Mt Fuji behind the city, its snowy top
+    const fy = HY - 10, fx = 60 - Math.round(shCurve*6);                                         // over the far end of the road, where the towers leave the sky open
+    for(let r=0;r<=10;r++){ const w = 3 + Math.round(r*1.4); vbg.fillStyle = K; vbg.fillRect(fx - w, fy + r, w*2 + 1, 1); ddot(fx - w, fy + r, G); ddot(fx + w, fy + r, G); if(r < 4) for(let x=-w;x<=w;x+=2) ddot(fx + x, fy + r, G); }
+    dline(fx - 3, fy, fx + 3, fy, G);
+  } else if(season === 'summer' && (!day || low)){                                                // fireworks over the city
+    for(let k=0;k<2;k++){
+      const cyc = shT/2.6 + k*.5, n = Math.floor(cyc), age = cyc - n, fx = 18 + hash(n*7.3 + k)*96, fy = 4 + hash(n*3.1 + k)*5;
+      if(age < .25) ddot(fx, fy + (1 - age*4)*8, A);                                               // the shell going up
+      else { const r = (age - .25)*10; for(let a=0;a<6.28;a+=.55) if(Math.sin(a*3 + n) > -.6) ddot(fx + Math.cos(a)*r*1.3, fy + Math.sin(a)*r*.8 + (age > .7 ? (age - .7)*4 : 0), (n + k) % 2 ? A : G); }
+    }
+  } else if(season === 'halloween'){                                                               // bats flapping across the sky
+    for(let i=0;i<3;i++){ const x = (shT*(5 + i) + i*47) % 146 - 7, y = 3 + i*2 + Math.sin(shT*2 + i)*1.5, f = Math.floor(shT*6 + i) % 2;
+      ddot(x, y, G); ddot(x - 1, y - f, G); ddot(x + 1, y - f, G); ddot(x - 2, y - 1 + f, G); ddot(x + 2, y - 1 + f, G); }
+  }
   // towers on both sides, far to near
   const step = 4.2, base = Math.floor(shTrav/step), frac = shTrav/step - base;
   for(let k=12;k>=0;k--){
@@ -5157,8 +5202,9 @@ function drawVFDShuto(dt){
     const gx = Math.max(2, Math.round(1.2*F/z)), gy = Math.max(2, Math.round(1.1*F/z));
     for(let y=t + 2;y<b - 1;y+=gy) for(let x=l + 2;x<r - 1;x+=gx){
       const lit = hash(id*31 + (x - l)*7 + (y - t)*13) < lights*(playing ? .55 + st.v[Math.min(15, Math.max(0, Math.floor(x/VB_C*16)))]*.4 : .5);
-      if(lit) ddot(x, y, hash(id + y - t) > .75 ? G : A); else if(day && !low && (x + y) % 3 === 0) ddot(x, y, G);   // by day the glass catches the light
+      if(lit) ddot(x, y, xmas && (x + y + Math.floor(shT*3)) % 4 === 0 ? (Math.floor(shT*3) % 2 ? G : A) : hash(id + y - t) > .75 ? G : A); else if(day && !low && (x + y) % 3 === 0) ddot(x, y, G);   // by day the glass catches the light
     }
+    if(xmas && lights > .3) for(let x=l;x<=r;x+=2) if((x + Math.floor(shT*4)) % 4 < 2) ddot(x, t, A);   // string lights along the roof
     if(hw > 15 && Math.sin(shT*2.4 + id) > .2) ddot((l + r)/2, t - 1, A);                         // aircraft warning light
   }
   // the road surface: edges, lane dashes rushing by
@@ -5178,6 +5224,7 @@ function drawVFDShuto(dt){
   for(let k=0;k<14;k++){
     const z = 1 + k*2.2 - ((shTrav % 2.2) + 2.2) % 2.2; if(z < .9) continue;
     const x = sx(6.9, z), y0 = sy(0, z), y1 = sy(.9, z); dline(x, y1, x, Math.min(43, y0), G); ddot(x, y1 - 1, A);
+    if(season === 'halloween' && k % 3 === 1 && z < 12){ const s = z < 4 ? 1 : 0; for(let a=-1 - s;a<=1 + s;a++) for(let b=0;b<=1 + s;b++) ddot(x + a, y1 - 2 - b, A); ddot(x, y1 - 4 - s, G); }   // a jack-o'-lantern on the rail
     if(k % 3 === 0){ const xl = sx(-6.9, z); dline(xl, sy(1.1, z), xl, Math.min(43, sy(0, z)), G, 2); }
   }
   // tall lamps over the road: lit from dusk to dawn
@@ -5226,7 +5273,7 @@ function drawVFDShuto(dt){
     const hop = pet2 && !wet && (shT*3) % 1 < .5 ? 1 : 0;
     const seats = duo ? [[cx + 1, pet], [cx - 12, shFriend()]] : [[cx - 5, pet]];
     // now and then the two chat: they lean toward each other and take turns with little speech bubbles
-    if(duo && !pet2 && shT > shTalkNext){ shTalkUntil = shT + 6; shTalkNext = shT + 22 + Math.random()*24; shTalkSay = Array.from({ length: 5 }, () => Math.floor(Math.random()*SH_SAY.length)); }
+    if(duo && !pet2 && shT > shTalkNext){ shTalkUntil = shT + 6; shTalkNext = shT + 22 + Math.random()*24; const pool = SH_SAY.concat(SH_SAY_SEASON[season] || []); shTalkSay = Array.from({ length: 5 }, () => pool[Math.floor(Math.random()*pool.length)]); }
     const talking = duo && !pet2 && shT < shTalkUntil, turn = talking ? Math.floor((shTalkUntil - shT)/1.2) : 0, speaker = turn % 2;
     seats.forEach(([ox0, sp], i) => {
       const ox = ox0 + (talking && i === speaker ? (i === 0 ? -1 : 1) : 0);
@@ -5236,7 +5283,7 @@ function drawVFDShuto(dt){
     });
     if(pet2) petHearts(cx, wet ? 16 : 17);
     if(talking){                                                                                   // the speech bubble over whoever is talking
-      const bx = speaker === 0 ? cx + 7 : cx - 15, by = 9, icon = SH_SAY[shTalkSay[turn % 5]];
+      const bx = speaker === 0 ? cx + 7 : cx - 15, by = 9, icon = shTalkSay[turn % 5];
       vbg.fillStyle = K; vbg.fillRect(bx, by, 8, 7);
       for(let x=0;x<7;x++){ ddot(bx + x, by, G); ddot(bx + x, by + 5, G); } for(let y=0;y<=5;y++){ ddot(bx, y + by, G); ddot(bx + 6, y + by, G); }
       ddot(speaker === 0 ? bx + 1 : bx + 5, by + 6, G);                                           // the tail, toward the speaker
@@ -5258,6 +5305,8 @@ function drawVFDShuto(dt){
     if(playing && Math.sin(shT*20) > 0) ddot(cx + 10, 41, A);                                        // exhaust flicker
     for(const wx of [cx - 16, cx + 13]) for(let x=0;x<4;x++) for(let y=41;y<44;y++) if((x + y + Math.floor(shTrav*6)) % 2) ddot(wx + x, y, G);   // tyres turning
   }
+  if(flurry && !wet) for(let i=0;i<14;i++){ const x = (hash(i*5.1)*VB_C + Math.sin(shT*1.1 + i)*2 - shCurve*8 + VB_C) % VB_C, y = (hash(i*2.7)*VB_R + shT*(3 + hash(i)*2)) % VB_R; ddot(x, y, G); }   // a light Christmas snow
+  if(season === 'sakura' && !wet) for(let i=0;i<12;i++){ const x = (hash(i*4.3)*VB_C - shT*(6 + hash(i)*4) + Math.sin(shT*1.7 + i)*2) % VB_C, y = (hash(i*6.1)*VB_R + shT*(4 + hash(i*2)*3)) % VB_R; ddot((x + VB_C) % VB_C, y, A); }   // cherry petals drifting past
   if(wet) for(let i=0;i<(snowy ? 26 : 34);i++){
     if(snowy){ const x = (hash(i*5.1)*VB_C + Math.sin(shT*1.3 + i)*2 - shCurve*8 + VB_C) % VB_C, y = (hash(i*2.7)*VB_R + shT*(4 + hash(i)*3)) % VB_R; ddot(x, y, G); }
     else { const x = (hash(i*5.1)*VB_C + VB_C) % VB_C, y = (hash(i*2.7)*VB_R + shT*38) % VB_R; ddot(x, y, G); ddot(x - 1, y - 2, G); }
