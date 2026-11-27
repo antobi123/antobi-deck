@@ -52,6 +52,12 @@
 :root[data-illum="aqua"]{ --illum:#2ff2d6; --illumglow:rgba(40,240,210,.55); }
 :root[data-illum="white"]{ --illum:#eef2ff; --illumglow:rgba(220,230,255,.5); }
 :root[data-illum="yellow"]{ --illum:#ffe63a; --illumglow:rgba(255,225,50,.55); }
+/* OFF: the keys' lights out; the printed labels stay readable in plain grey, the light bars and rings go dark */
+:root[data-illum="off"]{ --illum:#9a9ea8; --illumglow:rgba(0,0,0,0); }
+:root[data-illum="off"] .k, :root[data-illum="off"] .bar{text-shadow:none}
+:root[data-illum="off"] .strip{background:#2a2c32; box-shadow:none; opacity:1}
+:root[data-illum="off"] .wing::after{border-color:#3a3d44; box-shadow:none}
+:root[data-illum="off"] .strip::after, :root[data-illum="off"] .bar::after, :root[data-illum="off"] .rglow{display:none}
 /* key light colors fade into each other instead of snapping */
 @property --illum{ syntax:"<color>"; inherits:true; initial-value:#4aa8ff; }
 @property --illumglow{ syntax:"<color>"; inherits:true; initial-value:rgba(60,140,255,.65); }
@@ -668,6 +674,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-illum="yellow"><span class="dot" style="background:#ffe63a;box-shadow:0 0 10px #ffe63a"></span>YELLOW</button>
           <button class="chip" data-illum="random"><span class="dot" style="background:conic-gradient(#4aa8ff,#5dff8a,#ffb23a,#ff4d3d,#ff5fb0,#a970ff,#2ff2d6,#4aa8ff);box-shadow:0 0 10px #a970ff"></span>RANDOM</button>
           <button class="chip" data-illum="auto"><span class="dot" style="background:conic-gradient(#eef2ff 0 25%,#4aa8ff 25% 50%,#ffb23a 50% 75%,#ff4d3d 75%);box-shadow:0 0 10px #ffb23a"></span>AUTO</button>
+          <button class="chip" data-illum="off"><span class="dot" style="background:#2a2c32;box-shadow:inset 0 0 0 1px #5a5d66"></span>OFF</button>
         </div>
       </section>
       <section data-tab="look">
@@ -891,6 +898,13 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-as="1">ON</button>
           <button class="chip" data-as="0">OFF</button>
         </div>
+        <h3 style="margin-top:14px">車速で音量アップ</h3>
+        <div class="chips" id="svcChips">
+          <button class="chip" data-svc="off">OFF</button>
+          <button class="chip" data-svc="lo">弱</button>
+          <button class="chip" data-svc="hi">強</button>
+        </div>
+        <p class="rnote">車のカーステのように、走る速さに合わせて音量を少し上げ、走行音で聞こえにくくなるのを防ぎます。時速20km 未満（歩く・走る）では変わりません。20km から上がり始め、時速100km で 弱 は約 +4dB、強 は約 +8dB。速さはスマホの位置情報（GPS）から読むので、位置情報の許可が必要です。ON の間は GPS を使うため、電池が少し早く減ります。</p>
         <p class="rnote">アプリを開いたとき、前回閉じたときに流れていた曲（止まった所から）やラジオの局を自動で再生します。止めてから閉じたときは再生しません。スマホによっては最初にタップが必要で、そのときは1段目にお知らせが出ます。</p>
       </section>
       <section data-tab="music" id="listSec">
@@ -1062,7 +1076,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>スペアナ</dt><dd>10種類。BAR（バー）・CENTER（センター対称）・PEAK（ピーク点）・L/R METER（レベルメーター）・SCOPE（オシロスコープ）・WATERFALL（滝）・RING（リング）・MOUNTAIN（山なみ）・NEEDLE（針のメーター）・SPARK（火花）。SPECTRUM の画面に出ます。DISC 中は 6 ボタンでも順に切り替え</dd>
             <dt>時計</dt><dd>⚙「時計・電力・タイマー」タブで、右上の時計を24時間か12時間（AM/PM）に。時報（毎正時のピッ・ピッ・ピッ・ポーン）も同じタブで。目覚ましの画面も同じ表示になります</dd>
             <dt>MY PHOTO</dt><dd>⚙「マイ フォト」タブで自分の写真やロゴを<b>5枚まで</b>登録。1枚ずつ「使う／使わない」を選べて、プレビューで確認できます。画像をタップで差し替え、「消す」は2回押し</dd>
-            <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。押すたびに次の色へ。⚙「表示」からも選べます。<b>AUTO</b> は時間帯で色が変わります（5〜9時 白、9〜16時 青、16〜19時 アンバー、夜は赤）</dd>
+            <dt>ILLUMI</dt><dd>キー照明の色。左右の楕円の光るリングもこの色になります（リングは下の「左右の楕円のリング」で「光る」にしたとき）。BLUE・GREEN・RED・AMBER・PINK・PURPLE・AQUA・WHITE・YELLOW の9色と、色がゆっくり移り変わる RANDOM。<b>OFF</b> にするとキーの光が消え、文字はグレーで読めます（光る線やリングも消灯）。押すたびに次の色へ。⚙「表示」からも選べます。<b>AUTO</b> は時間帯で色が変わります（5〜9時 白、9〜16時 青、16〜19時 アンバー、夜は赤）</dd>
             <dt>左右の楕円のリング</dt><dd>VOLUME・SEEK のまわりの輪を「光らない」（はじめはこれ）か「光る」（キー照明の色）か。ボタンの絵で見た目が分かります。楕円の面はパネルと同じ色・質感です</dd>
             <dt>拍に合わせて光る</dt><dd>はじめは「控えめ」。「控えめ」「派手」のときは、曲の拍（右下の BPM）に合わせて、キー下の光る線・左右の楕円のリング・上のバーがドンドンと明るくなります。派手は光らせていないリングも拍で光ります。⚙「表示」のボタンの絵が光り方の見本です（絵も同じように点滅します）。運転中にまぶしいときは OFF に</dd>
           </dl>
@@ -1120,6 +1134,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ブースト</dt><dd>はじめは OFF。+3dB・+6dB にすると、VOLUME 40 よりさらに大きく（ほかのアプリより大きく）鳴ります。音割れ防止と一緒に効くので割れにくくなりますが、迫力のある曲では少し音が詰まって聞こえることがあります。iPhone で画面を消しているときや、一部のラジオ局では効きません</dd>
             <dt>操作音</dt><dd>デッキのボタンを押したときの、やわらかく澄んだ「ピッ」と振動（振動は Android のみ）。OFF・ピッ（はじめの設定）・振動・ピッ＋振動。「ピッ」の大きさは VOLUME で調整（つまみはロックしてあり、「タップで調整」で動かせます。15秒触らないと自動でロック）</dd>
             <dt>自動で再開</dt><dd>はじめから ON。電話やほかのアプリで止まった音楽・ラジオを、終わったあと自動で続きから再生します（20分以内）。自分で止めたときは再開しません<br><small>インスタなどで止まったときは、通知の音楽コントロールやロック画面の ▶ でも続きから再生できます（ラジオは局につなぎ直します）</small></dd>
+            <dt>車速で音量アップ</dt><dd>はじめは OFF。弱・強 にすると、車で走る速さに合わせて音量を少し上げます（カーステの「車速連動音量」と同じ）。速さはスマホの位置情報（GPS）から読みます。時速20km 未満では変わらないので、歩いたり走ったりしているときはそのまま。20km から上がり始めて、時速100km で 弱 は約 +4dB、強 は約 +8dB。数秒かけてゆっくり変わります。位置情報の許可が必要で、ON の間は電池が少し早く減ります</dd>
             <dt>開いたら続きを再生</dt><dd>はじめから ON。アプリを開いたとき、前回閉じたときに流れていた曲（止まった所から）やラジオの局を自動で再生します。止めてから閉じたときは再生しません。スマホによっては音を出す前にタップが必要で、そのときは1段目に「画面をタップすると続きから再生」と出ます</dd>
             <dt>クロスフェード</dt><dd>OFF・2〜8秒。曲の終わりと次の曲の頭を重ねて、DJ のようになめらかにつなぎます。DISC の曲だけで、1曲リピート・イントロスキャン中は使いません</dd>
           </dl>
@@ -1198,7 +1213,7 @@ const store = {
 const FIRST_RUN = (() => { try{ for(let i = 0; i < localStorage.length; i++) if((localStorage.key(i) || '').startsWith('mdeck.')) return false; return true; }catch(e){ return false; } })();
 
 /* ---------------- state ---------------- */
-const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdstage','vfdline','vfddj','vfdclub','vfddrive','vfd','vfdmine'], SKIN_NAME = {vfdstage:'STAGE', vfdline:'LINE DANCE', vfddj:'DJ BOOTH', vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfd:'SPECTRUM', vfdb:'BEACH', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random','auto'];
+const SKINS = ['vfdb','vfdrec','vfdtape','vfdroom','vfdstage','vfdline','vfddj','vfdclub','vfddrive','vfd','vfdmine'], SKIN_NAME = {vfdstage:'STAGE', vfdline:'LINE DANCE', vfddj:'DJ BOOTH', vfddrive:'CITY CRUISE', vfdclub:'CLUB', vfdroom:'ROOM', vfdtape:'CASSETTE', vfdrec:'TURNTABLE', vfd:'SPECTRUM', vfdb:'BEACH', vfdmine:'MY PHOTO'}, ILLUMS = ['blue','green','red','amber','pink','purple','aqua','white','yellow','random','auto','off'];
 let skin = store.get('skin2','vfd'); if(!SKINS.includes(skin)) skin = 'vfd';
 let ORDER = (store.get('order', []) || []).filter(s => SKINS.includes(s));
 // An order nobody rearranged (an earlier default) moves to the current default, so new displays land in place.
@@ -1264,7 +1279,8 @@ let sleepFade = 1;   // the sleep timer and alarm fade, on top of the volume
 // VOLUME 0-40 → gain. 40 is the full level (the same as other apps); the curve stays loud through the upper half
 // (28 ≈ -2.5 dB, 20 ≈ -8 dB, 10 ≈ -21 dB) and only falls away quickly near the bottom, like a car stereo
 const volGain = v => v <= 0 ? 0 : Math.pow(10, -42*Math.pow(1 - Math.min(40, v)/40, 2.35)/20);
-function applyVol(){ if(master) master.gain.setTargetAtTime(volGain(vol) * (att ? .1 : 1) * sleepFade, AC.currentTime, .03); try{ plain.volume = Math.min(1, volGain(vol) * (att ? .1 : 1) * sleepFade); }catch(e){} }
+function applyVol(){ const gv = volGain(vol) * (att ? .1 : 1) * sleepFade * svcGain; if(master) master.gain.setTargetAtTime(gv, AC.currentTime, .03); try{ plain.volume = Math.min(1, gv); }catch(e){} }
+var svcGain = 1;                                            // 車速で音量: the extra gain for the speed (1 = none)
 function applyLoud(){ if(!lowS) return; lowS.gain.value = loud ? 9 : 0; highS.gain.value = loud ? 6 : 0; }
 
 /* ---------------- playback ---------------- */
@@ -3214,7 +3230,7 @@ var petName = String(store.get('petName', '') || '').slice(0, 10);
 const RESET_KEYS = {
   look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos'],
   chara: ['pet', 'costume', 'wxwear', 'petName'],
-  sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'autoStart', 'loud'],
+  sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'autoStart', 'svc', 'loud'],
   night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
   fx: ['dimmer2', 'boot2'],
   music: ['sort', 'nextTempo', 'plSel', 'pickHint']
@@ -4290,7 +4306,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127114530';                                 // stamped by build.ps1
+const APP_VER = '20261127134642';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4406,6 +4422,40 @@ function setAutoResume(v, announce){
 }
 document.querySelectorAll('#resumeChips .chip').forEach(b => b.addEventListener('click', () => setAutoResume(b.dataset.ar === '1', true)));
 setAutoResume(autoResume, false);
+/* ---------------- 車速で音量 (speed-sensitive volume, like a car stereo): GPS speed -> a little more volume ----------------
+   Nothing below 20 km/h (walking, running), then up to +4 dB (弱) / +8 dB (強) at 100 km/h. The gain moves slowly
+   so a GPS jump does not pump the sound. OFF by default; GPS is only watched while it is on. */
+var svc = store.get('svc', 'off'); if(!['off', 'lo', 'hi'].includes(svc)) svc = 'off';
+let svcWatch = null, svcKmh = 0, svcAt = 0, svcLast = null;
+function svcPos(p){
+  const c = p.coords, now = p.timestamp || Date.now();
+  let v = c.speed;                                           // m/s, when the phone gives it
+  if(v == null || isNaN(v)){
+    if(svcLast){ const dt = (now - svcLast.t)/1000, R = 6371e3, la1 = svcLast.la*Math.PI/180, la2 = c.latitude*Math.PI/180, dla = la2 - la1, dlo = (c.longitude - svcLast.lo)*Math.PI/180;
+      const d = 2*R*Math.asin(Math.sqrt(Math.sin(dla/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin(dlo/2)**2)); v = dt > .5 ? d/dt : 0; }
+    else v = 0;
+  }
+  svcLast = { t: now, la: c.latitude, lo: c.longitude };
+  if(c.accuracy > 60) return;                                // too rough to trust
+  svcKmh = Math.max(0, v*3.6); svcAt = Date.now();
+}
+function svcTarget(){
+  if(svc === 'off' || Date.now() - svcAt > 15000) return 1;  // no fresh reading: back to normal
+  const db = (svc === 'hi' ? 8 : 4)*Math.max(0, Math.min(100, svcKmh) - 20)/80;
+  return Math.pow(10, db/20);
+}
+function setSvc(v, announce){
+  svc = v; if(announce) store.set('svc', v);
+  document.querySelectorAll('#svcChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.svc === v));
+  if(v === 'off'){ if(svcWatch !== null){ try{ navigator.geolocation.clearWatch(svcWatch); }catch(e){} svcWatch = null; } svcLast = null; svcGain = 1; applyVol(); }
+  else if(svcWatch === null && navigator.geolocation){
+    try{ svcWatch = navigator.geolocation.watchPosition(svcPos, err => { if(err.code === 1 && announce) flash('SVC  位置情報が許可されていません', 2500); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }); }catch(e){}
+  }
+  if(announce) flash('SPEED VOL  ' + ({ off: 'OFF', lo: 'LOW', hi: 'HIGH' })[v], 1000);
+}
+document.querySelectorAll('#svcChips .chip').forEach(b => b.addEventListener('click', () => setSvc(b.dataset.svc, true)));
+setSvc(svc, false);
+setInterval(() => { const t = svcTarget(); if(Math.abs(t - svcGain) > .005){ svcGain += (t - svcGain)*.25; applyVol(); } }, 1000);
 /* ---------------- お気に入り (★): mark songs, play only the ★ ones, LIST held down marks the playing song ---------------- */
 /* プレイリスト: besides ★, lists with their own names ("ドライブ用", "おやすみ用"…). Choosing one plays only its songs.
    A list remembers songs by the same key as ★, so a song taken out and put back in finds its lists again. */
