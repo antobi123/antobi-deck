@@ -793,7 +793,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-adim="1">鳴る前は画面を暗く</button>
           <button class="chip" data-adim="0">暗くしない</button>
         </div>
-        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにします。「鳴る前は画面を暗く」にすると鳴る8時間前から暗く保ち、鳴ったあとは明るく戻ります。「暗くしない」ならいつもの明るさのままです。アプリを開いたまま、できれば充電しながら使ってください。</p>
+        <p class="rnote">決めた時刻に音を鳴らし、1分かけてゆっくり音量を上げます。目覚ましONの間は画面が消えないようにします。「鳴る前は画面を暗く」にすると鳴る8時間前から少し暗く保ち（画面をタップすると30秒だけ元の明るさ）、鳴ったあとは明るく戻ります。「暗くしない」ならいつもの明るさのままです。アプリを開いたまま、できれば充電しながら使ってください。</p>
       </section>
       <section data-tab="photo">
         <h3>MY PHOTO（自分の画像） <span id="myCount" style="float:right; font:600 11px var(--font-ui); color:var(--muted)"></span></h3>
@@ -1123,7 +1123,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">目覚ましを使うときは</h3>
           <ol class="hsteps">
             <li>アプリを<b>開いたまま</b>にしてください。閉じたり他のアプリに切り替えると鳴らないことがあります</li>
-            <li>目覚ましON の間は画面が消えないようにします（「鳴る前は画面を暗く」なら鳴る8時間前から暗め、鳴ったあとは元の明るさ。「暗くしない」なら明るいまま）。夜通し点いたままになるので、<b>充電しながら</b>がおすすめです</li>
+            <li>目覚ましON の間は画面が消えないようにします（「鳴る前は画面を暗く」なら鳴る8時間前から暗め。タップすると30秒だけ元の明るさ。鳴ったあとは元の明るさ。「暗くしない」なら明るいまま）。夜通し点いたままになるので、<b>充電しながら</b>がおすすめです</li>
           </ol>
         </div>
         <div class="hpage" data-h="fx" hidden>
@@ -4194,7 +4194,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127090544';                                 // stamped by build.ps1
+const APP_VER = '20261127090916';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4699,9 +4699,14 @@ const shade = document.createElement('div');
 shade.style.cssText = 'position:fixed; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity 1.2s; z-index:900';
 document.body.appendChild(shade);
 function setShade(){
-  const o = slept ? .88 : (sleepEnd || sleepAtEnd || alarmDim && alarmNear()) ? .62 : battSave ? .28 : 0;   // after the alarm has rung the screen is bright again
+  let o = slept ? .8 : (sleepEnd || sleepAtEnd || alarmDim && alarmNear()) ? .45 : battSave ? .28 : 0;   // after the alarm has rung the screen is bright again
+  if(!slept && o && Date.now() < peekUntil) o = 0;          // a tap lights it up for a while
   shade.style.opacity = o; shade.style.pointerEvents = slept ? 'auto' : 'none';
 }
+var peekUntil = 0;
+// the dark screens (alarm / sleep timer / battery saving): a tap anywhere brings the normal brightness back for 30 s
+document.addEventListener('pointerdown', () => { if(slept || +shade.style.opacity === 0 && Date.now() >= peekUntil) return; peekUntil = Date.now() + 30e3; setShade(); setTimeout(setShade, 30e3 + 50); }, { capture: true });
+setInterval(setShade, 60e3);   // the alarm's 8-hour window starts and ends on its own
 function wakeUp(){ if(slept){ slept = false; setShade(); } }
 shade.addEventListener('click', wakeUp);
 [audio, plain].forEach(el => el.addEventListener('playing', wakeUp));           // so does playing again (lock screen, earphones)
