@@ -998,7 +998,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3 style="margin-top:16px">覚えておくと便利</h3>
           <ul class="hsteps">
             <li>アプリを閉じても、次に開くと<b>最後の状態</b>（曲と再生位置・ラジオの局・ディスプレイ・設定）から始まります<br><small>スマホは最初のタップまで音を出せないので、▶ を押すと続きから鳴ります</small></li>
-            <li>他のアプリを開いても、画面を消しても音楽は流れ続けます。ロック画面やイヤホン・車のボタンで ⏯ ⏭ ⏮ を操作でき、ラジオは局のロゴも出ます。電話などで止まっても、終わると自動で続きから再生します</li>
+            <li>他のアプリを開いても、画面を消しても音楽は流れ続けます。ロック画面やイヤホン・車のボタンで ⏯ ⏭ ⏮ を操作でき、ラジオは局のロゴも出ます。車とスマホを Bluetooth でつなぐと、車によってはハンドルのスイッチでも曲送り・曲戻し・再生／一時停止ができます（ラジオは ⏭ ⏮ で局を切り替え）。音量もハンドルのスイッチで変えられます（車側の音量が変わります。アプリの VOLUME はそのまま）。電話などで止まっても、終わると自動で続きから再生します</li>
             <li>音が小さいと感じたら、まず VOLUME を 40 まで。それでも足りなければ ⚙「サウンド」の<b>ブースト</b>（+3dB・+6dB）で、ほかのアプリより大きくできます</li>
             <li>設定が見つからないときは、⚙ SETUP の一番上の<b>検索欄</b>に「時報」「リング」などと入れると、その設定（または使い方の説明）に飛べます</li>
             <li>いろいろ触って分からなくなったら、各タブの一番下の「<b>このタブを最初の設定に戻す</b>」（2回押し）。そのタブの設定だけが元に戻り、曲・プレイリスト・写真・ラジオの局・誕生日・なつき度・記録は消えません</li>
@@ -4322,7 +4322,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127140706';                                 // stamped by build.ps1
+const APP_VER = '20261127140956';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
