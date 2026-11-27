@@ -2985,7 +2985,7 @@ function drawVFDRoom(dt){
   // little thought bubbles
   let bx = ox + 11, by = oy - 6;
   const bubble = icon => { for(let x=0;x<7;x++){ dot(bx + x, by, G); dot(bx + x, by + 5, G); } for(let y=0;y<=5;y++){ dot(bx, by + y, G); dot(bx + 6, by + y, G); } dot(bx - 1, by + 6, G); icon.forEach(([x, y]) => dot(bx + 1 + x, by + 1 + y, A)); };
-  if(petBoth){ bubble(HEART); [bx, by] = fb; bubble(HEART); [bx, by] = [ox + 11, oy - 6]; }               // ♥ ♥ from both
+  if(petBoth){ [bx, by] = [ox - 8, oy - 6]; bubble(HEART); [bx, by] = [fb[0] + 19, fb[1]]; bubble(HEART); [bx, by] = [ox + 11, oy - 6]; }   // ♥ ♥ from both, each on its outer side
   else if(dancing && Math.sin(rmT*2) > -.2) bubble([[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]]);                       // ♪
   if(!petBoth && (rmState === 'wave' || rmState === 'greet' && Math.sin(rmT*1.6) > 0)) bubble(HEART);                         // ♥
   if(fb && !petBoth && rmFr.state !== 'walk' && rmFr.state !== 'leave' && Math.sin(rmT*1.6) <= 0){ [bx, by] = fb; bubble(rmFr.state === 'dance' ? NOTE : HEART); }   // the friend answers
@@ -4239,7 +4239,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127101640';                                 // stamped by build.ps1
+const APP_VER = '20261127101824';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
