@@ -993,7 +993,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
             <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。聴いている途中で SRC を押しても音は切れず、ボタンの局名だけ次のバンドに変わります。1〜6 を押すとそのバンドの局が流れます。上の段に局名、一番下のバーに ♪ 局名と曲名（曲名を公開している局のみ）が出ます</dd>
-            <dt>電波が切れたとき</dt><dd>ネットが切れると1段目に「NO SIGNAL」、一番下の段に「電波がありません」と出ます。つながると、聴いていた局に自動でつなぎ直します（「SIGNAL OK」）。その間に SRC で DISC に切り替えることもできます</dd>
+            <dt>電波が切れたとき</dt><dd>ネットが切れると1段目に「NO SIGNAL」、一番下の段に「電波がありません」と出ます。つながると、聴いていた局に自動でつなぎ直します（「SIGNAL OK」）。途中で音が途切れたり止まったりしたときも、つながるまで数秒〜20秒ごとにつなぎ直し続けます（1段目に「RECONNECT...」）。止めたいときは ▶ を押して停止。その間に SRC で DISC に切り替えることもできます</dd>
             <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
             <dt>局のロゴ</dt><dd>ラジオを聴いているとき、ロック画面や車のディスプレイに局のロゴが出ます（ロゴの無い局は局名の画像）</dd>
@@ -1430,7 +1430,7 @@ function playIndex(i){
 }
 function togglePlay(){
   ensureAudio();
-  if(mode === 'radio'){ if(radioEl().paused){ if(radioNow) playStation(radioNow, $('#trk').textContent); else tune(radioCh); } else { audio.pause(); plain.pause(); } updateUI(); return; }
+  if(mode === 'radio'){ if(radioEl().paused){ if(radioNow) playStation(radioNow, $('#trk').textContent); else tune(radioCh); } else { clearTimeout(rcTimer); rcTimer = 0; audio.pause(); plain.pause(); } updateUI(); return; }
   if(mode === 'file' && discEnd && audio.paused){ playFromTop(); updateUI(); return; }
   if(mode === 'file'){ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); }
   else if(tracks.length) playIndex(Math.max(0, idx)); else flash('NO DISC  ▲ DISC LOAD', 1500);
@@ -1622,6 +1622,7 @@ let radioPlain = false;
 const radioEl = () => radioPlain ? plain : audio;
 function playStation(st, label){
   ensureAudio();
+  clearTimeout(rcTimer); rcTimer = 0; rcTry = 0; radioOk = false;
   mode = 'radio'; scan = false; radioNow = st; presetLabels(true);
   plain.pause(); plain.removeAttribute('src'); radioPlain = false;
   audio.src = st.url; audio.play().catch(() => {});
@@ -1649,9 +1650,10 @@ function savePreset(i, st){
 }
 audio.addEventListener('error', () => {
   if(mode !== 'radio' || radioPlain || !radioNow) return;
+  if(radioOk){ radioReconnect(); return; }                 // it was playing fine: the line dropped, so join again (not the plain player)
   radioPlain = true; audio.removeAttribute('src'); audio.load();
   plain.src = radioNow.url; plain.volume = Math.min(1, volGain(vol)*(att ? .1 : 1)*sleepFade);
-  plain.play().catch(() => flash('NO SIGNAL', 1600));
+  plain.play().catch(() => { flash('NO SIGNAL', 1600); radioReconnect(); });
 });
 plain.addEventListener('error', () => { if(mode === 'radio' && radioPlain) flash('NO SIGNAL', 1600); });
 [audio, plain].forEach(el => {
@@ -1662,18 +1664,19 @@ plain.addEventListener('pause', () => { updateUI(); });
 /* keep the sound going in the background: when the radio stream drops (the phone switching Wi-Fi / mobile data,
    a server hiccup) it reconnects by itself, waiting a little longer each try; a stream that is "playing" but has
    stopped moving for 12 s counts as dropped too. A music file that cannot be read is skipped instead of stopping. */
-let rcTry = 0, rcTimer = 0, wdTime = -1, wdStuck = 0, fileErr = 0;
+let radioOk = false, rcTry = 0, rcTimer = 0, wdTime = -1, wdStuck = 0, fileErr = 0;
 function radioReconnect(){
-  if(mode !== 'radio' || !radioNow || rcTimer || rcTry >= 10) return;   // after 10 tries (a few minutes) it gives up
+  if(mode !== 'radio' || !radioNow || rcTimer) return;          // it keeps trying (every 20 s at most) until the station is back or you stop it
   const wait = Math.min(20000, 1500*Math.pow(1.6, rcTry++));
+  if(rcTry > 1) flash('RECONNECT...', 1500);
   rcTimer = setTimeout(() => {
-    rcTimer = 0; if(mode !== 'radio' || !radioNow) return;
-    const el = radioEl(); el.src = radioNow.url; el.play().catch(() => radioReconnect());
+    rcTimer = 0; if(mode !== 'radio' || !radioNow || slept) return;
+    const el = radioEl(); el.pause(); el.src = radioNow.url; el.load(); el.play().catch(() => radioReconnect());
   }, wait);
 }
 [audio, plain].forEach(el => {
   el.addEventListener('ended', () => { if(mode === 'radio' && el === radioEl()) radioReconnect(); });   // a live stream should never end
-  el.addEventListener('playing', () => { if(mode === 'radio' && el === radioEl()){ rcTry = 0; wdStuck = 0; } if(mode === 'file' && el === audio) fileErr = 0; });
+  el.addEventListener('playing', () => { if(mode === 'radio' && el === radioEl()){ rcTry = 0; wdStuck = 0; radioOk = true; if(rcTimer){ clearTimeout(rcTimer); rcTimer = 0; } } if(mode === 'file' && el === audio) fileErr = 0; });
 });
 plain.addEventListener('error', () => { if(mode === 'radio' && radioPlain) radioReconnect(); });
 audio.addEventListener('error', () => {                       // an unreadable file: go on to the next one
@@ -2020,7 +2023,7 @@ function mediaMeta(){
     const t = mode === 'radio' && radioNow ? { title: radioNow.nowTitle || radioNow.name, artist: radioNow.nowTitle ? radioNow.name : (radioNow.genre || 'RADIO'), album: 'ANTOBi Deck RADIO', cover: stationArt(radioNow) } : tracks[idx];   // radio: the station's logo
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title || t.name, artist: t.artist || 'ANTOBi Deck', album: t.album || 'TRACK ' + String(idx+1).padStart(2,'0'), artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => { if(mode === 'radio'){ const el = radioEl(); if(el.paused){ if(!el.src) el.src = radioNow.url; el.play().catch(() => radioReconnect()); } } else if(bgHand === 'file') plain.play().catch(() => {}); else audio.play(); });
-    navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); plain.pause(); });
+    navigator.mediaSession.setActionHandler('pause', () => { clearTimeout(rcTimer); rcTimer = 0; audio.pause(); plain.pause(); });
     navigator.mediaSession.setActionHandler('nexttrack', () => { if(bgHand === 'file'){ bgStep.manual = true; bgStep(1); } else step(1); });
     navigator.mediaSession.setActionHandler('previoustrack', () => { if(bgHand === 'file'){ bgStep.manual = true; bgStep(-1); } else step(-1); });
   }catch(e){ if(!frame.err){ frame.err = 1; console.error(e); } }   // report a drawing error once, keep the loop alive
@@ -4087,7 +4090,7 @@ window.addEventListener('offline', () => {
 window.addEventListener('online', () => {
   if(!noSig) return; noSig = false;
   if(mode !== 'radio' || !radioNow) return;
-  if(sigWasOn){ playStation(radioNow, $('#trk').textContent); flash('SIGNAL OK', 1200); }
+  if(sigWasOn || !radioEl().paused || rcTimer){ playStation(radioNow, $('#trk').textContent); flash('SIGNAL OK', 1200); }   // back online: join again right away
   else { setTitle(radioNow.name); updateUI(); }
 });
 function setStatPos(v, announce){
@@ -4195,7 +4198,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127091049';                                 // stamped by build.ps1
+const APP_VER = '20261127091249';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -4397,7 +4400,7 @@ const alarmUI = document.createElement('div'); alarmUI.id = 'alarmUI'; alarmUI.h
 alarmUI.innerHTML = '<div class="at" id="alarmUITime"></div><div class="ab"><button id="alarmSnooze">SNOOZE<small>5分後にもう一度</small></button><button id="alarmStop">STOP<small>止める</small></button></div>';
 document.body.appendChild(alarmUI);
 function showAlarmUI(){ $('#alarmUITime').textContent = clockText(new Date(), true); alarmUI.hidden = false; }
-function alarmQuiet(){ audio.pause(); try{ plain.pause(); }catch(e){} alarmRing = 0; sleepFade = 1; applyVol(); alarmUI.hidden = true; setShade(); updateUI(); }
+function alarmQuiet(){ clearTimeout(rcTimer); rcTimer = 0; audio.pause(); try{ plain.pause(); }catch(e){} alarmRing = 0; sleepFade = 1; applyVol(); alarmUI.hidden = true; setShade(); updateUI(); }
 $('#alarmStop').addEventListener('click', () => { snoozeAt = 0; alarmQuiet(); flash('ALARM  STOP', 1200); });
 $('#alarmSnooze').addEventListener('click', () => { snoozeAt = Date.now() + 5*60e3; alarmQuiet(); flash('SNOOZE  5MIN', 1500); });
 setInterval(() => { if(snoozeAt && Date.now() >= snoozeAt){ snoozeAt = 0; ringAlarm(); } }, 1000);
