@@ -1066,7 +1066,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>ROOM</dt><dd>動物の暮らす部屋。食べたり寝たり、音楽が鳴ると踊ります。画面をタップするとなでられます（友達が遊びに来ているときは2匹とも喜びます）。季節によってはサンタ帽などの衣装と、ツリーや門松などの飾りも。壁の時計は今の時刻、窓は時刻と天気、ときどき友達が遊びに来ます。キャラクターは⚙「キャラクター」タブで7種類から</dd>
             <dt>STAGE</dt><dd>ステージで動物が大きく踊ります。左右からスポットライト、床は音に合わせて光り、踊りが変わると紙吹雪。踊りは10種類（左右に揺れる・ジャンプ・手拍子・ディスコ・くるっと回る・スクワット・手を振る・シャッフル・ロボット など）で、8拍ごとに変わります。なつき度が上がると、キック・タテノリ・ツイスト・ブレイクダンス・エアギター・側転・ムーンウォーク・ハートのポーズ・決めポーズも1つずつ加わります（⚙「キャラクター」）</dd>
             <dt>LINE DANCE</dt><dd>同じ動物が3匹でラインダンス。上でミラーボールが回ります。そろって踊る・順番にずれて踊る（ウェーブ）・左右が鏡写し・真ん中がソロで両側は手拍子、の4つの並びが16拍ごとに変わります。タップすると3匹そろって喜びます</dd>
-            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
+            <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。2枚のレコードは本物の LP と同じ 33⅓ 回転で回ります。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
@@ -3721,7 +3721,7 @@ function drawDanceDJ(dt){
   for(let x=32;x<=100;x++){ ddot(x, 28, DG); ddot(x, 43, DG); } for(let y=28;y<=43;y++){ ddot(32, y, DG); ddot(100, y, DG); }
   [46, 86].forEach((cx, i) => {
     for(let a=0;a<Math.PI*2;a+=.3) ddot(cx + Math.cos(a)*9, 36 + Math.sin(a)*4, DG); ddot(cx, 36, DG);
-    let r = playing ? dnT*5 : 0;                                          // both records turn clockwise
+    let r = playing ? dnT*Math.PI*2*(100/3)/60 : 0;                       // both records turn clockwise at 33⅓ rpm, like a real LP
     if(playing && m === 'scratch' && i === 0) r = Math.sin(dnT*14)*.9;
     ddot(cx + Math.cos(r)*6, 36 + Math.sin(r)*2.7, DA);
   });
@@ -4266,7 +4266,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127110217';                                 // stamped by build.ps1
+const APP_VER = '20261127110509';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
