@@ -726,6 +726,12 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-pet="frog"><span class="pet">🐸</span>カエル</button>
         </div>
         <div class="avrow"><input type="text" id="petName" maxlength="10" placeholder="名前を付ける（例：ミケ）" aria-label="動物の名前"></div>
+        <h3 style="margin-top:14px">首都高の乗り物</h3>
+        <div class="chips" id="rideChips">
+          <button class="chip" data-ride="car"><span class="pet">🚗</span>クルマ</button>
+          <button class="chip" data-ride="bike"><span class="pet">🏍️</span>バイク</button>
+        </div>
+        <p class="rnote">ディスプレイの SHUTOKO（首都高）で、動物が乗る乗り物。クルマはオープンカーで、雨や雪の日は幌（ほろ）を閉じて走ります。</p>
         <h3 style="margin-top:14px">なつき度</h3>
         <div id="bondView" class="bondv"></div>
         <h3 style="margin-top:14px">季節の衣装と飾り</h3>
@@ -1097,7 +1103,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。2枚のレコードは本物の LP と同じ 33⅓ 回転で回ります。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
-            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーで首都高を走ります（後ろから見た景色）。道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
+            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーかバイクで首都高を走ります（後ろから見た景色。乗り物は⚙「キャラクター」の「首都高の乗り物」で選べます）。雨や雪の日は画面に雨や雪が降り、オープンカーは幌（ほろ）を閉じます。道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>MY PHOTO</dt><dd>自分で登録した画像がドット風に光る画面。「使う」にした画像が2枚以上あると、ランダムで切り替わります</dd>
           </dl>
@@ -3233,7 +3239,7 @@ var petName = String(store.get('petName', '') || '').slice(0, 10);
    birthdays, the bond and the records are kept; only that tab's settings go back to how they came. ---------------- */
 const RESET_KEYS = {
   look: ['skin2', 'order', 'dcolor', 'panel', 'spec', 'illum', 'ring', 'pulse', 'statPos'],
-  chara: ['pet', 'costume', 'wxwear', 'petName'],
+  chara: ['pet', 'costume', 'wxwear', 'petName', 'ride'],
   sound: ['eq', 'xfade', 'norm2', 'boost', 'beep2', 'beepVol', 'autoResume', 'autoStart', 'svc', 'loud'],
   night: ['clock12', 'chime', 'eco2', 'battAuto', 'alarmDim', 'alarmSrc', 'sleepSt', 'alarmSt'],
   fx: ['dimmer2', 'boot2'],
@@ -4311,7 +4317,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127135556';                                 // stamped by build.ps1
+const APP_VER = '20261127135812';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5073,6 +5079,13 @@ let drT = 0, drPulse = 0, drSpeed = .6, drFar = 0, drNear = 0, drWheel = 0;
    much of the city is lit. Bottom right: the speedometer. With 車速で音量 on and GPS moving it shows the real speed;
    otherwise the car cruises with the music and slows to a stop when it stops. */
 let shT = 0, shTrav = 0, shSpd = 0, shPulse = 0, shCurve = 0;
+var shRide = store.get('ride', 'car'); if(!['car', 'bike'].includes(shRide)) shRide = 'car';   // 首都高の乗り物: クルマ / バイク
+function setRide(v, announce){
+  shRide = v; if(announce){ store.set('ride', v); flash('RIDE  ' + (v === 'bike' ? 'BIKE' : 'CAR'), 900); }
+  document.querySelectorAll('#rideChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.ride === v));
+}
+document.querySelectorAll('#rideChips .chip').forEach(b => b.addEventListener('click', () => setRide(b.dataset.ride, true)));
+setRide(shRide, false);
 function drawVFDShuto(dt){
   shT += dt; vbBegin();
   const G = DG, A = DA, K = DK;
@@ -5148,25 +5161,64 @@ function drawVFDShuto(dt){
     const x = sx(-6.9, z), top = sy(4.8, z), arm = sx(-4.2, z);
     dline(x, sy(1.1, z), x, top, G); dline(x, top, arm, top, G); ddot(arm, top + 1, (day && !low) ? G : A);
   }
-  // the car, from behind, leaning a little into the bends; the animal at the wheel (we see the back of its head)
+  // the weather: rain streaks or snowflakes over everything; in rain or snow the car has its soft top up
+  const snowy = WEAR_FAKE === 'snow' || (wxCode >= 71 && wxCode <= 77) || wxCode === 85 || wxCode === 86;
+  const wet = snowy || WEAR_FAKE === 'rain' || isRaining();
+  // the ride, from behind, leaning a little into the bends; the animal at the wheel / on the bike (we see the back of its head)
   const cx = 66 - Math.round(shCurve*3), bob = playing && shPulse > .45 ? 1 : 0, pet2 = petting();
-  dline(cx - 13, 31, cx - 12, 29, G); dline(cx + 13, 31, cx + 12, 29, G); dline(cx - 12, 29, cx + 12, 29, G);   // the windscreen frame ahead of the driver
-  ddot(cx - 15, 29, G); ddot(cx - 14, 29, G); ddot(cx + 14, 29, G); ddot(cx + 15, 29, G);          // door mirrors
-  const ox = cx - 5, oy = 21 - bob - (pet2 && (shT*3) % 1 < .5 ? 1 : 0);
-  vbg.fillStyle = K; vbg.fillRect(ox, oy, 11, 9);
-  RM_PETS[pet].head.forEach((row, r) => { for(let c=0;c<11;c++) if(row[c] === '#') ddot(ox + c, oy + r, G); });
-  try{ RM_PETS[pet].extra(ox, oy, { dot: ddot, G, A, K, t: shT, walking: false, dancing: false, sleeping: false }); }catch(e){}
-  costumeDraw((x, y, c) => ddot(ox + x, oy + y, c), G, A, false);
-  dline(ox, oy + 7, ox + 10, oy + 7, G);                                                          // shoulders
-  if(pet2){ dline(ox - 1, oy + 6, ox - 2, oy + 2, G); dline(ox + 11, oy + 6, ox + 12, oy + 2, G); petHearts(cx, oy - 2); }   // petted: both arms up
-  vbg.fillStyle = K; vbg.fillRect(cx - 17, 31, 35, 13);
-  dline(cx - 15, 31, cx + 15, 31, G); ddot(cx - 16, 32, G); ddot(cx + 16, 32, G);                    // the rear deck
-  for(let y=32;y<=39;y++){ ddot(cx - 17, y, G); ddot(cx + 17, y, G); }
-  dline(cx - 17, 40, cx + 17, 40, G);                                                              // bumper
-  for(let x=0;x<4;x++) for(let y=0;y<2;y++){ ddot(cx - 15 + x, 34 + y, A); ddot(cx + 12 + x, 34 + y, A); }   // tail lights
-  dline(cx - 4, 36, cx + 4, 36, G); dline(cx - 4, 38, cx + 4, 38, G); ddot(cx - 4, 37, G); ddot(cx + 4, 37, G);   // number plate
-  if(playing && Math.sin(shT*20) > 0) ddot(cx + 10, 41, A);                                        // exhaust flicker
-  for(const wx of [cx - 16, cx + 13]) for(let x=0;x<4;x++) for(let y=41;y<44;y++) if((x + y + Math.floor(shTrav*6)) % 2) ddot(wx + x, y, G);   // tyres turning
+  const drawHead = (ox, oy, roofed) => {                                                          // roofed: under the soft top, no ears or hat showing
+    vbg.fillStyle = K; vbg.fillRect(ox, oy, 11, 8);
+    RM_PETS[pet].head.forEach((row, r) => { for(let c=0;c<11;c++) if(row[c] === '#') ddot(ox + c, oy + r, G); });
+    if(!roofed){
+      try{ RM_PETS[pet].extra(ox, oy, { dot: ddot, G, A, K, t: shT, walking: false, dancing: false, sleeping: false }); }catch(e){}
+      costumeDraw((x, y, c) => ddot(ox + x, oy + y, c), G, A, false);
+    }
+    dline(ox, oy + 7, ox + 10, oy + 7, G);                                                        // shoulders
+  };
+  if(shRide === 'bike'){
+    // a motorbike: the rider sits up, arms out to the bars, the rear tyre and tail light below
+    const ox = cx - 5, oy = 17 - bob - (pet2 && (shT*3) % 1 < .5 ? 1 : 0);
+    vbg.fillStyle = K; vbg.fillRect(cx - 10, oy, 21, 44 - oy);
+    drawHead(ox, oy);
+    for(let y=oy + 8;y<=32;y++){ ddot(cx - 4, y, G); ddot(cx + 4, y, G); }                         // the rider's back
+    dline(cx - 4, 33, cx + 4, 33, G);
+    if(pet2){ dline(cx - 5, oy + 8, cx - 8, oy + 3, G); dline(cx + 5, oy + 8, cx + 8, oy + 3, G); petHearts(cx, oy - 2); }   // petted: both arms up (no hands on the bars!)
+    else { dline(cx - 5, oy + 9, cx - 9, 28, G); dline(cx + 5, oy + 9, cx + 9, 28, G); }             // arms out to the handlebars
+    dline(cx - 10, 28, cx - 8, 28, G); dline(cx + 8, 28, cx + 10, 28, G); ddot(cx - 11, 26, G); ddot(cx + 11, 26, G);   // bar ends and mirrors
+    vbg.fillStyle = K; vbg.fillRect(cx - 3, 33, 7, 4);
+    dline(cx - 3, 34, cx + 3, 34, G); ddot(cx - 3, 35, G); ddot(cx + 3, 35, G);                      // the rear cowl
+    for(let x=-1;x<=1;x++) ddot(cx + x, 35, A);                                                     // tail light
+    dline(cx - 2, 37, cx + 2, 37, G);                                                               // number plate
+    dline(cx - 7, 37, cx - 5, 36, G); dline(cx + 5, 36, cx + 7, 37, G);                              // mufflers
+    if(playing && Math.sin(shT*20) > 0){ ddot(cx - 8, 38, A); ddot(cx + 8, 38, A); }
+    for(let y=38;y<44;y++) for(let x=-1;x<=1;x++) if((x + y + Math.floor(shTrav*6)) % 2 || x === 0) ddot(cx + x, y, G);   // the rear tyre turning
+  } else {
+    // the open car (soft top up in rain or snow)
+    dline(cx - 13, 31, cx - 12, 29, G); dline(cx + 13, 31, cx + 12, 29, G); dline(cx - 12, 29, cx + 12, 29, G);   // the windscreen frame ahead of the driver
+    ddot(cx - 15, 29, G); ddot(cx - 14, 29, G); ddot(cx + 14, 29, G); ddot(cx + 15, 29, G);          // door mirrors
+    const ox = cx - 5, oy = 21 - bob - (pet2 && !wet && (shT*3) % 1 < .5 ? 1 : 0);
+    drawHead(ox, wet ? 22 : oy, wet);
+    if(pet2 && !wet){ dline(ox - 1, oy + 6, ox - 2, oy + 2, G); dline(ox + 11, oy + 6, ox + 12, oy + 2, G); }   // petted: both arms up
+    if(pet2) petHearts(cx, wet ? 16 : oy - 2);
+    if(wet){                                                                                        // the soft top, with its small rear window
+      vbg.fillStyle = K; vbg.fillRect(cx - 13, 19, 27, 4); vbg.fillRect(cx - 14, 23, 6, 8); vbg.fillRect(cx + 9, 23, 6, 8);
+      dline(cx - 10, 19, cx + 10, 19, G); dline(cx - 10, 19, cx - 14, 30, G); dline(cx + 10, 19, cx + 14, 30, G);
+      dline(cx - 7, 22, cx + 7, 22, G); dline(cx - 7, 22, cx - 8, 29, G); dline(cx + 7, 22, cx + 8, 29, G);   // the rear window frame
+      for(let x=-8;x<=8;x+=4) ddot(cx + x, 20, G);                                                // the hood's seams
+    }
+    vbg.fillStyle = K; vbg.fillRect(cx - 17, 31, 35, 13);
+    dline(cx - 15, 31, cx + 15, 31, G); ddot(cx - 16, 32, G); ddot(cx + 16, 32, G);                    // the rear deck
+    for(let y=32;y<=39;y++){ ddot(cx - 17, y, G); ddot(cx + 17, y, G); }
+    dline(cx - 17, 40, cx + 17, 40, G);                                                              // bumper
+    for(let x=0;x<4;x++) for(let y=0;y<2;y++){ ddot(cx - 15 + x, 34 + y, A); ddot(cx + 12 + x, 34 + y, A); }   // tail lights
+    dline(cx - 4, 36, cx + 4, 36, G); dline(cx - 4, 38, cx + 4, 38, G); ddot(cx - 4, 37, G); ddot(cx + 4, 37, G);   // number plate
+    if(playing && Math.sin(shT*20) > 0) ddot(cx + 10, 41, A);                                        // exhaust flicker
+    for(const wx of [cx - 16, cx + 13]) for(let x=0;x<4;x++) for(let y=41;y<44;y++) if((x + y + Math.floor(shTrav*6)) % 2) ddot(wx + x, y, G);   // tyres turning
+  }
+  if(wet) for(let i=0;i<(snowy ? 26 : 34);i++){
+    if(snowy){ const x = (hash(i*5.1)*VB_C + Math.sin(shT*1.3 + i)*2 - shCurve*8 + VB_C) % VB_C, y = (hash(i*2.7)*VB_R + shT*(4 + hash(i)*3)) % VB_R; ddot(x, y, G); }
+    else { const x = (hash(i*5.1)*VB_C + VB_C) % VB_C, y = (hash(i*2.7)*VB_R + shT*38) % VB_R; ddot(x, y, G); ddot(x - 1, y - 2, G); }
+  }
   // the speedometer, bottom right
   const kmh = Math.max(0, Math.round(shSpd)), gx0 = 124, gy0 = 37, R = 6;      // kept above the bottom text row
   vbg.fillStyle = K; vbg.fillRect(101, 29, 31, 10);
