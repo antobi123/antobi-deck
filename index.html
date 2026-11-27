@@ -1753,7 +1753,7 @@ function remotePlay(){
 }
 // the notification shows ▶ or ⏸ to match
 [audio, plain].forEach(el => {
-  el.addEventListener('playing', () => { try{ navigator.mediaSession.playbackState = 'playing'; }catch(e){} });
+  ['play', 'playing'].forEach(t => el.addEventListener(t, () => { try{ navigator.mediaSession.playbackState = 'playing'; }catch(e){} }));
   el.addEventListener('pause', () => { if(audio.paused && plain.paused) try{ navigator.mediaSession.playbackState = 'paused'; }catch(e){} });
 });
 function handBack(){
@@ -4266,7 +4266,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127110038';                                 // stamped by build.ps1
+const APP_VER = '20261127110217';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
