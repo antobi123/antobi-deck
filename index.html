@@ -940,7 +940,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <li><b class="kb">▲ DISC LOAD</b> でスマホの中の曲を選ぶ<br><small>まとめて選択OK。曲名・アーティスト・ジャケットは自動で読み込み、同じ曲は二重に入りません<br>Android のアプリで曲を選ぶ画面から戻るときは、画面のいちばん下の端から上へ（ジェスチャー操作なら左右の端から内側へ）スワイプすると戻るボタンが出ます</small></li>
             <li><b class="kb">▶</b> で再生<br><small>曲が無くても <b class="kb">SRC</b> でラジオが聴けます</small></li>
             <li><b class="kb">DISP</b> で、ディスプレイの柄を切り替え<br><small>ROOM・STAGE・LINE DANCE・DJ BOOTH では、画面をタップすると動物をなでられます</small></li>
-            <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります。ラジオを聴いている間は、SRC でバンドを変えても今の局がそのまま流れ、<b class="kb">1〜6</b> を押すとそのバンドの局に変わります</li>
+            <li><b class="kb">SRC</b> を押すたびに <b>DISC → FM1 → FM2 → FM3 → DISC</b> と切り替わります。ラジオを聴いている間は、SRC でバンドを変えても今の局がそのまま流れ、<b class="kb">1〜6</b> を押すとそのバンドの局に変わります。DISC から SRC でラジオに戻ったときも、最後に聴いていた局が流れます</li>
           </ol>
           <div class="row" style="margin:12px 0 4px"><button class="pbtn" id="tourAgain">はじめての案内をもう一度見る</button></div>
           <p class="rnote" style="margin:0 0 4px">初めて開いたときに出る案内です。アプリとして使う（ブラウザで開いているときだけ）・曲を入れる・ラジオを聴く・自分好みにする の順に出ます。</p>
@@ -994,7 +994,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <h3>SRC・ラジオ</h3>
           <dl class="help">
             <dt>DISC</dt><dd>スマホから入れた曲</dd>
-            <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。聴いている途中で SRC を押しても音は切れず、ボタンの局名だけ次のバンドに変わります。1〜6 を押すとそのバンドの局が流れます。上の段に局名、一番下のバーに ♪ 局名と曲名（曲名を公開している局のみ）が出ます</dd>
+            <dt>FM1・FM2・FM3</dt><dd>ネットラジオ。SRC で DISC → FM1 → FM2 → FM3 と切り替わり、それぞれ 1〜6 に局を登録できるので全部で18局。画面には「FM1-3」のように出ます。聴いている途中で SRC を押しても音は切れず、ボタンの局名だけ次のバンドに変わります。DISC に切り替えてから SRC でラジオに戻ったときも、最後に聴いていた局が流れます（ボタンは FM1 の局名）。1〜6 を押すとそのバンドの局が流れます。上の段に局名、一番下のバーに ♪ 局名と曲名（曲名を公開している局のみ）が出ます</dd>
             <dt>電波が切れたとき</dt><dd>ネットが切れると1段目に「NO SIGNAL」、一番下の段に「電波がありません」と出ます。つながると、聴いていた局に自動でつなぎ直します（「SIGNAL OK」）。途中で音が途切れたり止まったりしたときも、つながるまで数秒〜20秒ごとにつなぎ直し続けます（1段目に「RECONNECT...」）。止めたいときは ▶ を押して停止。その間に SRC で DISC に切り替えることもできます</dd>
             <dt>はじめの局</dt><dd>FM1 はヒップホップとソウル、FM2 は J-POP・シティポップ・アニメ・ジャズ・クラシック・チル、FM3 はロック・80s・ダンス・インディー・ラテン・ワールド。好きな局に入れ替えられます（1〜6 の<b>長押し</b>、または ⚙「ラジオ」で FM1〜3 を選んで検索）。「初期」で元の局に戻ります</dd>
             <dt>途切れたとき</dt><dd>電波の切り替わりなどで放送が切れても、自動でつなぎ直します</dd>
@@ -1626,6 +1626,7 @@ function playStation(st, label){
   ensureAudio();
   clearTimeout(rcTimer); rcTimer = 0; rcTry = 0; radioOk = false;
   mode = 'radio'; scan = false; radioNow = st; presetLabels(true);
+  if(/^FM/.test(label)) store.set('radioLast', { st: { short: st.short, name: st.name, genre: st.genre, url: st.url }, label });   // SRC from DISC comes back to it
   plain.pause(); plain.removeAttribute('src'); radioPlain = false;
   audio.src = st.url; audio.play().catch(() => {});
   $('#srcl').textContent = 'RADIO'; $('#trk').textContent = label;
@@ -1917,7 +1918,11 @@ on('#ruAdd', () => {
 renderPresets();
 on('#srcBtn', () => {            // SRC: DISC → FM1 → FM2 → FM3 → DISC
   ensureAudio();
-  if(mode !== 'radio'){ audio.pause(); setBand(0); enterBand(); }
+  if(mode !== 'radio'){                                  // back from DISC: FM1's buttons, and the station you were listening to last
+    audio.pause(); setBand(0);
+    const ls = store.get('radioLast', null);
+    if(ls && ls.st && ls.st.url){ playStation(ls.st, ls.label); flash(ls.label + '  ' + ls.st.short, 1200); } else enterBand();
+  }
   else if(band < 2){ setBand(band + 1); if(radioNow){ flash(`FM${band + 1}  SELECT 1-6`, 1500); updateUI(); } else enterBand(); }   // the station on air keeps playing; 1-6 picks from the new band
   else {
     leaveRadio();
@@ -4212,7 +4217,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127095754';                                 // stamped by build.ps1
+const APP_VER = '20261127095949';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
