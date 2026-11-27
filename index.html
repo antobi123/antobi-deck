@@ -736,7 +736,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
           <button class="chip" data-duo="one">クルマ：ひとり</button>
           <button class="chip" data-duo="two">クルマ：ふたり</button>
         </div>
-        <p class="rnote">ふたりにすると、助手席に友達の動物が乗ります（毎日ちがう子）。運転席は右側です。</p>
+        <p class="rnote">ふたりにすると、助手席に友達の動物が乗ります（毎日ちがう子）。運転席は右側です。ときどき2匹でおしゃべりします。</p>
         <h3 style="margin-top:14px">なつき度</h3>
         <div id="bondView" class="bondv"></div>
         <h3 style="margin-top:14px">季節の衣装と飾り</h3>
@@ -1108,7 +1108,7 @@ ol.steps{margin:6px 0 0; padding-left:20px; font-size:13px; line-height:1.8; col
             <dt>DJ BOOTH</dt><dd>ヘッドホンをした動物が DJ。うなずく・左右に揺れる・スクラッチ・両手を上げる・ヘッドホンを押さえる・指さす、を8拍ごとに。2枚のレコードは本物の LP と同じ 33⅓ 回転で回ります。左右のスピーカーはスペアナです<br><small>3つとも、曲を止めている間はゆっくり揺れたり、次のレコードを探したりしています。動物は画面右下の BPM（テンポ）に合わせて踊ります。おやすみタイマーの最後の1分半はあくびをしてウトウト、止まると座り込んで Zzz、目覚ましが鳴ると伸びをして起きます。画面をタップするとなでられます（喜んでハート）。天気によっては傘・マフラー・うちわも。動物は⚙「キャラクター」タブで選べます</small></dd>
             <dt>CLUB</dt><dd>ネオンの3Dスペアナ</dd>
             <dt>CITY CRUISE</dt><dd>高速から眺める街。時刻に合わせて昼・夕暮れ・夜景に変わります</dd>
-            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーかバイクで首都高を走ります（後ろから見た景色。乗り物は⚙「キャラクター」の「首都高の乗り物」で選べます）。雨や雪の日は画面に雨や雪が降り、オープンカーは幌（ほろ）を閉じます。クルマは「ふたり」にすると助手席に友達が乗ります（毎日ちがう動物。運転席は右）。道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
+            <dt>SHUTOKO（首都高）</dt><dd>選んでいる動物がオープンカーかバイクで首都高を走ります（後ろから見た景色。乗り物は⚙「キャラクター」の「首都高の乗り物」で選べます）。雨や雪の日は画面に雨や雪が降り、オープンカーは幌（ほろ）を閉じます。クルマは「ふたり」にすると助手席に友達が乗ります（毎日ちがう動物。運転席は右）。ときどき2匹が顔を寄せて、吹き出し（♥・♪・！・？・…・にっこり）でおしゃべりします。道はゆるやかに左右へカーブし、左は壁と照明、右はガードレールと反射板、両側にビル。時刻に合わせて昼・夕暮れ・夜に変わり、夕方から夜はビルの窓と道路の照明が灯ります。右下はスピードメーター：曲に合わせて巡航し、止めるとゆっくり停車。⚙「サウンド」の「車速で音量アップ」を ON にして走っているときは、GPS の本当の速さを表示します。画面をタップすると動物が両手を上げて喜びます</dd>
             <dt>SPECTRUM</dt><dd>スペアナだけの画面（種類は⚙「表示」→スペアナ）</dd>
             <dt>MY PHOTO</dt><dd>自分で登録した画像がドット風に光る画面。「使う」にした画像が2枚以上あると、ランダムで切り替わります</dd>
           </dl>
@@ -4322,7 +4322,7 @@ $('#bkFile').addEventListener('change', async e => {
 });
 
 /* ---------------- a new version is out ---------------- */
-const APP_VER = '20261127140053';                                 // stamped by build.ps1
+const APP_VER = '20261127140212';                                 // stamped by build.ps1
 const updBar = document.createElement('div'); updBar.id = 'updBar'; updBar.hidden = true;
 updBar.innerHTML = '新しいバージョンがあります <button id="updBtn">更新する</button><button id="updLater" aria-label="あとで">×</button>';
 document.body.appendChild(updBar);
@@ -5098,6 +5098,15 @@ function setDuo(v, announce){
 }
 document.querySelectorAll('#duoChips .chip').forEach(b => b.addEventListener('click', () => setDuo(b.dataset.duo, true)));
 setDuo(shDuo, false);
+let shTalkNext = 8, shTalkUntil = 0, shTalkSay = [0, 1, 2, 3, 4];
+const SH_SAY = [
+  [[0,0],[1,1],[3,1],[4,0],[0,1],[4,1],[1,2],[2,3],[3,2]],             // ♥
+  [[2,0],[3,0],[3,1],[3,2],[1,2],[2,3],[1,3]],                         // ♪
+  [[2,0],[2,1],[2,3]],                                                 // !
+  [[1,0],[2,0],[3,1],[2,2],[2,3]],                                     // ?
+  [[0,3],[2,3],[4,3]],                                                 // …
+  [[0,0],[4,0],[0,2],[1,3],[2,3],[3,3],[4,2]]                          // a smile
+];
 function shFriend(){                                          // the friend in the passenger seat: another animal, a new one each day
   const others = Object.keys(RM_PETS).filter(k => k !== pet), d = new Date(), n = d.getFullYear()*372 + d.getMonth()*31 + d.getDate();
   return others[n % others.length];
@@ -5216,12 +5225,23 @@ function drawVFDShuto(dt){
     ddot(cx - 15, 29, G); ddot(cx - 14, 29, G); ddot(cx + 14, 29, G); ddot(cx + 15, 29, G);          // door mirrors
     const hop = pet2 && !wet && (shT*3) % 1 < .5 ? 1 : 0;
     const seats = duo ? [[cx + 1, pet], [cx - 12, shFriend()]] : [[cx - 5, pet]];
-    seats.forEach(([ox, sp], i) => {
+    // now and then the two chat: they lean toward each other and take turns with little speech bubbles
+    if(duo && !pet2 && shT > shTalkNext){ shTalkUntil = shT + 6; shTalkNext = shT + 22 + Math.random()*24; shTalkSay = Array.from({ length: 5 }, () => Math.floor(Math.random()*SH_SAY.length)); }
+    const talking = duo && !pet2 && shT < shTalkUntil, turn = talking ? Math.floor((shTalkUntil - shT)/1.2) : 0, speaker = turn % 2;
+    seats.forEach(([ox0, sp], i) => {
+      const ox = ox0 + (talking && i === speaker ? (i === 0 ? -1 : 1) : 0);
       const oy = (wet ? 22 : 21 - bob - hop) + (duo && i ? (Math.sin(shT*2 + 1) > .6 ? 0 : 0) : 0);
       const keep = pet; pet = sp; try{ drawHead(ox, oy, wet); } finally { pet = keep; }
       if(pet2 && !wet){ dline(ox - 1, oy + 6, ox - 2, oy + 2, G); dline(ox + 11, oy + 6, ox + 12, oy + 2, G); }   // petted: both arms up
     });
     if(pet2) petHearts(cx, wet ? 16 : 17);
+    if(talking){                                                                                   // the speech bubble over whoever is talking
+      const bx = speaker === 0 ? cx + 7 : cx - 15, by = 9, icon = SH_SAY[shTalkSay[turn % 5]];
+      vbg.fillStyle = K; vbg.fillRect(bx, by, 8, 7);
+      for(let x=0;x<7;x++){ ddot(bx + x, by, G); ddot(bx + x, by + 5, G); } for(let y=0;y<=5;y++){ ddot(bx, y + by, G); ddot(bx + 6, y + by, G); }
+      ddot(speaker === 0 ? bx + 1 : bx + 5, by + 6, G);                                           // the tail, toward the speaker
+      icon.forEach(([x, y]) => ddot(bx + 1 + x, by + 1 + y, A));
+    }
     if(wet){                                                                                        // the soft top, with its rear window
       const w = duo ? 11 : 7, t = duo ? 13 : 10, b = duo ? 16 : 14;
       vbg.fillStyle = K; vbg.fillRect(cx - b, 19, b*2 + 1, 3); vbg.fillRect(cx - b - 1, 22, b - w + 1, 9); vbg.fillRect(cx + w + 1, 22, b - w + 1, 9);
